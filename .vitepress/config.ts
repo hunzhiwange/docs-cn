@@ -41,7 +41,7 @@ export default defineConfig({
     logo: '/logo.png',
 
     editLink: {
-      pattern: 'https://github.com/vitejs/docs-cn/edit/main/:path',
+      pattern: 'https://github.com/hunzhiwange/docs-cn/edit/main/:path',
       text: '为此页提供修改建议',
     },
 
