@@ -1,3 +1,6 @@
+---
+title: 从 v3 迁移
+---
 # 从 v3 迁移 {#migration-from-v3}
 
 ## Rollup 3 {#rollup-3}

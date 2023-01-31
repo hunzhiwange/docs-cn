@@ -1,3 +1,6 @@
+---
+title: 与其他工具比较
+---
 # 与其他工具比较 {#comparisons}
 
 ## WMR {#wmr}

@@ -1,150 +1,107 @@
-# 开始 {#getting-started}
+---
+title: 介绍
+---
 
-<audio id="vite-audio">
-  <source src="/vite.mp3" type="audio/mpeg">
-</audio>
+# 介绍
 
-## 总览 {#overview}
-
-Vite（法语意为 "快速的"，发音 `/vit/`<button id="play-vite-audio" onclick="document.getElementById('vite-audio').play();"><svg style="height:2em;width:2em"><use href="/voice.svg#voice" /></svg></button>，发音同 "veet"）是一种新型前端构建工具，能够显著提升前端开发体验。它主要由两部分组成：
-
-- 一个开发服务器，它基于 [原生 ES 模块](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) 提供了 [丰富的内建功能](./features)，如速度快到惊人的 [模块热更新（HMR）](./features#hot-module-replacement)。
-
-- 一套构建指令，它使用 [Rollup](https://rollupjs.org) 打包你的代码，并且它是预配置的，可输出用于生产环境的高度优化过的静态资源。
-
-Vite 意在提供开箱即用的配置，同时它的 [插件 API](./api-plugin) 和 [JavaScript API](./api-javascript) 带来了高度的可扩展性，并有完整的类型支持。
-
-你可以在 [为什么选 Vite](./why) 中了解更多关于项目的设计初衷。
-
-## 浏览器支持 {#browser-support}
-
-默认的构建目标是能支持 [原生 ESM 语法的 script 标签](https://caniuse.com/es6-module)、[原生 ESM 动态导入](https://caniuse.com/es6-module-dynamic-import) 和 [`import.meta`](https://caniuse.com/mdn-javascript_operators_import_meta) 的浏览器。传统浏览器可以通过官方插件 [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) 支持 —— 查看 [构建生产版本](./build) 章节获取更多细节。
-
-## 在线试用 Vite {#trying-vite-online}
-
-你可以通过 [StackBlitz](https://vite.new/) 在线试用 vite。它直接在浏览器中运行基于 Vite 的构建，因此它与本地开发几乎无差别，同时无需在你的机器上安装任何东西。你可以浏览 `vite.new/{template}` 来选择你要使用的框架。
-
-目前支持的模板预设如下：
-
-|             JavaScript              |                TypeScript                 |
-| :---------------------------------: | :---------------------------------------: |
-| [vanilla](https://vite.new/vanilla) | [vanilla-ts](https://vite.new/vanilla-ts) |
-|     [vue](https://vite.new/vue)     |     [vue-ts](https://vite.new/vue-ts)     |
-|   [react](https://vite.new/react)   |   [react-ts](https://vite.new/react-ts)   |
-|  [preact](https://vite.new/preact)  |  [preact-ts](https://vite.new/preact-ts)  |
-|     [lit](https://vite.new/lit)     |     [lit-ts](https://vite.new/lit-ts)     |
-|  [svelte](https://vite.new/svelte)  |  [svelte-ts](https://vite.new/svelte-ts)  |
-
-## 搭建第一个 Vite 项目 {#scaffolding-your-first-vite-project}
-
-::: tip 兼容性注意
-Vite 需要 [Node.js](https://nodejs.org/en/) 版本 14.18+，16+。然而，有些模板需要依赖更高的 Node 版本才能正常运行，当你的包管理器发出警告时，请注意升级你的 Node 版本。
+::: tip The PHP Framework For Code Poem As Free As Wind
+始于二零一零，十年磨一剑
 :::
 
-使用 NPM:
+QueryPHP 是一款现代化的高性能 PHP 渐进式框架, 以提供稳定可靠的高品质企业级框架为历史使命。**<span style="color:#e82e7d;">USE LEEVEL DO BETTER</span>**
 
-```bash
-$ npm create vite@latest
+## 特性
+
+- 生产就绪 (Production-ready)
+- [简单高性能路由](https://www.queryphp.com/docs/router/)
+- [富于表现力的模板引擎](https://www.queryphp.com/docs/template/)
+- [基于领域驱动设计的强大 ORM](https://www.queryphp.com/docs/database/)
+- 高质量代码及高覆盖率[单元测试](https://github.com/hunzhiwange/framework/tree/master/tests)
+
+## 它是如何工作的？
+
+QueryPHP 是一个渐进式 PHP 常驻框架，我们强调的是一个渐进式，它既可以运行在 PHP-FPM 场景，同时还支持在 Go RoadRunner 服务中运行。
+
+### 运行在 PHP-FPM 场景或者 PHP 内置 webserver
+
+事实上，QueryPHP 也是一个普通的 PHP 框架，目前最低版本要求 PHP 8.1.0，我们对环境并没有特别的要求。
+
+* PHP ^8.1.0
+* ext-mbstring [字符处理](https://github.com/hunzhiwange/framework/blob/master/src/Leevel/Support/Str.php)
+* ext-openssl [加密组件](https://github.com/hunzhiwange/framework/blob/master/src/Leevel/Encryption/Encryption.php)
+
+我们系统依赖的组件可以通过 [composer.json](https://github.com/hunzhiwange/queryphp/blob/master/composer.json) 找到，我们提供了大量开箱即用的功能。
+
+```
+~ $ php leevel server
+# => Now visite http://127.0.0.1:9527/
 ```
 
-使用 Yarn:
+- Home http://127.0.0.1:9527/
+- MVC router http://127.0.0.1:9527/api/test
+- MVC restful router http://127.0.0.1:9527/restful/123
+- MVC restful router with method http://127.0.0.1:9527/restful/123/show
+- Annotation api router http://127.0.0.1:9527/api/v1/demo/liu
+- Annotation web router http://127.0.0.1:9527/web/v2/demo
+- php leevel link:static http://127.0.0.1:9527/static/css/page.css
+- php leevel link:attachments http://127.0.0.1:9527/attachments/.gitignore
+- php leevel link:apis http://127.0.0.1:9527/apis/
+- php leevel link:debugbar http://127.0.0.1:9527/debugbar/debugbar.cs
 
-```bash
-$ yarn create vite
+上面就是运行在 PHP 内置 WebServer 中，也可以用 Nginx 搭建站点。
+
+### Go RoadRunner 支持
+
+RoadRunner 是一个开源的高性能 PHP 应用服务器、负载均衡器和流程管理器。它支持作为一个服务运行，能够在每个项目的基础上扩展其功能。
+
+### 安装 RoadRunner
+
+你可以下载二进制文件.
+
+```
+cd /data/server
+wget https://github.com/spiral/roadrunner/releases/download/v2.12.1/roadrunner-2.12.1-darwin-amd64.zip
+unzip roadrunner-2.12.1-darwin-amd64.zip
+cd /data/codes/queryphp
 ```
 
-使用 PNPM:
+### RoadRunner 服务
 
-```bash
-$ pnpm create vite
+安装依赖包
+
+- composer require spiral/roadrunner ^2.12.1
+- composer require spiral/dumper ^2.14.1.
+- composer require symfony/psr-http-message-bridge ^2.0
+- composer require nyholm/psr7 ^1.5
+
+```
+/data/server/roadrunner-2.12.1-darwin-amd64/rr serve
+/data/server/roadrunner-2.12.1-darwin-amd64/rr http:reset
 ```
 
-然后按照提示操作即可！
+RoadRunner 和 php-fpm 保持一致
 
-你还可以通过附加的命令行选项直接指定项目名称和你想要使用的模板。例如，要构建一个 Vite + Vue 项目，运行:
-
-```bash
-# npm 6.x
-npm create vite@latest my-vue-app --template vue
-
-# npm 7+, extra double-dash is needed:
-npm create vite@latest my-vue-app -- --template vue
-
-# yarn
-yarn create vite my-vue-app --template vue
-
-# pnpm
-pnpm create vite my-vue-app --template vue
+```
+root@vagrant-ubuntu-10-0-2-5:/data/codes/queryphp# /data/server/roadrunner-2.12.1-darwin-amd64/rr serve
+2022-12-10T16:43:30.226+0800	DEBUG	rpc         	plugin was started	{"address": "tcp://127.0.0.1:6001", "list of the plugins with RPC methods:": ["app", "informer", "resetter"]}
+[INFO] RoadRunner server started; version: 2.12.1, buildtime: 2022-12-01T12:41:50+0000
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9522, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9525, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9523, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9529, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9528, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9526, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9527, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.524+0800	DEBUG	server      	worker is allocated	{"pid": 9524, "internal_event_name": "EventWorkerConstruct"}
+2022-12-10T16:43:30.525+0800	DEBUG	http        	http server was started	{"address": "0.0.0.0:9527"}
+2022-12-10T16:44:08.664+0800	INFO	http        	http log	{"status": 200, "method": "GET", "URI": "/", "remote_address": "127.0.0.1:56516", "read_bytes": 0, "write_bytes": 18441, "start": "2022-12-10T16:44:08.644+0800", "elapsed": "19.623241ms"}
 ```
 
-查看 [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) 以获取每个模板的更多细节：`vanilla`，`vanilla-ts`, `vue`, `vue-ts`，`react`，`react-ts`，`react-swc`，`react-swc-ts`，`preact`，`preact-ts`，`lit`，`lit-ts`，`svelte`，`svelte-ts`。
+## Todo
 
-## 社区模板 {#community-templates}
+QueryPHP 仍然处于开发中，这里有一些目前还不支持、但已经在计划中的特性：
 
-create-vite 是一个快速生成主流框架基础模板的工具。查看 Awesome Vite 仓库的 [社区维护模板](https://github.com/vitejs/awesome-vite#templates)，里面包含各种工具和不同框架的模板。你可以用如 [degit](https://github.com/Rich-Harris/degit) 之类的工具，使用社区模版来搭建项目。
+- 完善开发文档
+- 更多边界单元测试
 
-```bash
-npx degit user/project my-project
-cd my-project
-
-npm install
-npm run dev
-```
-
-如果该项目使用 `main` 作为默认分支, 需要在项目名后添加 `#main`。
-
-```bash
-npx degit user/project#main my-project
-```
-
-## `index.html` 与项目根目录 {#index-html-and-project-root}
-
-你可能已经注意到，在一个 Vite 项目中，`index.html` 在项目最外层而不是在 `public` 文件夹内。这是有意而为之的：在开发期间 Vite 是一个服务器，而 `index.html` 是该 Vite 项目的入口文件。
-
-Vite 将 `index.html` 视为源码和模块图的一部分。Vite 解析 `<script type="module" src="...">` ，这个标签指向你的 JavaScript 源码。甚至内联引入 JavaScript 的 `<script type="module">` 和引用 CSS 的 `<link href>` 也能利用 Vite 特有的功能被解析。另外，`index.html` 中的 URL 将被自动转换，因此不再需要 `%PUBLIC_URL%` 占位符了。
-
-与静态 HTTP 服务器类似，Vite 也有 “根目录” 的概念，即服务文件的位置，在接下来的文档中你将看到它会以 `<root>` 代称。源码中的绝对 URL 路径将以项目的 “根” 作为基础来解析，因此你可以像在普通的静态文件服务器上一样编写代码（并且功能更强大！）。Vite 还能够处理依赖关系，解析处于根目录外的文件位置，这使得它即使在基于 monorepo 的方案中也十分有用。
-
-Vite 也支持多个 `.html` 作入口点的 [多页面应用模式](./build#multi-page-app)。
-
-#### 指定替代根目录 {#specifying-alternative-root}
-
-`vite` 以当前工作目录作为根目录启动开发服务器。你也可以通过 `vite serve some/sub/dir` 来指定一个替代的根目录。
-
-## 命令行界面 {#command-line-interface}
-
-在安装了 Vite 的项目中，可以在 npm scripts 中使用 `vite` 可执行文件，或者直接使用 `npx vite` 运行它。下面是通过脚手架创建的 Vite 项目中默认的 npm scripts：
-
-<!-- prettier-ignore -->
-```json
-{
-  "scripts": {
-    "dev": "vite", // 启动开发服务器，别名：`vite dev`，`vite serve`
-    "build": "vite build", // 为生产环境构建产物
-    "preview": "vite preview" // 本地预览生产构建产物
-  }
-}
-```
-
-可以指定额外的命令行选项，如 `--port` 或 `--https`。运行 `npx vite --help` 获得完整的命令行选项列表。
-
-查看 [命令行界面](./cli.md) 了解更多细节。
-
-## 使用未发布的功能 {#using-unreleased-commits}
-
-如果你迫不及待想要体验最新的功能，可以自行克隆 [vite 仓库](https://github.com/vitejs/vite) 到本地机器上然后自行将其链接（将需要 [pnpm](https://pnpm.io/)）：
-
-```bash
-git clone https://github.com/vitejs/vite.git
-cd vite
-pnpm install
-cd packages/vite
-pnpm run build
-pnpm link --global # you can use your preferred package manager for this step
-```
-
-然后，回到你的 Vite 项目并运行 `pnpm link --global vite`（或者使用你的其他包管理工具来全局链接 `vite`）。重新启动开发服务器来体验新功能吧！
-
-## 社区 {#community}
-
-如果你有疑问或者需要帮助，可以到 [Discord](https://chat.vitejs.dev) 和 [GitHub Discussions](https://github.com/vitejs/vite/discussions) 社区来寻求帮助。
+我们欢迎你为 QueryPHP 的开发作出贡献。

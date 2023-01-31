@@ -1,5 +1,5 @@
 export function fetchReleaseTag() {
-  return fetch('https://api.github.com/repos/vitejs/docs-cn/releases/latest')
+  return fetch('https://api.github.com/repos/hunzhiwange/queryphp/releases/latest')
     .then((res) => res.json())
     .then((json) => json.tag_name ?? '')
     .then(releaseTag => {

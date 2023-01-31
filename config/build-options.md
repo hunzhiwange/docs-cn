@@ -1,3 +1,6 @@
+---
+title: 构建选项
+---
 # 构建选项 {#build-options}
 
 ## build.target {#build-target}

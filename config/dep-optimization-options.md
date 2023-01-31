@@ -1,3 +1,6 @@
+---
+title: 依赖优化选项
+---
 # 依赖优化选项 {#dep-optimization-options}
 
 - **相关内容：** [依赖预构建](/guide/dep-pre-bundling)

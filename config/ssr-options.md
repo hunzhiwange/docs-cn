@@ -1,3 +1,6 @@
+---
+title: SSR 选项
+---
 # SSR 选项 {#ssr-options}
 
 ## ssr.external {#ssr-external}

@@ -1,3 +1,6 @@
+---
+title: 从 v2 迁移
+---
 # 从 v2 迁移 {#migration-from-v2}
 
 ## Node 支持 {#node-support}

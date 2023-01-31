@@ -2,18 +2,18 @@ import { defineConfig } from 'vitepress'
 import renderPermaLink from './render-perma-link'
 import MarkDownItCustomAnchor from './markdown-it-custom-anchor'
 
-const ogDescription = 'Next Generation Frontend Tooling'
-const ogImage = 'https://vitejs.dev/og-image.png'
-const ogTitle = 'Vite'
-const ogUrl = 'https://vitejs.dev'
+const ogDescription = 'High Performance PHP Progressive Framework.'
+const ogImage = 'https://queryphp.com/logo.png'
+const ogTitle = 'QueryPHP'
+const ogUrl = 'https://queryphp.com'
 
 export default defineConfig({
-  title: 'Vite 官方中文文档',
-  description: '下一代前端工具链',
+  title: 'QueryPHP Documentation',
+  description: 'High Performance PHP Progressive Framework.',
   lang: 'zh-CN',
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/here.png' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: ogTitle }],
     ['meta', { property: 'og:image', content: ogImage }],
@@ -38,7 +38,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/logo.png',
 
     editLink: {
       pattern: 'https://github.com/vitejs/docs-cn/edit/main/:path',
@@ -46,9 +46,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'twitter', link: 'https://twitter.com/vite_js' },
-      { icon: 'discord', link: 'https://chat.vitejs.dev' },
-      { icon: 'github', link: 'https://github.com/vitejs/vite' },
+      { icon: 'github', link: 'https://github.com/hunzhiwange/queryphp' },
     ],
 
     algolia: {
@@ -66,196 +64,143 @@ export default defineConfig({
     },
 
     localeLinks: {
-      text: '简体中文',
+      text: 'English',
       items: [
-        { text: 'English', link: 'https://vitejs.dev' },
-        { text: '日本語', link: 'https://ja.vitejs.dev' },
-        { text: 'Español', link: 'https://es.vitejs.dev' },
+        { text: '中文', link: 'https://cn.queryphp.com' },
       ],
     },
 
     footer: {
       copyright:
-        '本中文文档内容版权为 Vite 官方中文翻译团队所有，保留所有权利。'
+        'MIT Licensed | Copyright © 2010-present Xiangmin Liu'
     },
 
     nav: [
-      { text: '指引', link: '/guide/', activeMatch: '/guide/' },
-      { text: '配置', link: '/config/', activeMatch: '/config/' },
-      { text: '插件', link: '/plugins/', activeMatch: '/plugins/' },
+      {
+        text: 'Docs',
+        items: [
+          {
+            text: 'Preface',
+            link: '/docs/'
+          },
+          {
+            text: 'Started',
+            link: '/docs/started/'
+          },
+          {
+            text: 'Guide',
+            link: '/docs/guide/'
+          },
+          {
+            text: 'Architecture',
+            link: '/docs/architecture/'
+          },
+          {
+            text: 'Routing',
+            link: '/docs/router/'
+          },
+          {
+            text: 'Template',
+            link: '/docs/template/'
+          },
+          {
+            text: 'Database',
+            link: '/docs/database/'
+          },
+          {
+            text: 'ORM',
+            link: '/docs/orm/'
+          },
+          {
+            text: 'Validate',
+            link: '/docs/validate/'
+          },
+          {
+            text: 'Component',
+            link: '/docs/component/support/str'
+          },
+          {
+            text: 'Test',
+            link: '/docs/test/'
+          },
+          {
+            text: 'Developer',
+            link: '/docs/developer/'
+          },
+        ],
+      },
+      { text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
+      { text: 'Community', link: '/ecosystem/', activeMatch: '/ecosystem/' },
+      { text: 'About Us', link: '/about/', activeMatch: '/about/' },
       {
         text: '相关链接',
         items: [
           { text: 'Team', link: '/team' },
           {
-            text: 'Twitter',
-            link: 'https://twitter.com/vite_js'
+            text: 'QueryPHP 社区',
+            link: 'https://github.com/hunzhiwange/framework/discussions'
           },
           {
-            text: 'Discord Chat',
-            link: 'https://chat.vitejs.dev'
-          },
-          {
-            text: 'Awesome Vite',
-            link: 'https://github.com/vitejs/awesome-vite'
-          },
-          {
-            text: 'Dev.to 社区',
-            link: 'https://dev.to/t/vite'
-          },
-          {
-            text: 'Rollup 插件兼容',
-            link: 'https://vite-rollup-plugins.patak.dev/'
-          },
-          {
-            text: '更新日志',
-            link: 'https://github.com/vitejs/vite/blob/main/packages/vite/CHANGELOG.md'
+            text: 'CHANGELOG',
+            link: 'https://github.com/hunzhiwange/queryphp/blob/master/assets/changelog/CHANGELOG.md'
           }
         ]
       },
-      {
-        text: 'Version',
-        items: [
-          {
-            text: 'Vite v3 文档（英文）',
-            link: 'https://v3.vitejs.dev'
-          },
-          {
-            text: 'Vite v2 文档（英文）',
-            link: 'https://v2.vitejs.dev'
-          },
-        ]
-      }
     ],
 
     sidebar: {
-      '/guide/': [
-        {
-          text: '指引',
-          items: [
-            {
-              text: '为什么选 Vite',
-              link: '/guide/why'
-            },
-            {
-              text: '开始',
-              link: '/guide/'
-            },
-            {
-              text: '功能',
-              link: '/guide/features'
-            },
-            {
-              text: '命令行界面',
-              link: '/guide/cli'
-            },
-            {
-              text: '使用插件',
-              link: '/guide/using-plugins'
-            },
-            {
-              text: '依赖预构建',
-              link: '/guide/dep-pre-bundling'
-            },
-            {
-              text: '静态资源处理',
-              link: '/guide/assets'
-            },
-            {
-              text: '构建生产版本',
-              link: '/guide/build'
-            },
-            {
-              text: '部署静态站点',
-              link: '/guide/static-deploy'
-            },
-            {
-              text: '环境变量与模式',
-              link: '/guide/env-and-mode'
-            },
-            {
-              text: '服务端渲染（SSR）',
-              link: '/guide/ssr'
-            },
-            {
-              text: '后端集成',
-              link: '/guide/backend-integration'
-            },
-            {
-              text: '比较',
-              link: '/guide/comparisons'
-            },
-            {
-              text: '故障排除',
-              link: '/guide/troubleshooting'
-            },
-            {
-              text: '从 v3 迁移',
-              link: '/guide/migration'
-            }
-          ]
-        },
-        {
-          text: 'API',
-          items: [
-            {
-              text: '插件 API',
-              link: '/guide/api-plugin'
-            },
-            {
-              text: 'HMR API',
-              link: '/guide/api-hmr',
-            },
-            {
-              text: 'JavaScript API',
-              link: '/guide/api-javascript',
-            },
-            {
-              text: '配置参考',
-              link: '/config/'
-            }
-          ]
-        }
-      ],
-      '/config/': [
-        {
-          text: '配置',
-          items: [
-            {
-              text: '配置 Vite',
-              link: '/config/'
-            },
-            {
-              text: '共享选项',
-              link: '/config/shared-options'
-            },
-            {
-              text: '服务器选项',
-              link: '/config/server-options'
-            },
-            {
-              text: '构建选项',
-              link: '/config/build-options'
-            },
-            {
-              text: '预览选项',
-              link: '/config/preview-options'
-            },
-            {
-              text: '依赖优化选项',
-              link: '/config/dep-optimization-options'
-            },
-            {
-              text: 'SSR 选项',
-              link: '/config/ssr-options'
-            },
-            {
-              text: 'Worker 选项',
-              link: '/config/worker-options'
-            }
-          ]
-        }
-      ]
+      //'/guide/': genSidebarConfig('Guide'),
+      '/docs/started/': genSidebarConfigStartedDoc('Started'),
+      // '/docs/guide/': genSidebarConfigGuideDoc('Guide'),
+      // '/docs/architecture/': genSidebarConfigArchitectureDoc('Architecture', 'Kernel'),
+      // '/docs/router/': genSidebarConfigRouterDoc('Routing'),
+      // '/docs/template/': genSidebarConfigTemplateDoc('Template'),
+      // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
+      // '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
+      // '/docs/validate/': genSidebarConfigValidateDoc('Validate'),
+      // '/docs/component/': genSidebarConfigComponentDoc('Component', 'Encryption', 'Option', 'Cache', 'Auth', 'Filesystem', 'Console'),
+      // '/docs/test/': genSidebarConfigTestDoc('Test'),
+      // '/docs/developer/': genSidebarConfigDeveloperDoc('Developer'),
+      // '/guide/': genSidebarConfigGuideDoc('Guide'),
+      // '/config/': [
+      //   {
+      //     text: '配置',
+      //     items: [
+      //       {
+      //         text: '配置 Vite',
+      //         link: '/config/'
+      //       },
+      //       {
+      //         text: '共享选项',
+      //         link: '/config/shared-options'
+      //       },
+      //       {
+      //         text: '服务器选项',
+      //         link: '/config/server-options'
+      //       },
+      //       {
+      //         text: '构建选项',
+      //         link: '/config/build-options'
+      //       },
+      //       {
+      //         text: '预览选项',
+      //         link: '/config/preview-options'
+      //       },
+      //       {
+      //         text: '依赖优化选项',
+      //         link: '/config/dep-optimization-options'
+      //       },
+      //       {
+      //         text: 'SSR 选项',
+      //         link: '/config/ssr-options'
+      //       },
+      //       {
+      //         text: 'Worker 选项',
+      //         link: '/config/worker-options'
+      //       }
+      //     ]
+      //   }
+      // ]
     }
   },
 
@@ -268,3 +213,426 @@ export default defineConfig({
     }
   }
 })
+
+function genSidebarConfigGuideDoc (groupA) {
+  return [
+    {
+      text: groupA,
+      items: []
+    }
+  ]
+}
+
+function genSidebarConfig (groupA) {
+  return [
+    {
+      title: groupA,
+      items: []
+    }
+  ]
+}
+
+function genSidebarConfigStartedDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      items: [
+        {
+          text: 'Summary',
+          link: '/docs/started/'
+        },
+        {
+          text: 'Install',
+          link: '/docs/started/install'
+        },
+        {
+          text: 'Specification',
+          link: '/docs/started/specification'
+        },
+        {
+          text: 'Directory',
+          link: '/docs/started/directory'
+        },
+        {
+          text: 'Namespace',
+          link: '/docs/started/namespace'
+        },
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigArchitectureDoc (groupA, groupB) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+        'ioc',
+        'provider',
+        'event',
+        'manager',
+        {
+          title: groupB,
+          collapsable: true,
+          'children': [
+            'kernel',
+            'kernel/kernelconsole',
+            'kernel/app',
+            'kernel/functions',
+            'kernel/bootstrap/loadoption',
+            'kernel/bootstrap/loadi18n',
+            'kernel/bootstrap/registerexceptionruntime',
+            'kernel/bootstrap/traverseprovider',
+          ],
+        },
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigRouterDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+        'router',
+        'url',
+        'response',
+        'annotation',
+        'provider',
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigTemplateDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+        'var',
+        'quick',
+        'if',
+        'for',
+        'foreach',
+        'foreachplus',
+        'while',
+        'break',
+        'include',
+        'tagself',
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigDatabaseDoc (groupA, groupB, groupC, groupD, groupE, groupF) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+        'config',
+        'database',
+        'select',
+        {
+          title: groupB + ' Create',
+          collapsable: false,
+          'children': [
+            'create/insert',
+            'create/insertall',
+          ],
+        },
+        {
+          title: groupC + ' Delete',
+          collapsable: false,
+          'children': [
+            'delete/delete',
+            'delete/truncate',
+          ],
+        },
+        {
+          title: groupD + ' Update',
+          collapsable: false,
+          'children': [
+            'update/update',
+            'update/updatecolumn',
+            'update/updateincrease',
+            'update/updatedecrease',
+          ],
+        },
+        {
+          title: groupE + ' Read',
+          collapsable: false,
+          'children': [
+            'read/aggregate',
+            'read/find',
+            'read/findall',
+            'read/findone',
+            'read/finddynamics',
+            'read/select',
+            'read/list',
+            'read/value',
+          ],
+        },
+        {
+          title: groupF,
+          collapsable: false,
+          'children': [
+            'query/flow',
+            'query/sql',
+            'query/table',
+            'query/columns',
+            'query/where',
+            'query/wheredate',
+            'query/comment',
+            'query/prefix',
+            'query/forceindex',
+            'query/bind',
+            'query/join',
+            'query/union',
+            'query/orderby',
+            'query/groupby',
+            'query/having',
+            'query/havingdate',
+            'query/distinct',
+            'query/aggregate',
+            'query/limit',
+            'query/forupdate',
+            'query/reset',
+          ],
+        },
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigOrmDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+        'entity',
+        'define',
+        'toarray',
+        'conversion',
+        'create',
+        'update',
+        'replace',
+        'delete',
+        'event',
+        'relation',
+        'belongsto',
+        'hasmany',
+        'hasone',
+        'manymany',
+        'nested',
+        'select',
+        'unitofwork',
+        'repository',
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigValidateDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      'children': [
+        '',
+        'assert',
+        'helper',
+        'validator/accepted',
+        'validator/after',
+        'validator/allowedip',
+        'validator/alpha',
+        'validator/alphadash',
+        'validator/alphalower',
+        'validator/alphanum',
+        'validator/alphaupper',
+        'validator/isarray',
+        'validator/before',
+        'validator/between',
+        'validator/betweenequal',
+        'validator/boolean',
+        'validator/chinese',
+        'validator/chinesealphadash',
+        'validator/chinesealphanum',
+        'validator/date',
+        'validator/dateformat',
+        'validator/denyip',
+        'validator/different',
+        'validator/digit',
+        'validator/double',
+        'validator/email',
+        'validator/isempty',
+        'validator/equal',
+        'validator/equalgreaterthan',
+        'validator/equallessthan',
+        'validator/equalto',
+        'validator/isfloat',
+        'validator/greaterthan',
+        'validator/idcard',
+        'validator/in',
+        'validator/integer',
+        'validator/ip',
+        'validator/ipv4',
+        'validator/ipv6',
+        'validator/json',
+        'validator/lessthan',
+        'validator/lower',
+        'validator/luhn',
+        'validator/max',
+        'validator/maxlength',
+        'validator/min',
+        'validator/minlength',
+        'validator/mobile',
+        'validator/notbetween',
+        'validator/notbetweenequal',
+        'validator/notempty',
+        'validator/notequal',
+        'validator/notin',
+        'validator/notnull',
+        'validator/notsame',
+        'validator/isnull',
+        'validator/number',
+        'validator/phone',
+        'validator/qq',
+        'validator/regex',
+        'validator/required',
+        'validator/same',
+        'validator/strlen',
+        'validator/telephone',
+        'validator/timezone',
+        'validator/type',
+        'validator/unique',
+        'validator/upper',
+        'validator/url',
+        'validator/zipcode',
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, groupF, groupG) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        'support/str',
+        'support/arr',
+        'support/type',
+        'support/dto',
+        'support/enum',
+        {
+          title: 'Collection',
+          collapsable: false,
+          'children': [
+            'collection',
+            'collection/typedassociative',
+            'collection/typedint',
+            'collection/typedstring',
+          ],
+        },
+        'tree',
+        'pipeline',
+        'flow',
+        'linkedlist',
+        'queue',
+        'stack',
+        {
+          title: groupB,
+          collapsable: false,
+          'children': [
+            'encryption',
+            'encryption/helper',
+          ],
+        },
+        {
+          title: groupC,
+          collapsable: false,
+          'children': [
+            'option',
+            'option/composer',
+          ],
+        },
+        {
+          title: groupD,
+          collapsable: false,
+          'children': [
+            'cache',
+          ],
+        },
+        'session',
+        'page',
+        'debug',
+        'log',
+        {
+          title: 'HTTP',
+          collapsable: false,
+          'children': [
+            'http/',
+            'http/request',
+            'http/response',
+            'http/jsonresponse',
+            'http/redirectresponse',
+          ],
+        },
+        'cache',
+        {
+          title: groupF,
+          collapsable: false,
+          'children': [
+            'filesystem',
+            'filesystem/helper',
+          ],
+        },
+        {
+          title: groupG,
+          collapsable: false,
+          'children': [
+            'console',
+            'console/makecommand',
+            'console/runcommand',
+          ],
+        },
+        'view',
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigTestDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+      ]
+    }
+  ]
+}
+
+function genSidebarConfigDeveloperDoc (groupA) {
+  return [
+    {
+      title: groupA,
+      collapsable: false,
+      children: [
+        '',
+      ]
+    }
+  ]
+}

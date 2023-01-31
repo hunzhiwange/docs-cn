@@ -22,34 +22,34 @@ const dataHost = 'https://sponsors.vuejs.org'
 const dataUrl = `${dataHost}/vite.json`
 
 export function useSponsor() {
-  onMounted(async () => {
-    if (data.value) {
-      return
-    }
-
-    const result = await fetch(dataUrl)
-    const json = await result.json()
-
-    data.value = mapSponsors(json)
-  })
+  // onMounted(async () => {
+  //   if (data.value) {
+  //     return
+  //   }
+  //
+  //   const result = await fetch(dataUrl)
+  //   const json = await result.json()
+  //
+  //   data.value = mapSponsors(json)
+  // })
 
   return {
-    data,
+    //data,
   }
 }
 
 function mapSponsors(sponsors: Sponsors) {
   return [
-    {
-      tier: 'Platinum Sponsor',
-      size: 'big',
-      items: mapImgPath(sponsors['platinum']),
-    },
-    {
-      tier: 'Gold Sponsors',
-      size: 'medium',
-      items: mapImgPath(sponsors['gold']),
-    },
+    // {
+    //   tier: 'Platinum Sponsor',
+    //   size: 'big',
+    //   items: mapImgPath(sponsors['platinum']),
+    // },
+    // {
+    //   tier: 'Gold Sponsors',
+    //   size: 'medium',
+    //   items: mapImgPath(sponsors['gold']),
+    // },
   ]
 }
 

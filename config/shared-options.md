@@ -1,3 +1,6 @@
+---
+title: 共享配置
+---
 # 共享配置 {#shared-options}
 
 ## root {#root}

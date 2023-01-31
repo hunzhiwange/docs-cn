@@ -1,3 +1,6 @@
+---
+title: 故障排除
+---
 # 故障排除 {#troubleshooting}
 
 > 你还可以查看 [Rollup 的故障排除指南](https://rollupjs.org/guide/en/#troubleshooting) 了解更多。

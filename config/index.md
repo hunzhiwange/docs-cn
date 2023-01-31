@@ -1,3 +1,6 @@
+---
+title: 配置 Vite
+---
 # 配置 Vite {#configuring-vite}
 
 当以命令行方式运行 `vite` 时，Vite 会自动解析 [项目根目录](/guide/#index-html-and-project-root) 下名为 `vite.config.js` 的文件。
