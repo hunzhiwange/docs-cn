@@ -18,7 +18,7 @@ import { core, emeriti, cnTranslator } from './_data/team'
   <VPTeamPageTitle>
     <template #title>认识我们的团队</template>
     <template #lead>
-      Vite 目前由一个国际化的团队开发和维护，<br>
+      QueryPHP 目前由一个人的团队开发和维护，<br>
       下面是对一些团队成员的介绍。
     </template>
   </VPTeamPageTitle>
@@ -26,7 +26,7 @@ import { core, emeriti, cnTranslator } from './_data/team'
   <VPTeamPageSection>
     <template #title>中文文档翻译维护者</template>
     <template #lead>
-      官方中文文档目前由以下 Vite 团队成员进行维护。
+      官方中文文档目前由以下 QueryPHP 团队成员进行维护。
     </template>
     <template #members>
       <VPTeamMembers size="small" :members="cnTranslator" />

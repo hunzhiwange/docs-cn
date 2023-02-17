@@ -8,7 +8,7 @@ const ogTitle = 'QueryPHP'
 const ogUrl = 'https://queryphp.com'
 
 export default defineConfig({
-  title: 'QueryPHP Documentation',
+  title: 'QueryPHP',
   description: 'High Performance PHP Progressive Framework.',
   lang: 'zh-CN',
 
