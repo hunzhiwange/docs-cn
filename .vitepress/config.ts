@@ -152,7 +152,7 @@ export default defineConfig({
       //'/guide/': genSidebarConfig('Guide'),
       '/docs/started/': genSidebarConfigStartedDoc('Started'),
       // '/docs/guide/': genSidebarConfigGuideDoc('Guide'),
-      // '/docs/architecture/': genSidebarConfigArchitectureDoc('Architecture', 'Kernel'),
+      '/docs/architecture/': genSidebarConfigArchitectureDoc('Architecture', 'Kernel'),
       // '/docs/router/': genSidebarConfigRouterDoc('Routing'),
       '/docs/template/': genSidebarConfigTemplateDoc('Template'),
       // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
@@ -266,13 +266,27 @@ function genSidebarConfigArchitectureDoc (groupA, groupB) {
   return [
     {
       title: groupA,
-      collapsable: false,
-      children: [
-        '',
-        'ioc',
-        'provider',
-        'event',
-        'manager',
+      items: [
+        {
+          text: 'Summary',
+          link: '/docs/architecture/'
+        },
+        {
+          text: 'IOC 容器',
+          link: '/docs/architecture/ioc'
+        },
+        {
+          text: '服务提供者',
+          link: '/docs/architecture/provider'
+        },
+        {
+          text: '事件',
+          link: '/docs/architecture/event'
+        },
+        {
+          text: '内核',
+          link: '/docs/architecture/kernel'
+        },
         {
           title: groupB,
           collapsable: true,
@@ -358,36 +372,6 @@ function genSidebarConfigTemplateDoc (groupA) {
     }
   ]
 }
-
-// function genSidebarConfigStartedDoc (groupA) {
-//   return [
-//     {
-//       title: groupA,
-//       items: [
-//         {
-//           text: 'Summary',
-//           link: '/docs/started/'
-//         },
-//         {
-//           text: 'Install',
-//           link: '/docs/started/install'
-//         },
-//         {
-//           text: 'Specification',
-//           link: '/docs/started/specification'
-//         },
-//         {
-//           text: 'Directory',
-//           link: '/docs/started/directory'
-//         },
-//         {
-//           text: 'Namespace',
-//           link: '/docs/started/namespace'
-//         },
-//       ]
-//     }
-//   ]
-// }
 
 function genSidebarConfigDatabaseDoc (groupA, groupB, groupC, groupD, groupE, groupF) {
   return [
