@@ -7,5 +7,4 @@ node_modules/
 package-lock.json
 yarn.lock
 .vitepress/dist
-.vitepress/cache
 *.local
