@@ -153,7 +153,7 @@ export default defineConfig({
       '/docs/started/': genSidebarConfigStartedDoc('Started'),
       // '/docs/guide/': genSidebarConfigGuideDoc('Guide'),
       '/docs/architecture/': genSidebarConfigArchitectureDoc('Architecture', 'Kernel'),
-      // '/docs/router/': genSidebarConfigRouterDoc('Routing'),
+      '/docs/router/': genSidebarConfigRouterDoc('Routing'),
       '/docs/template/': genSidebarConfigTemplateDoc('Template'),
       // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
       // '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
@@ -329,14 +329,31 @@ function genSidebarConfigRouterDoc (groupA) {
   return [
     {
       title: groupA,
-      collapsable: false,
-      children: [
-        '',
-        'router',
-        'url',
-        'response',
-        'annotation',
-        'provider',
+      items: [
+        {
+          text: '路由',
+          link: '/docs/router/'
+        },
+        {
+          text: 'Router',
+          link: '/docs/router/router'
+        },
+        {
+          text: 'url',
+          link: '/docs/router/url'
+        },
+        {
+          text: 'response',
+          link: '/docs/router/response'
+        },
+        {
+          text: 'annotation',
+          link: '/docs/router/annotation'
+        },
+        {
+          text: 'provider',
+          link: '/docs/router/provider'
+        },
       ]
     }
   ]
@@ -347,6 +364,10 @@ function genSidebarConfigTemplateDoc (groupA) {
     {
       title: groupA,
       items: [
+        {
+          text: '模板',
+          link: '/docs/template/'
+        },
         {
           text: '变量',
           link: '/docs/template/var'
