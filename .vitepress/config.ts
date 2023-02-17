@@ -289,16 +289,35 @@ function genSidebarConfigArchitectureDoc (groupA, groupB) {
         },
         {
           title: groupB,
-          collapsable: true,
-          'children': [
-            'kernel',
-            'kernel/kernelconsole',
-            'kernel/app',
-            'kernel/functions',
-            'kernel/bootstrap/loadoption',
-            'kernel/bootstrap/loadi18n',
-            'kernel/bootstrap/registerexceptionruntime',
-            'kernel/bootstrap/traverseprovider',
+          items: [
+            {
+              text: '命令行内核',
+              link: '/docs/architecture/kernel/kernelconsole'
+            },
+            {
+              text: '应用',
+              link: '/docs/architecture/kernel/app'
+            },
+            {
+              text: '内核助手函数',
+              link: '/docs/architecture/kernel/functions'
+            },
+            {
+              text: '初始化载入配置',
+              link: '/docs/architecture/kernel/bootstrap/loadoption'
+            },
+            {
+              text: '初始化载入语言包',
+              link: '/docs/architecture/kernel/bootstrap/loadi18n'
+            },
+            {
+              text: '初始化注册异常运行时',
+              link: '/docs/architecture/kernel/bootstrap/registerexceptionruntime'
+            },
+            {
+              text: '初始化遍历服务提供者注册服务',
+              link: '/docs/architecture/kernel/bootstrap/traverseprovider'
+            },
           ],
         },
       ]
