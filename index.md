@@ -6,7 +6,7 @@ titleTemplate: High performance PHP progressive framework
 
 hero:
   name: QueryPHP
-  text: High performance PHP progressive framework.
+  text: 现代化渐进式框架
   tagline: QueryPHP is a modern, high performance PHP progressive framework, to provide a stable and reliable high-quality enterprise level framework as its historical mission.USE LEEVEL DO BETTER.
   image:
     src: /hero-old.png

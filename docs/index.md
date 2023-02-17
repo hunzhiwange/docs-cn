@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Docs/Preface/PrefaceSummaryDoc.php](https://github.com/hunzhiwange/framework/blob/master/tests/Docs/Preface/PrefaceSummaryDoc.php)
 :::
-    
+
 再小的个体都有自己的品牌，QueryPHP 与你相约这个时代。
 
 ## 概览

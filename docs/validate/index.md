@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/ValidatorTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/ValidatorTest.php)
 :::
-    
+
 **构造器函数原型**
 
 ``` php
@@ -23,7 +23,6 @@ public function __construct(array $data = [], array $rules = [], array $names = 
 ``` php
 <?php
 
-use I18nMock;
 use Leevel\Di\Container;
 use Leevel\Validate\IValidator;
 use Leevel\Validate\Validate;
@@ -43,10 +42,10 @@ public function testBaseUse(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => 'required|max_length:10',
+            'name' => 'required|max_length:10',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -69,13 +68,13 @@ public function testBaseUse(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame([], $validate->error());
-    $this->assertSame([], $validate->getMessage());
-    $this->assertSame(['name' => '小牛哥'], $validate->getData());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame([], $validate->error());
+    static::assertSame([], $validate->getMessage());
+    static::assertSame(['name' => '小牛哥'], $validate->getData());
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
@@ -83,7 +82,7 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ## 验证器规则支持数组写法
 
 可以通过 `success` 判断是否通过验证，`error` 返回错误消息。
@@ -97,10 +96,10 @@ public function testRuleIsArray(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => ['required', 'max_length:10'],
+            'name' => ['required', 'max_length:10'],
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -123,13 +122,13 @@ public function testRuleIsArray(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame([], $validate->error());
-    $this->assertSame([], $validate->getMessage());
-    $this->assertSame(['name' => '小牛哥'], $validate->getData());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame([], $validate->error());
+    static::assertSame([], $validate->getMessage());
+    static::assertSame(['name' => '小牛哥'], $validate->getData());
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
@@ -137,7 +136,7 @@ public function testRuleIsArray(): void
     );
 }
 ```
-    
+
 ## 验证器规则支持数组写法:每一项都是一个数组(第一个是规则，第一个是参数非数组兼容为数组)
 
 可以通过 `success` 判断是否通过验证，`error` 返回错误消息。
@@ -151,10 +150,10 @@ public function testRuleIsArray2(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => ['required', ['max_length', 10]],
+            'name' => ['required', ['max_length', 10]],
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -177,13 +176,13 @@ public function testRuleIsArray2(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame([], $validate->error());
-    $this->assertSame([], $validate->getMessage());
-    $this->assertSame(['name' => '小牛哥'], $validate->getData());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame([], $validate->error());
+    static::assertSame([], $validate->getMessage());
+    static::assertSame(['name' => '小牛哥'], $validate->getData());
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
@@ -191,7 +190,7 @@ public function testRuleIsArray2(): void
     );
 }
 ```
-    
+
 ## 验证器规则支持数组写法:每一项都是一个数组(第一个是规则，第一个是参数数组用法)
 
 可以通过 `success` 判断是否通过验证，`error` 返回错误消息。
@@ -205,10 +204,10 @@ public function testRuleIsArray3(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => ['required', ['max_length', [10]]],
+            'name' => ['required', ['max_length', [10]]],
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -231,13 +230,13 @@ public function testRuleIsArray3(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame([], $validate->error());
-    $this->assertSame([], $validate->getMessage());
-    $this->assertSame(['name' => '小牛哥'], $validate->getData());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame([], $validate->error());
+    static::assertSame([], $validate->getMessage());
+    static::assertSame(['name' => '小牛哥'], $validate->getData());
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
@@ -245,7 +244,7 @@ public function testRuleIsArray3(): void
     );
 }
 ```
-    
+
 ## 验证器规则支持数组每一项字符串支持分隔:可以用于实际业务中合并验证规则的需求
 
 可以通过 `success` 判断是否通过验证，`error` 返回错误消息。
@@ -259,10 +258,10 @@ public function testRuleIsArrayStringMixed(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => ['required|chinese|min_length:1', ['max_length', [10]]],
+            'name' => ['required|chinese|min_length:1', ['max_length', [10]]],
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -295,13 +294,13 @@ public function testRuleIsArrayStringMixed(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame([], $validate->error());
-    $this->assertSame([], $validate->getMessage());
-    $this->assertSame(['name' => '小牛哥'], $validate->getData());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame([], $validate->error());
+    static::assertSame([], $validate->getMessage());
+    static::assertSame(['name' => '小牛哥'], $validate->getData());
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
@@ -309,7 +308,7 @@ public function testRuleIsArrayStringMixed(): void
     );
 }
 ```
-    
+
 ## make 创建验证器
 
 ``` php
@@ -320,10 +319,10 @@ public function testMake(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => 'required|max_length:10',
+            'name' => 'required|max_length:10',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -344,13 +343,13 @@ public function testMake(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame([], $validate->error());
-    $this->assertSame([], $validate->getMessage());
-    $this->assertSame(['name' => '小牛哥'], $validate->getData());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame([], $validate->error());
+    static::assertSame([], $validate->getMessage());
+    static::assertSame(['name' => '小牛哥'], $validate->getData());
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
@@ -358,7 +357,7 @@ public function testMake(): void
     );
 }
 ```
-    
+
 ## 验证器校验错误
 
 ``` php
@@ -369,10 +368,10 @@ public function testError(): void
             'name' => '小牛哥',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -384,10 +383,10 @@ public function testError(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -395,7 +394,7 @@ public function testError(): void
     );
 }
 ```
-    
+
 ## 设置校验数据
 
 ``` php
@@ -406,10 +405,10 @@ public function testData(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -421,10 +420,10 @@ public function testData(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -433,11 +432,11 @@ public function testData(): void
 
     $validate->data(['name' => '12345678901234567890']);
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 }
 ```
-    
+
 ## 添加校验数据
 
 ``` php
@@ -447,10 +446,10 @@ public function testAddData(): void
         [
         ],
         [
-            'name'     => 'required|min_length:20|'.IValidator::OPTIONAL,
+            'name' => 'required|min_length:20|'.IValidator::OPTIONAL,
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -462,15 +461,15 @@ public function testAddData(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->addData(['name' => '中国']);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -478,7 +477,7 @@ public function testAddData(): void
     );
 }
 ```
-    
+
 ## 设置校验规则
 
 ``` php
@@ -491,7 +490,7 @@ public function testRule(): void
         [
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -503,15 +502,15 @@ public function testRule(): void
         }
         eot;
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->rule(['name' => 'required|min_length:20']);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -520,11 +519,11 @@ public function testRule(): void
 
     $validate->rule(['name' => 'required|max_length:20']);
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 }
 ```
-    
+
 ## 设置校验规则支持条件
 
 第一个闭包条件参数不为空，如果闭包返回 `true` 则添加改验证规则，否则忽略。
@@ -539,12 +538,12 @@ public function testRuleIf(): void
         [
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->rule(['name' => 'required|min_length:20'], function (array $data) {
         $this->assertSame(['name' => '中国'], $data);
@@ -556,18 +555,18 @@ public function testRuleIf(): void
         []
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
         )
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 }
 ```
-    
+
 ## 添加校验规则
 
 ``` php
@@ -580,12 +579,12 @@ public function testAddRule(): void
         [
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->addRule(['name' => 'required|min_length:20']);
 
@@ -606,15 +605,15 @@ public function testAddRule(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
         )
     );
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -624,7 +623,7 @@ public function testAddRule(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -632,7 +631,7 @@ public function testAddRule(): void
     );
 }
 ```
-    
+
 ## 添加校验规则支持条件
 
 第一个闭包条件参数不为空，如果闭包返回 `true` 则添加改验证规则，否则忽略。
@@ -647,12 +646,12 @@ public function testAddRuleIf(): void
         [
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->addRule(['name' => 'required|min_length:20'], function (array $data) {
         $this->assertSame(['name' => '中国'], $data);
@@ -664,18 +663,18 @@ public function testAddRuleIf(): void
         []
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule()
         )
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 }
 ```
-    
+
 ## 设置验证消息
 
 ``` php
@@ -686,10 +685,10 @@ public function testMessage(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -701,10 +700,10 @@ public function testMessage(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -721,10 +720,10 @@ public function testMessage(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -732,7 +731,7 @@ public function testMessage(): void
     );
 }
 ```
-    
+
 ## 添加验证消息
 
 设置规则所有字段的验证消息。
@@ -745,10 +744,10 @@ public function testAddMessage(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -760,10 +759,10 @@ public function testAddMessage(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -780,10 +779,10 @@ public function testAddMessage(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -791,7 +790,7 @@ public function testAddMessage(): void
     );
 }
 ```
-    
+
 ## 添加指定字段验证规则消息
 
 可以单独为某个字段指定验证消息规则，其它字段验证消息保持不变。
@@ -804,10 +803,10 @@ public function testAddMessageForOneField(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -819,10 +818,10 @@ public function testAddMessageForOneField(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -839,10 +838,10 @@ public function testAddMessageForOneField(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -850,7 +849,7 @@ public function testAddMessageForOneField(): void
     );
 }
 ```
-    
+
 ## 添加指定字段验证规则消息(圆点分隔)
 
 通过圆点 `.` 分隔开来。
@@ -863,10 +862,10 @@ public function testAddMessageForOneFieldSeparateByDot(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -878,10 +877,10 @@ public function testAddMessageForOneFieldSeparateByDot(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -898,10 +897,10 @@ public function testAddMessageForOneFieldSeparateByDot(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -909,7 +908,7 @@ public function testAddMessageForOneFieldSeparateByDot(): void
     );
 }
 ```
-    
+
 ## 添加指定多层子字段验证规则消息(圆点分隔)
 
 通过圆点 `.` 分隔开来。
@@ -925,12 +924,12 @@ public function testSubDataWithSubMessage(): void
             'name.sub.sub' => 'required|'.Validator::MUST,
         ],
         [
-            'name'     => '歌曲',
+            'name' => '歌曲',
         ]
     );
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -940,7 +939,7 @@ public function testSubDataWithSubMessage(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -949,8 +948,8 @@ public function testSubDataWithSubMessage(): void
 
     $validate->addMessage(['name.sub.sub' => ['required' => '字段 {field} 不能为空']]);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -960,7 +959,7 @@ public function testSubDataWithSubMessage(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -968,7 +967,7 @@ public function testSubDataWithSubMessage(): void
     );
 }
 ```
-    
+
 ## 添加通配符字段验证规则消息
 
 通过 `*` 来代表通配符。
@@ -984,12 +983,12 @@ public function testWildcardSubDataWithSubMessage(): void
             'name.sub.sub' => 'required|'.Validator::MUST,
         ],
         [
-            'name'     => '歌曲',
+            'name' => '歌曲',
         ]
     );
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -999,7 +998,7 @@ public function testWildcardSubDataWithSubMessage(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1008,8 +1007,8 @@ public function testWildcardSubDataWithSubMessage(): void
 
     $validate->addMessage(['name*' => ['required' => 'sub {field} must have value']]);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -1019,7 +1018,7 @@ public function testWildcardSubDataWithSubMessage(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1027,7 +1026,7 @@ public function testWildcardSubDataWithSubMessage(): void
     );
 }
 ```
-    
+
 ## 设置验证字段隐射
 
 ``` php
@@ -1038,10 +1037,10 @@ public function testName(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -1053,11 +1052,11 @@ public function testName(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '用户名'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '用户名'], $validate->getName());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1074,10 +1073,10 @@ public function testName(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1085,7 +1084,7 @@ public function testName(): void
     );
 }
 ```
-    
+
 ## 添加验证字段隐射
 
 ``` php
@@ -1096,10 +1095,10 @@ public function testAddName(): void
             'name' => '中国',
         ],
         [
-            'name'     => 'required|min_length:20',
+            'name' => 'required|min_length:20',
         ],
         [
-            'name'     => '用户名',
+            'name' => '用户名',
         ]
     );
 
@@ -1111,11 +1110,11 @@ public function testAddName(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '用户名'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '用户名'], $validate->getName());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1132,10 +1131,10 @@ public function testAddName(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1143,7 +1142,7 @@ public function testAddName(): void
     );
 }
 ```
-    
+
 ## 设置验证规则别名
 
 ``` php
@@ -1154,10 +1153,10 @@ public function testAlias(): void
             'name' => '成都',
         ],
         [
-            'name'     => 'required|min_length:5',
+            'name' => 'required|min_length:5',
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
@@ -1169,11 +1168,11 @@ public function testAlias(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '地名'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '地名'], $validate->getName());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1191,10 +1190,10 @@ public function testAlias(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1202,7 +1201,7 @@ public function testAlias(): void
     );
 }
 ```
-    
+
 ## 批量设置验证规则别名
 
 ``` php
@@ -1213,10 +1212,10 @@ public function testAliasMany(): void
             'name' => '成都',
         ],
         [
-            'name'     => 'required|min_length:5',
+            'name' => 'required|min_length:5',
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
@@ -1228,11 +1227,11 @@ public function testAliasMany(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '地名'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '地名'], $validate->getName());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1250,10 +1249,10 @@ public function testAliasMany(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1261,7 +1260,7 @@ public function testAliasMany(): void
     );
 }
 ```
-    
+
 ## 验证后回调
 
 无论成功或者失败都会执行回调。
@@ -1274,22 +1273,22 @@ public function testAfter(): void
             'name' => '成都',
         ],
         [
-            'name'     => 'required|max_length:10',
+            'name' => 'required|max_length:10',
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
-    $validate->after(function ($v) {
+    $validate->after(function ($v): void {
         $this->assertSame(['name' => '地名'], $v->getName());
     });
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 }
 ```
-    
+
 ## 自定义扩展验证规则
 
 ``` php
@@ -1300,10 +1299,10 @@ public function testExtend(): void
             'name' => 1,
         ],
         [
-            'name'     => 'required|custom_rule:10',
+            'name' => 'required|custom_rule:10',
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
@@ -1315,16 +1314,16 @@ public function testExtend(): void
         return false;
     });
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->data(['name' => 0]);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 }
 ```
-    
+
 ## 直接调用验证规则
 
 ``` php
@@ -1332,14 +1331,14 @@ public function testCall(): void
 {
     $validate = new Validator();
 
-    $this->assertTrue($validate->minLength('成都', 1));
-    $this->assertTrue($validate->minLength('成都', 2));
-    $this->assertFalse($validate->minLength('成都', 3));
-    $this->assertFalse($validate->alpha('成都'));
-    $this->assertTrue($validate->alpha('cd'));
+    static::assertTrue($validate->minLength('成都', 1));
+    static::assertTrue($validate->minLength('成都', 2));
+    static::assertFalse($validate->minLength('成都', 3));
+    static::assertFalse($validate->alpha('成都'));
+    static::assertTrue($validate->alpha('cd'));
 }
 ```
-    
+
 ## 直接调用自定义验证规则
 
 ``` php
@@ -1355,11 +1354,11 @@ public function testCallCustom(): void
         return false;
     });
 
-    $this->assertTrue($validate->customFooBar('成都'));
-    $this->assertFalse($validate->customFooBar('魂之挽歌'));
+    static::assertTrue($validate->customFooBar('成都'));
+    static::assertFalse($validate->customFooBar('魂之挽歌'));
 }
 ```
-    
+
 ## 自定义扩展验证规则(类)
 
 自定义扩展规则可以为一个独立的类，例如下面的例子。
@@ -1400,22 +1399,22 @@ public function testCallExtendClass(): void
             'name' => 1,
         ],
         [
-            'name'     => 'custom_foobar',
+            'name' => 'custom_foobar',
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
     $container = new Container();
     $validate->setContainer($container);
     $validate->extend('custom_foobar', ExtendClassTest1::class);
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
     $validate->data(['name' => 'foo']);
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## 自定义扩展验证规则(类)，指定验证方法
 
 自定义扩展规则可以为一个独立的类，例如下面的例子。
@@ -1456,22 +1455,22 @@ public function testCallExtendClassWithCustomMethod(): void
             'name' => 2,
         ],
         [
-            'name'     => 'custom_foobar',
+            'name' => 'custom_foobar',
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
     $container = new Container();
     $validate->setContainer($container);
     $validate->extend('custom_foobar', ExtendClassTest1::class.'@handle2');
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
     $validate->data(['name' => 'foo']);
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## 验证失败则跳过其它验证规则
 
 只需要在校验规则中加入 `SKIP_OTHER` 即可。
@@ -1482,16 +1481,16 @@ public function testShouldSkipOther(): void
 {
     $validate = new Validator(
         [
-            'name'  => '',
+            'name' => '',
             'value' => '',
         ],
         [
-            'name'     => 'required|alpha',
-            'value'    => 'required',
+            'name' => 'required|alpha',
+            'value' => 'required',
         ],
         [
-            'name'      => '地名',
-            'value'     => '值',
+            'name' => '地名',
+            'value' => '值',
         ]
     );
 
@@ -1507,11 +1506,11 @@ public function testShouldSkipOther(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '地名', 'value' => '值'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '地名', 'value' => '值'], $validate->getName());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1520,8 +1519,8 @@ public function testShouldSkipOther(): void
 
     $validate->addRule(['name' => 'required|alpha|'.Validator::SKIP_OTHER]);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -1531,7 +1530,7 @@ public function testShouldSkipOther(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1539,7 +1538,7 @@ public function testShouldSkipOther(): void
     );
 }
 ```
-    
+
 ## 验证失败则跳过自身其它验证规则
 
 只需要在校验规则中加入 `SKIP_SELF` 即可，只会跳过当前字段的其他验证规则，而其它字段的验证规则不受影响。
@@ -1550,16 +1549,16 @@ public function testShouldSkipSelf(): void
 {
     $validate = new Validator(
         [
-            'name'  => '',
+            'name' => '',
             'value' => '',
         ],
         [
-            'name'     => 'required|alpha',
-            'value'    => 'required',
+            'name' => 'required|alpha',
+            'value' => 'required',
         ],
         [
-            'name'      => '地名',
-            'value'     => '值',
+            'name' => '地名',
+            'value' => '值',
         ]
     );
 
@@ -1575,11 +1574,11 @@ public function testShouldSkipSelf(): void
         }
         eot;
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '地名', 'value' => '值'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '地名', 'value' => '值'], $validate->getName());
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1588,8 +1587,8 @@ public function testShouldSkipSelf(): void
 
     $validate->addRule(['name' => 'required|alpha|'.Validator::SKIP_SELF]);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -1602,7 +1601,7 @@ public function testShouldSkipSelf(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1610,7 +1609,7 @@ public function testShouldSkipSelf(): void
     );
 }
 ```
-    
+
 ## 值为 null 会跳过可选验证规则
 
 如果校验规则中有 `OPTIONAL` ，那么字段值为 `null` 则不会执行验证规则。
@@ -1624,19 +1623,19 @@ public function testOptional(): void
             'name' => null,
         ],
         [
-            'name'     => 'required|'.Validator::OPTIONAL,
+            'name' => 'required|'.Validator::OPTIONAL,
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame(['name' => '地名'], $validate->getName());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame(['name' => '地名'], $validate->getName());
 }
 ```
-    
+
 ## 值为 null 默认必须验证
 
 我们加入 `MUST` 或者默认不指定，那么 `null` 也会执行验证。
@@ -1650,20 +1649,20 @@ public function testMustRequired(): void
             'name' => null,
         ],
         [
-            'name'     => 'required|'.Validator::OPTIONAL,
+            'name' => 'required|'.Validator::OPTIONAL,
         ],
         [
-            'name'     => '地名',
+            'name' => '地名',
         ]
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
-    $this->assertSame(['name' => '地名'], $validate->getName());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
+    static::assertSame(['name' => '地名'], $validate->getName());
 
     $validate->rule(['name' => 'required']);
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -1673,7 +1672,7 @@ public function testMustRequired(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1681,8 +1680,8 @@ public function testMustRequired(): void
     );
 
     $validate->data(['name' => null]);
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
 
     $error = <<<'eot'
         {
@@ -1692,7 +1691,7 @@ public function testMustRequired(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error()
@@ -1700,7 +1699,7 @@ public function testMustRequired(): void
     );
 }
 ```
-    
+
 ## 通配符验证规则支持
 
 可以通过 `*` 来表示通配符验证规则。
@@ -1711,27 +1710,27 @@ public function testWildcardRule(): void
 {
     $validate = new Validator(
         [
-            'name'  => '',
+            'name' => '',
             'nafoo' => '',
             'nabar' => '',
         ],
         [
         ],
         [
-            'name'      => '地名',
-            'nafoo'     => 'foo',
-            'nabar'     => 'bar',
+            'name' => '地名',
+            'nafoo' => 'foo',
+            'nabar' => 'bar',
         ]
     );
 
-    $this->assertTrue($validate->success());
-    $this->assertFalse($validate->fail());
+    static::assertTrue($validate->success());
+    static::assertFalse($validate->fail());
 
     $validate->rule(['na*' => 'required']);
 
-    $this->assertFalse($validate->success());
-    $this->assertTrue($validate->fail());
-    $this->assertSame(['name' => '地名', 'nafoo' => 'foo', 'nabar' => 'bar'], $validate->getName());
+    static::assertFalse($validate->success());
+    static::assertTrue($validate->fail());
+    static::assertSame(['name' => '地名', 'nafoo' => 'foo', 'nabar' => 'bar'], $validate->getName());
 
     $data = <<<'eot'
         {
@@ -1741,7 +1740,7 @@ public function testWildcardRule(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $validate->getData()
@@ -1771,7 +1770,7 @@ public function testWildcardRule(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $rule,
         $this->varJson(
             $validate->getRule(),
@@ -1793,7 +1792,7 @@ public function testWildcardRule(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $error,
         $this->varJson(
             $validate->error(),

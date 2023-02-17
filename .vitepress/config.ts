@@ -49,19 +49,19 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/hunzhiwange/queryphp' },
     ],
 
-    algolia: {
-      appId: '7H67QR5P0A',
-      apiKey: 'deaab78bcdfe96b599497d25acc6460e',
-      indexName: 'vitejs',
-      searchParameters: {
-        facetFilters: ['tags:cn']
-      }
-    },
+    // algolia: {
+    //   appId: '7H67QR5P0A',
+    //   apiKey: 'deaab78bcdfe96b599497d25acc6460e',
+    //   indexName: 'vitejs',
+    //   searchParameters: {
+    //     facetFilters: ['tags:cn']
+    //   }
+    // },
 
-    carbonAds: {
-      code: 'CEBIEK3N',
-      placement: 'vitejsdev',
-    },
+    // carbonAds: {
+    //   code: 'CEBIEK3N',
+    //   placement: 'vitejsdev',
+    // },
 
     localeLinks: {
       text: 'English',
@@ -154,7 +154,7 @@ export default defineConfig({
       // '/docs/guide/': genSidebarConfigGuideDoc('Guide'),
       // '/docs/architecture/': genSidebarConfigArchitectureDoc('Architecture', 'Kernel'),
       // '/docs/router/': genSidebarConfigRouterDoc('Routing'),
-      // '/docs/template/': genSidebarConfigTemplateDoc('Template'),
+      '/docs/template/': genSidebarConfigTemplateDoc('Template'),
       // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
       // '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
       // '/docs/validate/': genSidebarConfigValidateDoc('Validate'),
@@ -313,23 +313,81 @@ function genSidebarConfigTemplateDoc (groupA) {
   return [
     {
       title: groupA,
-      collapsable: false,
-      children: [
-        '',
-        'var',
-        'quick',
-        'if',
-        'for',
-        'foreach',
-        'foreachplus',
-        'while',
-        'break',
-        'include',
-        'tagself',
+      items: [
+        {
+          text: '变量',
+          link: '/docs/template/var'
+        },
+        {
+          text: '快捷标签',
+          link: '/docs/template/quick'
+        },
+        {
+          text: '流程控制',
+          link: '/docs/template/if'
+        },
+        {
+          text: 'For 循环',
+          link: '/docs/template/for'
+        },
+        {
+          text: 'Foreach 循环',
+          link: '/docs/template/foreach'
+        },
+        {
+          text: 'Foreach 增强循环',
+          link: '/docs/template/foreachplus'
+        },
+        {
+          text: 'While 循环',
+          link: '/docs/template/while'
+        },
+        {
+          text: '跳出循环',
+          link: '/docs/template/break'
+        },
+        {
+          text: 'Include 标签',
+          link: '/docs/template/include'
+        },
+        {
+          text: 'Tagself 保护标签',
+          link: '/docs/template/tagself'
+        },
       ]
     }
   ]
 }
+
+// function genSidebarConfigStartedDoc (groupA) {
+//   return [
+//     {
+//       title: groupA,
+//       items: [
+//         {
+//           text: 'Summary',
+//           link: '/docs/started/'
+//         },
+//         {
+//           text: 'Install',
+//           link: '/docs/started/install'
+//         },
+//         {
+//           text: 'Specification',
+//           link: '/docs/started/specification'
+//         },
+//         {
+//           text: 'Directory',
+//           link: '/docs/started/directory'
+//         },
+//         {
+//           text: 'Namespace',
+//           link: '/docs/started/namespace'
+//         },
+//       ]
+//     }
+//   ]
+// }
 
 function genSidebarConfigDatabaseDoc (groupA, groupB, groupC, groupD, groupE, groupF) {
   return [
