@@ -158,7 +158,7 @@ export default defineConfig({
       // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
       // '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
       // '/docs/validate/': genSidebarConfigValidateDoc('Validate'),
-      // '/docs/component/': genSidebarConfigComponentDoc('Component', 'Encryption', 'Option', 'Cache', 'Auth', 'Filesystem', 'Console'),
+      '/docs/component/': genSidebarConfigComponentDoc('Component', 'Encryption', 'Option', 'Cache', 'Auth', 'Filesystem', 'Console'),
       // '/docs/test/': genSidebarConfigTestDoc('Test'),
       // '/docs/developer/': genSidebarConfigDeveloperDoc('Developer'),
       // '/guide/': genSidebarConfigGuideDoc('Guide'),
@@ -282,6 +282,10 @@ function genSidebarConfigArchitectureDoc (groupA, groupB) {
         {
           text: '事件',
           link: '/docs/architecture/event'
+        },
+        {
+          text: 'Manager',
+          link: '/docs/architecture/manager'
         },
         {
           text: '内核',
@@ -610,18 +614,31 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
   return [
     {
       title: groupA,
-      collapsable: false,
-      children: [
-        'support/str',
-        'support/arr',
-        'support/type',
-        'support/dto',
-        'support/enum',
+      items: [
         {
-          title: 'Collection',
-          collapsable: false,
-          'children': [
-            'collection',
+          text: 'str',
+          link: '/docs/component/support/str'
+        },
+        {
+          text: 'arr',
+          link: '/docs/component/support/arr'
+        },
+        {
+          text: 'type',
+          link: '/docs/component/support/type'
+        },
+        {
+          text: 'dto',
+          link: '/docs/component/support/dto'
+        },
+        {
+          text: 'enum',
+          link: '/docs/component/support/enum'
+        },
+        {
+          text: 'Collection',
+          link: '/docs/component/support/Collection/',
+          items: [
             'collection/typedassociative',
             'collection/typedint',
             'collection/typedstring',
@@ -635,24 +652,21 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
         'stack',
         {
           title: groupB,
-          collapsable: false,
-          'children': [
+          items: [
             'encryption',
             'encryption/helper',
           ],
         },
         {
           title: groupC,
-          collapsable: false,
-          'children': [
+          items: [
             'option',
             'option/composer',
           ],
         },
         {
           title: groupD,
-          collapsable: false,
-          'children': [
+          items: [
             'cache',
           ],
         },
@@ -662,8 +676,7 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
         'log',
         {
           title: 'HTTP',
-          collapsable: false,
-          'children': [
+          items: [
             'http/',
             'http/request',
             'http/response',
@@ -674,16 +687,14 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
         'cache',
         {
           title: groupF,
-          collapsable: false,
-          'children': [
+          items: [
             'filesystem',
             'filesystem/helper',
           ],
         },
         {
           title: groupG,
-          collapsable: false,
-          'children': [
+          items: [
             'console',
             'console/makecommand',
             'console/runcommand',
