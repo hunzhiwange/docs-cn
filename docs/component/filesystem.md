@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Filesystem/ManagerTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Filesystem/ManagerTest.php)
 :::
-    
+
 文件管理统一由文件组件完成，通常我们使用代理 `\Leevel\Filesystem\Proxy\Filesystem` 类进行静态调用。
 
 内置支持的 filesystem 驱动类型包括 local、zip、ftp、sftp，未来可能增加其他驱动。
@@ -185,8 +185,8 @@ public function testBaseUse(): void
     $manager->write('hellomanager.txt', 'manager');
     $file = $path.'/hellomanager.txt';
 
-    $this->assertTrue(is_file($file));
-    $this->assertSame('manager', file_get_contents($file));
+    static::assertTrue(is_file($file));
+    static::assertSame('manager', file_get_contents($file));
     $this->clearTempDir();
 }
 ```

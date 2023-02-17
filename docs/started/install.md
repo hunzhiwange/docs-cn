@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Docs/Started/InstallDoc.php](https://github.com/hunzhiwange/framework/blob/master/tests/Docs/Started/InstallDoc.php)
 :::
-    
+
 QueryPHP 是一个渐进式 PHP 常驻框架，我们强调的是一个渐进式，它既可以运行在 PHP-FPM 场景，同时还支持在 RoadRunner 服务中运行。
 
 ## 环境要求

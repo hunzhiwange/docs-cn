@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Di/ContainerTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Di/ContainerTest.php)
 :::
-    
+
 IOC 容器是整个框架最核心的部分，负责服务的管理和解耦。
 
 目前系统所有的关键服务都接入了 IOC 容器，包括控制器、Console 命令行。
@@ -15,7 +15,6 @@ IOC 容器是整个框架最核心的部分，负责服务的管理和解耦。
 <?php
 
 use Leevel\Di\Container;
-use stdClass;
 ```
 
 ## 闭包绑定
@@ -36,26 +35,26 @@ public function testBindClosure(): void
         return 'bar';
     });
 
-    $this->assertSame('bar', $container->make('foo'));
+    static::assertSame('bar', $container->make('foo'));
 }
 ```
-    
+
 ## 闭包绑定单例
 
 ``` php
 public function testSingletonClosure(): void
 {
     $container = new Container();
-    $singleton = new stdClass();
+    $singleton = new \stdClass();
     $container->singleton('singleton', function () use ($singleton) {
         return $singleton;
     });
 
-    $this->assertSame($singleton, $container->make('singleton'));
-    $this->assertSame($singleton, $container->make('singleton'));
+    static::assertSame($singleton, $container->make('singleton'));
+    static::assertSame($singleton, $container->make('singleton'));
 }
 ```
-    
+
 ## 类直接生成本身
 
 一个独立的类可以直接生成，而不需要提前注册到容器中。
@@ -78,10 +77,10 @@ public function testClass(): void
 {
     $container = new Container();
 
-    $this->assertInstanceOf(Test1::class, $container->make(Test1::class));
+    static::assertInstanceOf(Test1::class, $container->make(Test1::class));
 }
 ```
-    
+
 ## 类单例
 
 类也可以注册为单例。
@@ -92,10 +91,10 @@ public function testSingletonClass(): void
     $container = new Container();
     $container->singleton(Test1::class);
 
-    $this->assertSame($container->make(Test1::class), $container->make(Test1::class));
+    static::assertSame($container->make(Test1::class), $container->make(Test1::class));
 }
 ```
-    
+
 ## 接口绑定
 
 可以为接口绑定实现。
@@ -129,11 +128,11 @@ public function testInterface(): void
     $container = new Container();
     $container->bind(ITest2::class, Test2::class);
 
-    $this->assertInstanceOf(ITest2::class, $container->make(ITest2::class));
-    $this->assertInstanceOf(ITest2::class, $container->make(Test2::class));
+    static::assertInstanceOf(ITest2::class, $container->make(ITest2::class));
+    static::assertInstanceOf(ITest2::class, $container->make(Test2::class));
 }
 ```
-    
+
 ## 接口绑定接口作为构造器参数
 
 接口可以作为控制器参数来做依赖注入。
@@ -165,11 +164,11 @@ public function testInterface2(): void
     $container = new Container();
     $container->bind(ITest2::class, Test2::class);
 
-    $this->assertInstanceOf(ITest2::class, $test2 = $container->make(Test3::class)->arg1);
-    $this->assertInstanceOf(Test2::class, $test2);
+    static::assertInstanceOf(ITest2::class, $test2 = $container->make(Test3::class)->arg1);
+    static::assertInstanceOf(Test2::class, $test2);
 }
 ```
-    
+
 ## 绑定闭包第一个参数为 IOC 容器本身
 
 ``` php
@@ -180,10 +179,10 @@ public function testContainerAsFirstArgs(): void
         return $container;
     });
 
-    $this->assertSame($container, $container->make('test'));
+    static::assertSame($container, $container->make('test'));
 }
 ```
-    
+
 ## 数组访问 ArrayAccess 支持
 
 ``` php
@@ -194,13 +193,13 @@ public function testArrayAccess(): void
         return 'bar';
     };
 
-    $this->assertTrue(isset($container['foo']));
-    $this->assertSame('bar', $container['foo']);
+    static::assertTrue(isset($container['foo']));
+    static::assertSame('bar', $container['foo']);
     unset($container['foo']);
-    $this->assertFalse(isset($container['foo']));
+    static::assertFalse(isset($container['foo']));
 }
 ```
-    
+
 ## alias 设置别名
 
 ``` php
@@ -213,16 +212,16 @@ public function testAliases(): void
     $container->alias(['foo' => ['foo5', 'foo6']]);
     $container->alias(['foo' => 'foo7']);
 
-    $this->assertSame('bar', $container->make('foo'));
-    $this->assertSame('bar', $container->make('foo2'));
-    $this->assertSame('bar', $container->make('foo3'));
-    $this->assertSame('bar', $container->make('foo4'));
-    $this->assertSame('bar', $container->make('foo5'));
-    $this->assertSame('bar', $container->make('foo6'));
-    $this->assertSame('bar', $container->make('foo7'));
+    static::assertSame('bar', $container->make('foo'));
+    static::assertSame('bar', $container->make('foo2'));
+    static::assertSame('bar', $container->make('foo3'));
+    static::assertSame('bar', $container->make('foo4'));
+    static::assertSame('bar', $container->make('foo5'));
+    static::assertSame('bar', $container->make('foo6'));
+    static::assertSame('bar', $container->make('foo7'));
 }
 ```
-    
+
 ## make 创建容器服务并返回支持参数
 
 ``` php
@@ -236,10 +235,10 @@ public function testMakeWithArgs(): void
         ];
     };
 
-    $this->assertSame([1, 2], $container->make('foo', [1, 2, 3]));
+    static::assertSame([1, 2], $container->make('foo', [1, 2, 3]));
 }
 ```
-    
+
 ## bind 注册到容器支持覆盖
 
 ``` php
@@ -247,26 +246,26 @@ public function testOverridden(): void
 {
     $container = new Container();
     $container['foo'] = 'bar';
-    $this->assertSame('bar', $container['foo']);
+    static::assertSame('bar', $container['foo']);
 
     $container['foo'] = 'bar2';
-    $this->assertSame('bar2', $container['foo']);
+    static::assertSame('bar2', $container['foo']);
 }
 ```
-    
+
 ## instance 注册为实例
 
 ``` php
 public function testInstance(): void
 {
     $container = new Container();
-    $instance = new stdClass();
+    $instance = new \stdClass();
     $container->instance('foo', $instance);
 
-    $this->assertSame($instance, $container->make('foo'));
+    static::assertSame($instance, $container->make('foo'));
 }
 ```
-    
+
 ## 默认参数支持
 
 **fixture 定义**
@@ -309,11 +308,11 @@ public function testDefaultArgs(): void
     $container->bind('foo', Test5::class);
     $test5 = $container->make('foo');
 
-    $this->assertInstanceOf(ITest3::class, $test5);
-    $this->assertSame('hello default', $test5->arg2);
+    static::assertInstanceOf(ITest3::class, $test5);
+    static::assertSame('hello default', $test5->arg2);
 }
 ```
-    
+
 ## 必填参数校验
 
 **fixture 定义**
@@ -346,14 +345,14 @@ public function testArgsRequiredContainerInvalidArgumentException(): void
 {
     $this->expectException(\Leevel\Di\ContainerInvalidArgumentException::class);
     $this->expectExceptionMessage(
-        'There are 3 required args,but 0 gived.'
+        'There are 3 required args,but 0 given.'
     );
 
     $container = new Container();
     $container->make(Test6::class, []);
 }
 ```
-    
+
 ## 接口必须绑定服务
 
 ``` php
@@ -368,7 +367,7 @@ public function testInterfaceContainerInvalidArgumentException(): void
     $container->make(ITest2::class, []);
 }
 ```
-    
+
 ## call 回调自动依赖注入
 
 **fixture 定义**
@@ -392,17 +391,17 @@ class Test8 implements ITest8
 {
     public function func1()
     {
-        return func_get_args();
+        return \func_get_args();
     }
 
     public function func2($arg1 = 'hello')
     {
-        return func_get_args();
+        return \func_get_args();
     }
 
     public static function staticFunc3()
     {
-        return func_get_args();
+        return \func_get_args();
     }
 
     public function handle()
@@ -418,41 +417,41 @@ public function testCall(): void
 {
     $container = new Container();
     $result = $container->call(function (Test7 $arg1, array $arg2 = []) {
-        return func_get_args();
+        return \func_get_args();
     });
 
-    $this->assertInstanceOf(Test7::class, $result[0]);
-    $this->assertSame([], $result[1]);
+    static::assertInstanceOf(Test7::class, $result[0]);
+    static::assertSame([], $result[1]);
 
     $result = $container->call(function (Test7 $arg1, array $arg2 = [], $arg3 = null) {
-        return func_get_args();
+        return \func_get_args();
     }, ['arg3' => 'hello']);
 
-    $this->assertInstanceOf(Test7::class, $result[0]);
-    $this->assertSame([], $result[1]);
-    $this->assertSame('hello', $result[2]);
+    static::assertInstanceOf(Test7::class, $result[0]);
+    static::assertSame([], $result[1]);
+    static::assertSame('hello', $result[2]);
 
     $test7 = new Test7();
     $result = $container->call(function (Test7 $arg1, $arg2 = 'hello') {
-        return func_get_args();
+        return \func_get_args();
     }, [Test7::class => $test7, 'arg2' => 'hello world']);
 
-    $this->assertSame($test7, $result[0]);
-    $this->assertSame('hello world', $result[1]);
+    static::assertSame($test7, $result[0]);
+    static::assertSame('hello world', $result[1]);
 
     $test8 = new Test8();
     $result = $container->call(function ($arg1, $arg2, $arg3, ?ITest8 $arg4 = null, ?Test8 $arg5 = null) {
-        return func_get_args();
+        return \func_get_args();
     }, ['arg1' => 'foo', 'arg3' => 'world2', Test8::class => $test8]);
 
-    $this->assertSame('foo', $result[0]);
-    $this->assertNull($result[1]);
-    $this->assertSame('world2', $result[2]);
-    $this->assertNull($result[3]);
-    $this->assertSame($result[4], $test8);
+    static::assertSame('foo', $result[0]);
+    static::assertNull($result[1]);
+    static::assertSame('world2', $result[2]);
+    static::assertNull($result[3]);
+    static::assertSame($result[4], $test8);
 }
 ```
-    
+
 ## call 回调自动依赖注入支持字符串或者数组类回调
 
 ``` php
@@ -461,32 +460,32 @@ public function testCallWithArrayOrString(): void
     $container = new Container();
 
     $result = $container->call([Test8::class, 'func1'], ['foo', 'bar']);
-    $this->assertSame(['foo', 'bar'], $result);
+    static::assertSame(['foo', 'bar'], $result);
 
     $result = $container->call(Test8::class.'@func1', ['foo', 'bar']);
-    $this->assertSame(['foo', 'bar'], $result);
+    static::assertSame(['foo', 'bar'], $result);
 
     $result = $container->call([Test8::class], ['foo', 'bar']);
-    $this->assertSame(['call handle'], $result);
+    static::assertSame(['call handle'], $result);
 
     $result = $container->call(Test8::class.'@', ['foo', 'bar']);
-    $this->assertSame(['call handle'], $result);
+    static::assertSame(['call handle'], $result);
 
     $result = $container->call(Test8::class.'@func2');
-    $this->assertSame('hello', $result[0]);
+    static::assertSame('hello', $result[0]);
 
     $result = $container->call(Test8::class.'@func2', ['world', 'foo', 'bar']);
-    $this->assertSame('world', $result[0]);
-    $this->assertSame('foo', $result[1]);
-    $this->assertSame('bar', $result[2]);
+    static::assertSame('world', $result[0]);
+    static::assertSame('foo', $result[1]);
+    static::assertSame('bar', $result[2]);
 
     $result = $container->call(Test8::class.'@func2', ['world', 'arg1' => 'foo', 'bar']);
-    $this->assertSame('foo', $result[0]);
-    $this->assertSame('world', $result[1]);
-    $this->assertSame('bar', $result[2]);
+    static::assertSame('foo', $result[0]);
+    static::assertSame('world', $result[1]);
+    static::assertSame('bar', $result[2]);
 }
 ```
-    
+
 ## call 回调自动依赖注入支持实例和方法数组回调
 
 ``` php
@@ -496,10 +495,10 @@ public function testCallWithCallableArray(): void
     $test8 = new Test8();
     $result = $container->call([$test8, 'func1'], ['foo', 'bar']);
 
-    $this->assertSame(['foo', 'bar'], $result);
+    static::assertSame(['foo', 'bar'], $result);
 }
 ```
-    
+
 ## call 回调自动依赖注入支持静态回调
 
 ``` php
@@ -508,10 +507,10 @@ public function testCallStatic(): void
     $container = new Container();
 
     $result = $container->call(Test8::class.'::staticFunc3', ['hello', 'world']);
-    $this->assertSame(['hello', 'world'], $result);
+    static::assertSame(['hello', 'world'], $result);
 }
 ```
-    
+
 ## remove 删除服务和实例
 
 ``` php
@@ -521,13 +520,13 @@ public function testRemove(): void
 
     $test8 = new Test8();
     $container->instance(Test8::class, $test8);
-    $this->assertTrue($container->exists(Test8::class));
+    static::assertTrue($container->exists(Test8::class));
 
     $container->remove(Test8::class);
-    $this->assertFalse($container->exists(Test8::class));
+    static::assertFalse($container->exists(Test8::class));
 }
 ```
-    
+
 ## 实例数组访问 ArrayAccess.offsetUnset 支持
 
 ``` php
@@ -539,18 +538,18 @@ public function testUnsetInstances(): void
     $container->alias('foo', 'foo2');
     $container->alias('foo', 'foo3');
 
-    $this->assertTrue(isset($container['foo']));
-    $this->assertTrue(isset($container['foo2']));
-    $this->assertTrue(isset($container['foo3']));
+    static::assertTrue(isset($container['foo']));
+    static::assertTrue(isset($container['foo2']));
+    static::assertTrue(isset($container['foo3']));
 
     unset($container['foo']);
 
-    $this->assertFalse(isset($container['foo']));
-    $this->assertFalse(isset($container['foo2']));
-    $this->assertFalse(isset($container['foo3']));
+    static::assertFalse(isset($container['foo']));
+    static::assertFalse(isset($container['foo2']));
+    static::assertFalse(isset($container['foo3']));
 }
 ```
-    
+
 ## 类依赖注入构造器必须为 public
 
 **fixture 定义**
@@ -583,10 +582,10 @@ public function testNotInstantiable(): void
     );
 
     $container = new Container();
-    $this->assertSame('world9', $container->make(Test9::class)->hello());
+    static::assertSame('world9', $container->make(Test9::class)->hello());
 }
 ```
-    
+
 ## bind 注册到容器可以支持各种数据
 
 ``` php
@@ -595,10 +594,10 @@ public function testMakeServiceBool(): void
     $container = new Container();
 
     $container->bind('foo', false);
-    $this->assertFalse($container->make('foo'));
+    static::assertFalse($container->make('foo'));
 }
 ```
-    
+
 ## bind 注册到容器支持传递数组来设置别名
 
 ``` php
@@ -607,11 +606,11 @@ public function testBindArrayAsAlias(): void
     $container = new Container();
     $container->bind(['foo' => 'bar'], false);
 
-    $this->assertFalse($container->make('foo'));
-    $this->assertFalse($container->make('bar'));
+    static::assertFalse($container->make('foo'));
+    static::assertFalse($container->make('bar'));
 }
 ```
-    
+
 ## 依赖注入的方法中类参数不存在例子
 
 **fixture 定义**
@@ -643,21 +642,21 @@ public function testParseReflectionException(): void
     $container->call([new Test10(), 'hello']);
 }
 ```
-    
+
 ## instance 注册为实例支持传递数组来设置别名
 
 ``` php
 public function testInstanceWithArray(): void
 {
     $container = new Container();
-    $instance = new stdClass();
+    $instance = new \stdClass();
     $container->instance(['foo' => 'bar'], $instance);
 
-    $this->assertSame($instance, $container->make('foo'));
-    $this->assertSame($instance, $container->make('bar'));
+    static::assertSame($instance, $container->make('foo'));
+    static::assertSame($instance, $container->make('bar'));
 }
 ```
-    
+
 ## instance 注册为实例未传递第二个参数会注册自身
 
 比如说系统中中间件注册。
@@ -676,13 +675,13 @@ public function testInstanceItSelf(): void
 {
     $container = new Container();
     $container->instance('foo');
-    $this->assertSame('foo', $container->make('foo'));
+    static::assertSame('foo', $container->make('foo'));
 
     $container->instance('Leevel\\Foo\\Middleware\\Bar');
-    $this->assertSame('Leevel\\Foo\\Middleware\\Bar', $container->make('Leevel\\Foo\\Middleware\\Bar'));
+    static::assertSame('Leevel\\Foo\\Middleware\\Bar', $container->make('Leevel\\Foo\\Middleware\\Bar'));
 }
 ```
-    
+
 ## 参数为类实例例子
 
 **fixture 定义**
@@ -742,10 +741,10 @@ public function testCallWithClassArgsAndItInstance(): void
     $args = [new Test21('hello'), new Test22('world')];
     $result = $container->call([$obj, 'handle'], $args);
 
-    $this->assertSame(['test21' => 'hello', 'test22' => 'world'], $result);
+    static::assertSame(['test21' => 'hello', 'test22' => 'world'], $result);
 }
 ```
-    
+
 ## 参数为类实例例子和其它参数混合
 
 **fixture 定义**
@@ -805,10 +804,10 @@ public function testCallWithClassArgsAndItInstanceAndMore(): void
     $args = [new Test24('hello'), new Test25('world'), 'more'];
     $result = $container->call([$obj, 'handle'], $args);
 
-    $this->assertSame(['test24' => 'hello', 'test25' => 'world', 'three' => 'more'], $result);
+    static::assertSame(['test24' => 'hello', 'test25' => 'world', 'three' => 'more'], $result);
 }
 ```
-    
+
 ## make 创建容器服务并返回支持类名生成服务
 
 **fixture 定义**
@@ -840,10 +839,10 @@ public function testClassArgsASingleClass(): void
 {
     $container = new Container();
     $test = $container->make(Test28::class);
-    $this->assertSame('world', $test->hello());
+    static::assertSame('world', $test->hello());
 }
 ```
-    
+
 ## 魔术方法 __get 支持
 
 ``` php
@@ -852,10 +851,10 @@ public function testMagicGet(): void
     $container = new Container();
     $container->bind('foo', 'bar');
 
-    $this->assertSame('bar', $container->foo);
+    static::assertSame('bar', $container->foo);
 }
 ```
-    
+
 ## 魔术方法 __set 支持
 
 ``` php
@@ -864,10 +863,10 @@ public function testMagicSet(): void
     $container = new Container();
     $container->foo = 'bar';
 
-    $this->assertSame('bar', $container->foo);
+    static::assertSame('bar', $container->foo);
 }
 ```
-    
+
 ## clear 清理容器
 
 ``` php
@@ -876,14 +875,14 @@ public function testClear(): void
     $container = new Container();
     $container->instance('foo', 'bar');
 
-    $this->assertSame('bar', $container->make('foo'));
-    $this->assertSame('notfound', $container->make('notfound'));
+    static::assertSame('bar', $container->make('foo'));
+    static::assertSame('notfound', $container->make('notfound'));
 
     $container->clear();
-    $this->assertSame('foo', $container->make('foo'));
+    static::assertSame('foo', $container->make('foo'));
 }
 ```
-    
+
 ## IOC 容器禁止克隆
 
 ``` php
@@ -898,7 +897,7 @@ public function testClone(): void
     $container2 = clone $container;
 }
 ```
-    
+
 ## makeProvider 创建服务提供者
 
 **fixture 定义**
@@ -931,11 +930,11 @@ public function testMakeProvider(): void
     $container = new Container();
     $container->makeProvider(ProviderTest1::class);
 
-    $this->assertSame(1, $_SERVER['testMakeProvider']);
+    static::assertSame(1, $_SERVER['testMakeProvider']);
     unset($_SERVER['testMakeProvider']);
 }
 ```
-    
+
 ## callProviderBootstrap 执行服务提供者 bootstrap
 
 **fixture 定义**
@@ -954,7 +953,7 @@ class ProviderTest2 extends Provider
     {
     }
 
-    public function bootstrap()
+    public function bootstrap(): void
     {
         $_SERVER['testCallProviderBootstrap'] = 1;
     }
@@ -972,15 +971,15 @@ public function testCallProviderBootstrap(): void
     $container = new Container();
     $container->callProviderBootstrap(new ProviderTest1($container));
 
-    $this->assertSame(1, $_SERVER['testMakeProvider']);
+    static::assertSame(1, $_SERVER['testMakeProvider']);
     unset($_SERVER['testMakeProvider']);
 
     $container->callProviderBootstrap(new ProviderTest2($container));
-    $this->assertSame(1, $_SERVER['testCallProviderBootstrap']);
+    static::assertSame(1, $_SERVER['testCallProviderBootstrap']);
     unset($_SERVER['testCallProviderBootstrap']);
 }
 ```
-    
+
 ## registerProviders 注册服务提供者
 
 ``` php
@@ -988,15 +987,15 @@ public function testRegisterProviders(): void
 {
     $container = new Container();
 
-    $this->assertFalse($container->isBootstrap());
+    static::assertFalse($container->isBootstrap());
     $container->registerProviders([], [], []);
-    $this->assertTrue($container->isBootstrap());
+    static::assertTrue($container->isBootstrap());
 
     // do nothing
     $container->registerProviders([], [], []);
 }
 ```
-    
+
 ## registerProviders 注册服务提供者支持延迟写入
 
 **fixture 定义**
@@ -1038,12 +1037,12 @@ public function testDeferredProvider(): void
 
     $container = new Container();
 
-    $this->assertFalse($container->isBootstrap());
+    static::assertFalse($container->isBootstrap());
     $container->registerProviders([], $deferredProviders, $deferredAlias);
-    $this->assertTrue($container->isBootstrap());
-    $this->assertSame('test_deferred', $container->make('bar'));
-    $this->assertSame('test_deferred', $container->make('test_deferred'));
-    $this->assertSame(1, $_SERVER['testDeferredProvider']);
+    static::assertTrue($container->isBootstrap());
+    static::assertSame('test_deferred', $container->make('bar'));
+    static::assertSame('test_deferred', $container->make('test_deferred'));
+    static::assertSame(1, $_SERVER['testDeferredProvider']);
 
     unset($_SERVER['testDeferredProvider']);
 }

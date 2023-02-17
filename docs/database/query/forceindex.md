@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/ForceIndexTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/ForceIndexTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -21,7 +21,7 @@ public function testBaseUse(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` FORCE INDEX(nameindex,statusindex) IGNORE INDEX(testindex) WHERE `test_query`.`id` = :test_query_id",
+            "SELECT `test_query`.* FROM `test_query` FORCE INDEX(idx_nameindex,idx_statusindex) IGNORE INDEX(idx_testindex) WHERE `test_query`.`id` = :test_query_id",
             {
                 "test_query_id": [
                     5
@@ -31,20 +31,21 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->forceIndex('nameindex,statusindex')
-                ->ignoreIndex('testindex')
+                ->forceIndex('idx_nameindex,idx_statusindex')
+                ->ignoreIndex('idx_testindex')
                 ->where('id', '=', 5)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## forceIndex 数组支持
 
 ``` php
@@ -54,7 +55,7 @@ public function testForceIndexWithArray(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` FORCE INDEX(nameindex,statusindex) WHERE `test_query`.`id` = :test_query_id",
+            "SELECT `test_query`.* FROM `test_query` FORCE INDEX(idx_nameindex,idx_statusindex) WHERE `test_query`.`id` = :test_query_id",
             {
                 "test_query_id": [
                     2
@@ -64,19 +65,20 @@ public function testForceIndexWithArray(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->forceIndex(['nameindex', 'statusindex'])
+                ->forceIndex(['idx_nameindex', 'idx_statusindex'])
                 ->where('id', '=', 2)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## ignoreIndex 数组支持
 
 ``` php
@@ -86,7 +88,7 @@ public function testIgnoreIndexWithArray(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` IGNORE INDEX(nameindex,statusindex) WHERE `test_query`.`id` = :test_query_id",
+            "SELECT `test_query`.* FROM `test_query` IGNORE INDEX(idx_nameindex,idx_statusindex) WHERE `test_query`.`id` = :test_query_id",
             {
                 "test_query_id": [
                     6
@@ -96,14 +98,15 @@ public function testIgnoreIndexWithArray(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->ignoreIndex(['nameindex', 'statusindex'])
+                ->ignoreIndex(['idx_nameindex', 'idx_statusindex'])
                 ->where('id', '=', 6)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/LimitTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/LimitTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -27,18 +27,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->limit(5, 10)
-                ->find(null, true)
+                ->find(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 指示仅查询第一个符合条件的记录
 
 ``` php
@@ -54,19 +55,20 @@ public function testOne(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->one()
-                ->find(null, true),
+                ->find(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## 指示查询所有符合条件的记录
 
 ``` php
@@ -82,19 +84,20 @@ public function testAll(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->all()
-                ->find(null, true),
+                ->find(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## 查询几条记录
 
 ``` php
@@ -110,13 +113,14 @@ public function testTop(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->top(15)
-                ->find(null, true),
+                ->find(),
+            $connect,
             3
         )
     );

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Delete/TruncateTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Delete/TruncateTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -29,13 +29,14 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->truncate()
+                ->truncate(),
+            $connect
         )
     );
 }

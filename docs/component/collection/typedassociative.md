@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Support/TypedAssociativeArrayTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Support/TypedAssociativeArrayTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -23,9 +23,9 @@ public function testBaseUse(): void
     ];
 
     $collection = new TypedAssociativeArray($data);
-    $this->assertSame($collection['h'], 'hello');
-    $this->assertSame($collection['w'], 'world');
-    $this->assertTrue(isset($collection['h']));
-    $this->assertTrue(isset($collection['w']));
+    static::assertSame($collection['h'], 'hello');
+    static::assertSame($collection['w'], 'world');
+    static::assertTrue(isset($collection['h']));
+    static::assertTrue(isset($collection['w']));
 }
 ```

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Delete/DeleteTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Delete/DeleteTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -34,21 +34,22 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->where('id', 1)
                 ->limit(1)
                 ->orderBy('id desc')
-                ->delete()
+                ->delete(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## delete 不带条件的删除
 
 删除成功后，返回影响行数。
@@ -66,18 +67,19 @@ public function testWithoutCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
-                ->delete()
+                ->delete(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## delete.join 连表删除
 
 ``` php
@@ -97,17 +99,18 @@ public function testJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query as t')
                 ->innerJoin(['h' => 'test_query_subsql'], [], 'name', '=', Condition::raw('[t.name]'))
                 ->where('id', 1)
                 ->limit(1)
                 ->orderBy('id desc')
-                ->delete()
+                ->delete(),
+            $connect
         )
     );
 }

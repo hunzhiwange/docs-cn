@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Support/EnumTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Support/EnumTest.php)
 :::
-    
+
 QueryPHP 提供了一个简单的枚举组件。
 
 ## description 获取枚举值对应的描述
@@ -11,21 +11,21 @@ QueryPHP 提供了一个简单的枚举组件。
 ``` php
 public function testDescription(): void
 {
-    $this->assertSame('错误类型一', Enum1::description(Enum1::ERROR_ONE));
-    $this->assertSame('自定义错误', Enum1::description(Enum1::CUSTOM_ERROR));
-    $this->assertSame('错误类型一', Enum1::description(Enum1::ERROR_ONE, 'msg'));
-    $this->assertSame('自定义错误', Enum1::description(Enum1::CUSTOM_ERROR, 'msg'));
-    $this->assertSame('Status disabled', Enum1::description(Enum1::STATUS_DISABLE, 'status'));
-    $this->assertSame('Type enabled', Enum1::description(Enum1::TYPE_ENABLE, 'type'));
-    $this->assertSame('Type bool true', Enum1::description(Enum1::TYPE_BOOL_TRUE, 'type'));
-    $this->assertSame('Type bool false', Enum1::description(Enum1::TYPE_BOOL_FALSE, 'type'));
-    $this->assertSame('Type int', Enum1::description(Enum1::TYPE_INT, 'type'));
-    $this->assertSame('Type string float', Enum1::description(Enum1::TYPE_STRING_FLOAT, 'type'));
-    $this->assertSame('Type string', Enum1::description(Enum1::TYPE_STRING, 'type'));
-    $this->assertSame('Type null', Enum1::description(Enum1::TYPE_NULL, 'type'));
+    static::assertSame('错误类型一', Enum1::description(Enum1::ERROR_ONE));
+    static::assertSame('自定义错误', Enum1::description(Enum1::CUSTOM_ERROR));
+    static::assertSame('错误类型一', Enum1::description(Enum1::ERROR_ONE));
+    static::assertSame('自定义错误', Enum1::description(Enum1::CUSTOM_ERROR));
+    static::assertSame('Status disabled', Enum1::description(Enum1::STATUS_DISABLE, 'status'));
+    static::assertSame('Type enabled', Enum1::description(Enum1::TYPE_ENABLE, 'type'));
+    static::assertSame('Type bool true', Enum1::description(Enum1::TYPE_BOOL_TRUE, 'type'));
+    static::assertSame('Type bool false', Enum1::description(Enum1::TYPE_BOOL_FALSE, 'type'));
+    static::assertSame('Type int', Enum1::description(Enum1::TYPE_INT, 'type'));
+    static::assertSame('Type string float', Enum1::description(Enum1::TYPE_STRING_FLOAT, 'type'));
+    static::assertSame('Type string', Enum1::description(Enum1::TYPE_STRING, 'type'));
+    static::assertSame('Type null', Enum1::description(Enum1::TYPE_NULL, 'type'));
 }
 ```
-    
+
 ## 未设置注解将会被忽略
 
 ``` php
@@ -33,22 +33,22 @@ public function testDescriptionButNoAttributes(): void
 {
     $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage(
-        'Value `100013` is not part of Tests\\Support\\Fixtures\\Enum1:msg'
+        'Value `100013` is not part of Tests\\Support\\Fixtures\\Enum1:Leevel\\Support\\Msg'
     );
 
     Enum1::description(Enum1::NO_ATTRIBUTES);
 }
 ```
-    
+
 ## 注解为指定描述则为空
 
 ``` php
 public function testDescriptionButAttributesDescriptionNotFound(): void
 {
-    $this->assertSame('', Enum1::description(Enum1::NO_MSG));
+    static::assertSame('', Enum1::description(Enum1::NO_MSG));
 }
 ```
-    
+
 ## 值不存在枚举中会抛出异常
 
 ``` php
@@ -56,13 +56,13 @@ public function testDescriptionButValueNotFound(): void
 {
     $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage(
-        'Value `999999999999999` is not part of Tests\\Support\\Fixtures\\Enum1:msg'
+        'Value `999999999999999` is not part of Tests\\Support\\Fixtures\\Enum1:Leevel\\Support\\Msg'
     );
 
-    $this->assertSame('', Enum1::description(999999999999999));
+    static::assertSame('', Enum1::description(999999999999999));
 }
 ```
-    
+
 ## 相同枚举值会匹配第一个
 
 基于 array_search 查找，第一个会被找到并返回。
@@ -70,11 +70,11 @@ public function testDescriptionButValueNotFound(): void
 ``` php
 public function testDescriptionSameValueDescriptionWillBeFristOne(): void
 {
-    $this->assertSame('相同错误1', Enum1::description(Enum1::SAME_ERROR1));
-    $this->assertSame('相同错误1', Enum1::description(Enum1::SAME_ERROR2));
+    static::assertSame('相同错误1', Enum1::description(Enum1::SAME_ERROR1));
+    static::assertSame('相同错误1', Enum1::description(Enum1::SAME_ERROR2));
 }
 ```
-    
+
 ## descriptions 获取全部分组枚举描述
 
 ``` php
@@ -83,7 +83,7 @@ public function testDescriptions(): void
     $value = Enum1::descriptions('');
     $json = <<<'eot'
         {
-            "msg": {
+            "Leevel\\Support\\Msg": {
                 "value": {
                     "ERROR_ONE": 100010,
                     "CUSTOM_ERROR": 100011,
@@ -150,7 +150,7 @@ public function testDescriptions(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $value
@@ -158,7 +158,7 @@ public function testDescriptions(): void
     );
 }
 ```
-    
+
 ## values 获取分组枚举值
 
 ``` php
@@ -172,7 +172,7 @@ public function testValues(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $value
@@ -180,7 +180,32 @@ public function testValues(): void
     );
 }
 ```
-    
+
+## valueDescriptionMap 获取分组枚举值和描述映射
+
+``` php
+public function testValueDescriptionMap(): void
+{
+    $value = Enum1::valueDescriptionMap();
+    $json = <<<'eot'
+        {
+            "100010": "错误类型一",
+            "100011": "自定义错误",
+            "100014": "",
+            "100015": "Hello %s world",
+            "100016": "相同错误2"
+        }
+        eot;
+
+    static::assertSame(
+        $json,
+        $this->varJson(
+            $value
+        )
+    );
+}
+```
+
 ## descriptions 获取指定分组枚举描述
 
 ``` php
@@ -200,7 +225,7 @@ public function testGetOneGroupDescriptions(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $value
@@ -208,7 +233,7 @@ public function testGetOneGroupDescriptions(): void
     );
 }
 ```
-    
+
 ## descriptions 获取指定分组枚举描述不存在将抛出异常
 
 ``` php
@@ -222,34 +247,48 @@ public function testGetOneGroupDescriptionsButNotFound(): void
     Enum1::descriptions('not_found');
 }
 ```
-    
+
 ## description 验证是否为有效的枚举值
 
 ``` php
 public function testIsValid(): void
 {
-    $this->assertTrue(Enum1::isValid(Enum1::ERROR_ONE));
-    $this->assertTrue(Enum1::isValid(Enum1::ERROR_ONE, 'msg'));
-    $this->assertFalse(Enum1::isValid(9999999));
+    static::assertTrue(Enum1::isValid(Enum1::ERROR_ONE));
+    static::assertTrue(Enum1::isValid(Enum1::ERROR_ONE));
+    static::assertFalse(Enum1::isValid(9999999));
 }
 ```
-    
+
 ## isValidKey 验证是否为有效的键
 
 ``` php
 public function testIsValidKey(): void
 {
-    $this->assertTrue(Enum1::isValidKey('ERROR_ONE'));
-    $this->assertFalse(Enum1::isValidKey('NOT_FOUND'));
+    static::assertTrue(Enum1::isValidKey('ERROR_ONE'));
+    static::assertFalse(Enum1::isValidKey('NOT_FOUND'));
 }
 ```
-    
+
 ## searchKey 获取给定值的键
 
 ``` php
 public function testSearchKey(): void
 {
-    $this->assertSame('ERROR_ONE', Enum1::searchKey(Enum1::ERROR_ONE));
-    $this->assertSame(false, Enum1::searchKey(88));
+    static::assertSame('ERROR_ONE', Enum1::searchKey(Enum1::ERROR_ONE));
+    static::assertFalse(Enum1::searchKey(88));
+}
+```
+
+## description 获取真实枚举值对应的描述
+
+``` php
+public function testRealEnumDescription(): void
+{
+    static::assertSame('已完成', RealEnumInt::description(RealEnumInt::TRUE));
+    static::assertSame('未完成', RealEnumInt::description(RealEnumInt::FALSE));
+    static::assertSame('世界', RealEnumString::description(RealEnumString::HELLO));
+    static::assertSame('你好', RealEnumString::description(RealEnumString::WORLD));
+    static::assertSame('启用', RealEnumNoValue::description(RealEnumNoValue::ENABLE));
+    static::assertSame('禁用', RealEnumNoValue::description(RealEnumNoValue::DISABLE));
 }
 ```

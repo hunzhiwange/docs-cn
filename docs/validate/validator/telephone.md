@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/TelephoneTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/TelephoneTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,7 +18,7 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\TelephoneTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['028-8301444'],
@@ -44,21 +43,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'telephone',
+            'name' => 'telephone',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\TelephoneTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['130222000333311'],
@@ -67,7 +66,7 @@ public function badProvider(): array
         ['143311222333444'],
         ['17333322222444'],
         [' '],
-        [new stdClass()],
+        [new \stdClass()],
         [['foo', 'bar']],
         [[1, 2]],
         [true],
@@ -90,10 +89,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'telephone',
+            'name' => 'telephone',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

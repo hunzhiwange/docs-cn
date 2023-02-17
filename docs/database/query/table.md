@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/TableTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/TableTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Database\Condition;
-use stdClass;
 use Tests\Database\DatabaseTestCase as TestCase;
 ```
 
@@ -29,17 +28,18 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询指定数据库的表
 
 ``` php
@@ -55,18 +55,19 @@ public function testWithDatabaseName(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test.test_query')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表，表支持别名
 
 ``` php
@@ -82,18 +83,19 @@ public function testWithAlias(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table(['p' => 'test.test_query'])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表指定字段
 
 ``` php
@@ -109,17 +111,18 @@ public function testField(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'title,body')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表指定字段，字段支持别名
 
 ``` php
@@ -135,20 +138,21 @@ public function testWithFieldAlias(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test.test_query', [
                     't' => 'title', 'name', 'remark,value',
                 ])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表支持子查询
 
 ``` php
@@ -165,17 +169,18 @@ public function testSub(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table($subSql.' as a')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表支持子查询,子查询可以为数据库查询对象
 
 ``` php
@@ -192,17 +197,18 @@ public function testSubIsSelect(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table(['bb' => $subSql])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表支持子查询,子查询可以为数据库条件对象
 
 ``` php
@@ -219,17 +225,18 @@ public function testSubIsCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table(['bb' => $subSql])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表支持子查询,子查询可以为闭包
 
 ``` php
@@ -245,19 +252,20 @@ public function testSubIsClosure(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table(['b'=> function ($select) {
+                ->table(['b' => function ($select): void {
                     $select->table('test_query');
                 }])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表支持子查询,子查询可以为闭包,未指定别名默认为自身
 
 ``` php
@@ -273,19 +281,20 @@ public function testSubIsClosureWithItSeltAsAlias(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table(function ($select) {
+                ->table(function ($select): void {
                     $select->table('guest_book');
                 })
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Table 查询数据库表支持子查询,子查询可以为闭包,还可以进行 join 查询
 
 ``` php
@@ -301,15 +310,16 @@ public function testSubIsClosureWithJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table(function ($select) {
+                ->table(function ($select): void {
                     $select->table('test_query');
                 }, 'remark')
                 ->join('test_query_subsql', 'name,value', 'name', '=', Condition::raw('[test_query.name]'))
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

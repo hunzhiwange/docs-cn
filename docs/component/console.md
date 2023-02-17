@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Console/CommandTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Console/CommandTest.php)
 :::
-    
+
 QueryPHP 内置控制台命名，底层采用 `Symfony/console` 开发，用法与 Symfony 一致，对基础命令进行了简单的封装。
 几个简单的封装来自 `Laravel`，是对 Symfony 的基础命令做了一些常用功能的包装，可以完全满足常用开发需求。
 
@@ -94,32 +94,32 @@ class CallOtherCommand extends Command
 public function testBaseUse(): void
 {
     $result = $this->runCommand(new CallOtherCommand(), [
-        'command'     => 'call:other',
-    ], function ($container, $application) {
+        'command' => 'call:other',
+    ], function ($container, $application): void {
         $application->normalizeCommands([Test1::class]);
     });
 
     $result = $this->normalizeContent($result);
 
-    $this->assertStringContainsString($this->normalizeContent('call other command test.'), $result);
-    $this->assertStringContainsString($this->normalizeContent('load1 test1'), $result);
+    static::assertStringContainsString($this->normalizeContent('call other command test.'), $result);
+    static::assertStringContainsString($this->normalizeContent('load1 test1'), $result);
 
     // argument and option
-    $this->assertStringContainsString($this->normalizeContent('argument is {"command":"call:other"}'), $result);
-    $this->assertStringContainsString($this->normalizeContent('option is {"help":false'), $result);
+    static::assertStringContainsString($this->normalizeContent('argument is {"command":"call:other"}'), $result);
+    static::assertStringContainsString($this->normalizeContent('option is {"help":false'), $result);
 
     // table
-    $this->assertStringContainsString($this->normalizeContent('| Item  | Value |'), $result);
-    $this->assertStringContainsString($this->normalizeContent('| hello | world |'), $result);
-    $this->assertStringContainsString($this->normalizeContent('| foo   | bar   |'), $result);
+    static::assertStringContainsString($this->normalizeContent('| Item  | Value |'), $result);
+    static::assertStringContainsString($this->normalizeContent('| hello | world |'), $result);
+    static::assertStringContainsString($this->normalizeContent('| foo   | bar   |'), $result);
 
     // time
-    $this->assertStringContainsString($this->normalizeContent(']test time'), $result);
+    static::assertStringContainsString($this->normalizeContent(']test time'), $result);
 
     // question
-    $this->assertStringContainsString($this->normalizeContent('a question'), $result);
+    static::assertStringContainsString($this->normalizeContent('a question'), $result);
 
     // error
-    $this->assertStringContainsString($this->normalizeContent('a error message'), $result);
+    static::assertStringContainsString($this->normalizeContent('a error message'), $result);
 }
 ```

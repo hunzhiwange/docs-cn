@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Support/TreeTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Support/TreeTest.php)
 :::
-    
+
 树组件 `tree` 提供了一些实用方法，用于整理数据为一棵树，并提供一些方法来获取树相关节点的信息。
 
 **Uses**
@@ -41,7 +41,7 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
@@ -49,7 +49,7 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ## Tree.toJson 树结构输出为 JSON 格式字符串
 
 ``` php
@@ -64,13 +64,13 @@ public function testToJson(): void
         [{"value":1,"data":"hello","children":[{"value":2,"data":"world"}]}]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $tree->toJson(),
     );
 }
 ```
-    
+
 ## Tree.setNode 设置节点
 
 ``` php
@@ -103,7 +103,7 @@ public function testSetNode(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
@@ -111,7 +111,7 @@ public function testSetNode(): void
     );
 }
 ```
-    
+
 ## Tree.setNode 在头部设置节点
 
 ``` php
@@ -144,7 +144,7 @@ public function testSetNodeAtHeader(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
@@ -152,7 +152,7 @@ public function testSetNodeAtHeader(): void
     );
 }
 ```
-    
+
 ## Tree.setNode 设置子节点
 
 ``` php
@@ -187,7 +187,7 @@ public function testSetNodeAsChildren(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
@@ -198,13 +198,13 @@ public function testSetNodeAsChildren(): void
         [{"value":1,"data":"hello","children":[{"value":2,"data":"world","children":[{"value":8,"data":"subbar"}]}]}]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $tree->toJson()
     );
 }
 ```
-    
+
 ## Tree.getChildrenTree 获取节点子树
 
 
@@ -270,7 +270,7 @@ public function testGetChildrenTree(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
@@ -292,7 +292,7 @@ public function testGetChildrenTree(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getChildrenTree(3)
@@ -300,7 +300,7 @@ public function testGetChildrenTree(): void
     );
 }
 ```
-    
+
 ## Tree.getChild 获取一级子节点 ID
 
 ``` php
@@ -314,7 +314,7 @@ public function testGetChild(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getChild(0)
@@ -322,7 +322,7 @@ public function testGetChild(): void
     );
 }
 ```
-    
+
 ## Tree.getChildren 获取所有子节点 ID
 
 ``` php
@@ -337,7 +337,7 @@ public function testGetChildren(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getChildren(3)
@@ -345,7 +345,7 @@ public function testGetChildren(): void
     );
 }
 ```
-    
+
 ## Tree.hasChild 是否存在一级子节点 ID
 
 ``` php
@@ -353,16 +353,16 @@ public function testHasChild(): void
 {
     $tree = $this->providerTree();
 
-    $this->assertTrue(
+    static::assertTrue(
         $tree->hasChild(3)
     );
 
-    $this->assertFalse(
+    static::assertFalse(
         $tree->hasChild(6)
     );
 }
 ```
-    
+
 ## Tree.hasChildren 是否存在子节点 ID
 
 ``` php
@@ -371,30 +371,30 @@ public function testHasChildren(): void
     $tree = $this->providerTree();
 
     // hasChildren 存在严格和不严格校验
-    $this->assertFalse(
+    static::assertFalse(
         $tree->hasChildren(3, [5, 100000])
     );
 
-    $this->assertTrue(
+    static::assertTrue(
         $tree->hasChildren(3, [5, 100000], false)
     );
 
     // 第二个元素为空
-    $this->assertFalse(
+    static::assertFalse(
         $tree->hasChildren(3, [], false)
     );
 
-    $this->assertFalse(
+    static::assertFalse(
         $tree->hasChildren(1, [], true)
     );
 
     // 非严格模式不存在
-    $this->assertFalse(
+    static::assertFalse(
         $tree->hasChildren(100000, [2, 3], false)
     );
 }
 ```
-    
+
 ## Tree.getParent 获取一级父节点 ID
 
 ``` php
@@ -408,7 +408,7 @@ public function testGetParent(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getParent(3)
@@ -421,7 +421,7 @@ public function testGetParent(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getParent(5)
@@ -435,7 +435,7 @@ public function testGetParent(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getParent(5, true)
@@ -443,7 +443,7 @@ public function testGetParent(): void
     );
 }
 ```
-    
+
 ## Tree.getParent 不存在的节点父级 ID 为空数组
 
 ``` php
@@ -452,13 +452,13 @@ public function testGetParentButNodeNotFound(): void
     $tree = $this->providerTree();
 
     // 不存对应的节点查询父节点
-    $this->assertSame(
+    static::assertSame(
         [],
         $tree->getParent(400000000)
     );
 }
 ```
-    
+
 ## Tree.getParents 获取所有父节点 ID
 
 ``` php
@@ -473,7 +473,7 @@ public function testGetParents(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getParents(5)
@@ -488,7 +488,7 @@ public function testGetParents(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->getParents(5, true)
@@ -496,7 +496,7 @@ public function testGetParents(): void
     );
 }
 ```
-    
+
 ## Tree.getLevel 获取节点所在的层级
 
 ``` php
@@ -504,33 +504,33 @@ public function testGetLevel(): void
 {
     $tree = $this->providerTree();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $tree->getLevel(3)
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $tree->getLevel(6)
     );
 
-    $this->assertSame(
+    static::assertSame(
         0,
         $tree->getLevel(0)
     );
 
-    $this->assertSame(
+    static::assertSame(
         0,
         $tree->getLevel(1)
     );
 
-    $this->assertSame(
+    static::assertSame(
         0,
         $tree->getLevel(100000)
     );
 }
 ```
-    
+
 ## Tree.getData.setData 设置和获取节点数据
 
 ``` php
@@ -556,14 +556,14 @@ public function testGetSetData(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         'world',
         $tree->getData(2)
     );
@@ -585,20 +585,20 @@ public function testGetSetData(): void
 
     $tree->setData(2, 'world => foo');
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         'world => foo',
         $tree->getData(2)
     );
 }
 ```
-    
+
 ## Tree.normalize 返回整理树节点数据结构
 
 ``` php
@@ -624,7 +624,7 @@ public function testNormalize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->toArray()
@@ -646,12 +646,12 @@ public function testNormalize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->normalize(null, [
                 'value' => 'value1',
-                'data'  => 'data1',
+                'data' => 'data1',
             ])
         )
     );
@@ -673,7 +673,7 @@ public function testNormalize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->normalize(function ($item) {
@@ -685,7 +685,7 @@ public function testNormalize(): void
     );
 }
 ```
-    
+
 ## Tree.normalize 返回整理树某个节点及下级的数据结构
 
 ``` php
@@ -709,7 +709,7 @@ public function testNormalizeNode(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $nodes,
         $this->varJson(
             $tree->normalize(null, [], 3)

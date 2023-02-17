@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Kernel/ExceptionRuntimeTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Kernel/ExceptionRuntimeTest.php)
 :::
-    
+
 QueryPHP 系统发生的异常统一由异常运行时进行管理，处理异常上报和返回异常响应。
 
 **异常运行时接口**
@@ -18,7 +18,6 @@ namespace Leevel\Kernel\Exceptions;
 use Leevel\Http\Request;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 /**
  * 异常运行时接口.
@@ -28,22 +27,22 @@ interface IRuntime
     /**
      * 异常上报.
      */
-    public function report(Throwable $e): void;
+    public function report(\Throwable $e): void;
 
     /**
      * 异常是否需要上报.
      */
-    public function reportable(Throwable $e): bool;
+    public function reportable(\Throwable $e): bool;
 
     /**
      * 异常渲染.
      */
-    public function render(Request $request, Throwable $e): Response;
+    public function render(Request $request, \Throwable $e): Response;
 
     /**
      * 命令行异常渲染.
      */
-    public function renderForConsole(OutputInterface $output, Throwable $e): void;
+    public function renderForConsole(OutputInterface $output, \Throwable $e): void;
 }
 
 ```
@@ -79,12 +78,10 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Leevel;
 use Leevel\Http\Request;
 use Leevel\Kernel\Exceptions\HttpException;
 use Leevel\Kernel\Exceptions\Runtime as ExceptionRuntime;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 /**
  * 异常运行时.
@@ -94,7 +91,7 @@ class Runtime extends ExceptionRuntime
     /**
      * {@inheritDoc}
      */
-    public function report(Throwable $e): void
+    public function report(\Throwable $e): void
     {
         parent::report($e);
     }
@@ -102,7 +99,7 @@ class Runtime extends ExceptionRuntime
     /**
      * {@inheritDoc}
      */
-    public function render(Request $request, Throwable $e): Response
+    public function render(Request $request, \Throwable $e): Response
     {
         return parent::render($request, $e);
     }
@@ -112,7 +109,7 @@ class Runtime extends ExceptionRuntime
      */
     public function getHttpExceptionView(HttpException $e): string
     {
-        return Leevel::path(sprintf('assets/exceptions/%d.php', $e->getStatusCode()));
+        return \Leevel::path(sprintf('assets/exceptions/%d.php', $e->getStatusCode()));
     }
 
     /**
@@ -120,7 +117,7 @@ class Runtime extends ExceptionRuntime
      */
     public function getDefaultHttpExceptionView(): string
     {
-        return Leevel::path('assets/exceptions/default.php');
+        return \Leevel::path('assets/exceptions/default.php');
     }
 
     /**
@@ -128,17 +125,17 @@ class Runtime extends ExceptionRuntime
      */
     public function getJsonExceptionView(HttpException $e): string
     {
-        return Leevel::path(sprintf('assets/exceptions/%d.php', $e->getStatusCode()));
+        return \Leevel::path(sprintf('assets/exceptions/%d.php', $e->getStatusCode()));
     }
 
     /**
      * 获取 JSON 状态的默认异常结果.
      */
-    public function getDefaultJsonExceptionData(Throwable $e): array
+    public function getDefaultJsonExceptionData(\Throwable $e): array
     {
         return [
             'error' => [
-                'code'    => $e->getCode(),
+                'code' => $e->getCode(),
                 'message' => $e->getMessage(),
             ],
         ];
@@ -153,7 +150,6 @@ class Runtime extends ExceptionRuntime
 ``` php
 <?php
 
-use Exception;
 use Leevel\Database\Ddd\EntityNotFoundException;
 use Leevel\Di\Container;
 use Leevel\Di\IContainer;
@@ -168,7 +164,6 @@ use Leevel\Log\ILog;
 use Leevel\Option\Option;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 ```
 
 ## 基本使用
@@ -210,11 +205,11 @@ class Runtime11 extends Runtime
         return '';
     }
 
-    public function getDefaultJsonExceptionData(Throwable $e): array
+    public function getDefaultJsonExceptionData(\Throwable $e): array
     {
         return [
             'error' => [
-                'code'    => $e->getCode(),
+                'code' => $e->getCode(),
                 'message' => $e->getMessage(),
             ],
         ];
@@ -227,7 +222,7 @@ class Runtime11 extends Runtime
 ``` php
 namespace Tests\Kernel;
 
-class Exception1 extends Exception
+class Exception1 extends \Exception
 {
 }
 ```
@@ -260,7 +255,7 @@ public function testBaseUse(): void
 
     $log = $this->createMock(ILog::class);
 
-    $this->assertNull($log->error('hello world', []));
+    static::assertNull($log->error('hello world', []));
 
     $container->singleton(ILog::class, function () use ($log) {
         return $log;
@@ -270,10 +265,10 @@ public function testBaseUse(): void
 
     $e = new Exception1('hello world');
 
-    $this->assertNull($runtime->report($e));
+    static::assertNull($runtime->report($e));
 }
 ```
-    
+
 ## report 自定义异常上报
 
 异常提供 `report` 方法即实现自定义异常上报。
@@ -285,7 +280,7 @@ public function testBaseUse(): void
 ``` php
 namespace Tests\Kernel;
 
-class Exception2 extends Exception
+class Exception2 extends \Exception
 {
     public function report(): void
     {
@@ -304,16 +299,16 @@ public function testExceptionItSelfWithReport(): void
 
     $e = new Exception2('hello world');
 
-    $this->assertArrayNotHasKey('testExceptionItSelfWithReport', $_SERVER);
+    static::assertArrayNotHasKey('testExceptionItSelfWithReport', $_SERVER);
 
-    $this->assertNull($runtime->report($e));
+    static::assertNull($runtime->report($e));
 
-    $this->assertSame(1, $_SERVER['testExceptionItSelfWithReport']);
+    static::assertSame(1, $_SERVER['testExceptionItSelfWithReport']);
 
     unset($_SERVER['testExceptionItSelfWithReport']);
 }
 ```
-    
+
 ## reportable 异常是否需要上报
 
 默认可上报，reportable 返回 true 可以会上报。
@@ -325,7 +320,7 @@ public function testExceptionItSelfWithReport(): void
 ``` php
 namespace Tests\Kernel;
 
-class ExceptionCanReportable extends Exception
+class ExceptionCanReportable extends \Exception
 {
     public function reportable(): bool
     {
@@ -346,13 +341,13 @@ public function testExceptionReportable(): void
     $app = new AppRuntime(new Container(), __DIR__.'/app');
     $runtime = new Runtime11($app);
     $e = new ExceptionCanReportable('hello world');
-    $this->assertArrayNotHasKey('testExceptionReportable', $_SERVER);
-    $this->assertNull($runtime->report($e));
-    $this->assertSame(1, $_SERVER['testExceptionReportable']);
+    static::assertArrayNotHasKey('testExceptionReportable', $_SERVER);
+    static::assertNull($runtime->report($e));
+    static::assertSame(1, $_SERVER['testExceptionReportable']);
     unset($_SERVER['testExceptionReportable']);
 }
 ```
-    
+
 ## reportable 异常是否需要上报不可上报例子
 
 **fixture 定义**
@@ -362,7 +357,7 @@ public function testExceptionReportable(): void
 ``` php
 namespace Tests\Kernel;
 
-class ExceptionCannotReportable extends Exception
+class ExceptionCannotReportable extends \Exception
 {
     public function reportable(): bool
     {
@@ -383,12 +378,12 @@ public function testExceptionReportableIsFalse(): void
     $app = new AppRuntime(new Container(), __DIR__.'/app');
     $runtime = new Runtime11($app);
     $e = new ExceptionCannotReportable('hello world');
-    $this->assertArrayNotHasKey('testExceptionReportableIsFalse', $_SERVER);
-    $this->assertNull($runtime->report($e));
-    $this->assertArrayNotHasKey('testExceptionReportableIsFalse', $_SERVER);
+    static::assertArrayNotHasKey('testExceptionReportableIsFalse', $_SERVER);
+    static::assertNull($runtime->report($e));
+    static::assertArrayNotHasKey('testExceptionReportableIsFalse', $_SERVER);
 }
 ```
-    
+
 ## render 开启调试模式的异常渲染
 
 ``` php
@@ -399,7 +394,7 @@ public function testRender(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(false);
-    $this->assertFalse($request->isAcceptJson());
+    static::assertFalse($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -407,7 +402,7 @@ public function testRender(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => true,
+            'debug' => true,
             'environment' => 'development',
         ],
     ]);
@@ -421,11 +416,11 @@ public function testRender(): void
     $e = new Exception1('hello world');
 
     $this->assertInstanceof(Response::class, $resultResponse = $runtime->render($request, $e));
-    $this->assertStringContainsString('Tests\\Kernel\\Exception1: hello world in file', $resultResponse->getContent());
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertStringContainsString('Tests\\Kernel\\Exception1: hello world in file', $resultResponse->getContent());
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## renderForConsole 命令行渲染
 
 ``` php
@@ -455,7 +450,7 @@ public function testRenderForConsole(): void
 
     $log = $this->createMock(ILog::class);
 
-    $this->assertNull($log->error('hello world', []));
+    static::assertNull($log->error('hello world', []));
 
     $container->singleton(ILog::class, function () use ($log) {
         return $log;
@@ -468,7 +463,7 @@ public function testRenderForConsole(): void
     $runtime->renderForConsole(new ConsoleOutput(), $e);
 }
 ```
-    
+
 ## render 自定义异常渲染
 
 异常提供 `render` 方法即实现自定义异常渲染。
@@ -480,9 +475,9 @@ public function testRenderForConsole(): void
 ``` php
 namespace Tests\Kernel;
 
-class Exception3 extends Exception
+class Exception3 extends \Exception
 {
-    public function render(Request $request, Exception $e): string
+    public function render(Request $request, \Exception $e): string
     {
         return 'hello world';
     }
@@ -498,7 +493,7 @@ public function testRenderWithCustomRenderMethod(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(false);
-    $this->assertFalse($request->isAcceptJson());
+    static::assertFalse($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -506,7 +501,7 @@ public function testRenderWithCustomRenderMethod(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => true,
+            'debug' => true,
             'environment' => 'development',
         ],
     ]);
@@ -521,11 +516,11 @@ public function testRenderWithCustomRenderMethod(): void
 
     $this->assertInstanceof(Response::class, $resultResponse = $runtime->render($request, $e));
 
-    $this->assertSame('hello world', $resultResponse->getContent());
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertSame('hello world', $resultResponse->getContent());
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render 自定义异常渲染直接返回响应对象
 
 异常提供 `render` 方法即实现自定义异常渲染。
@@ -537,9 +532,9 @@ public function testRenderWithCustomRenderMethod(): void
 ``` php
 namespace Tests\Kernel;
 
-class Exception4 extends Exception
+class Exception4 extends \Exception
 {
-    public function render(Request $request, Exception $e): Response
+    public function render(Request $request, \Exception $e): Response
     {
         return new Response('foo bar', 500);
     }
@@ -555,7 +550,7 @@ public function testRenderWithCustomRenderMethod2(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(false);
-    $this->assertFalse($request->isAcceptJson());
+    static::assertFalse($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -563,7 +558,7 @@ public function testRenderWithCustomRenderMethod2(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => true,
+            'debug' => true,
             'environment' => 'development',
         ],
     ]);
@@ -578,11 +573,11 @@ public function testRenderWithCustomRenderMethod2(): void
 
     $this->assertInstanceof(Response::class, $resultResponse = $runtime->render($request, $e));
 
-    $this->assertSame('foo bar', $resultResponse->getContent());
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertSame('foo bar', $resultResponse->getContent());
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render 异常渲染直接返回 JSON 数据
 
 ``` php
@@ -593,7 +588,7 @@ public function testRenderToJson(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(true);
-    $this->assertTrue($request->isAcceptJson());
+    static::assertTrue($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -601,7 +596,7 @@ public function testRenderToJson(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => true,
+            'debug' => true,
             'environment' => 'development',
         ],
     ]);
@@ -616,14 +611,14 @@ public function testRenderToJson(): void
 
     $this->assertInstanceof(Response::class, $resultResponse = $runtime->render($request, $e));
 
-    $this->assertIsArray($content = json_decode($resultResponse->getContent(), true));
-    $this->assertArrayHasKey('error', $content);
-    $this->assertSame('Tests\\Kernel\\Exception1', $content['error']['type']);
-    $this->assertSame('hello world', $content['error']['message']);
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertIsArray($content = json_decode($resultResponse->getContent(), true));
+    static::assertArrayHasKey('error', $content);
+    static::assertSame('Tests\\Kernel\\Exception1', $content['error']['type']);
+    static::assertSame('hello world', $content['error']['message']);
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render 自定义异常渲染直接返回支持转 JSON 响应的数据
 
 异常提供 `render` 方法即实现自定义异常渲染。
@@ -635,9 +630,9 @@ public function testRenderToJson(): void
 ``` php
 namespace Tests\Kernel;
 
-class Exception5 extends Exception
+class Exception5 extends \Exception
 {
-    public function render(Request $request, Exception $e): array
+    public function render(Request $request, \Exception $e): array
     {
         return ['foo' => 'bar'];
     }
@@ -653,7 +648,7 @@ public function testRenderWithCustomRenderMethodToJson(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(true);
-    $this->assertTrue($request->isAcceptJson());
+    static::assertTrue($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -661,7 +656,7 @@ public function testRenderWithCustomRenderMethodToJson(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => true,
+            'debug' => true,
             'environment' => 'development',
         ],
     ]);
@@ -676,11 +671,11 @@ public function testRenderWithCustomRenderMethodToJson(): void
 
     $this->assertInstanceof(Response::class, $resultResponse = $runtime->render($request, $e));
 
-    $this->assertSame('{"foo":"bar"}', $resultResponse->getContent());
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertSame('{"foo":"bar"}', $resultResponse->getContent());
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render HTTP 500 异常响应渲染
 
 异常提供 `render` 方法即实现自定义异常渲染。
@@ -709,11 +704,11 @@ class Runtime22 extends Runtime
         return '';
     }
 
-    public function getDefaultJsonExceptionData(Throwable $e): array
+    public function getDefaultJsonExceptionData(\Throwable $e): array
     {
         return [
             'error' => [
-                'code'    => $e->getCode(),
+                'code' => $e->getCode(),
                 'message' => $e->getMessage(),
             ],
         ];
@@ -735,7 +730,7 @@ class Exception6 extends InternalServerErrorHttpException
 
 ``` php
 <div id="status-code"><?php echo $status_code ?? 500; ?></div>
-        
+
 <div id="content">
     <p id="title"><?php echo $title; ?></p>
     <p id="sub-title"><?php echo $code; ?> <?php echo $message; ?></p>
@@ -767,7 +762,7 @@ public function testRendorWithHttpExceptionView(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => false,
+            'debug' => false,
             'environment' => 'development',
         ],
     ]);
@@ -784,13 +779,13 @@ public function testRendorWithHttpExceptionView(): void
 
     $content = $resultResponse->getContent();
 
-    $this->assertStringContainsString('<div id="status-code">500</div>', $content);
-    $this->assertStringContainsString('<p id="title">服务器内部错误</p>', $content);
-    $this->assertStringContainsString('<p id="sub-title">0 服务器遇到错误，无法完成请求</p>', $content);
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertStringContainsString('<div id="status-code">500</div>', $content);
+    static::assertStringContainsString('<p id="title">服务器内部错误</p>', $content);
+    static::assertStringContainsString('<p id="sub-title">0 服务器遇到错误，无法完成请求</p>', $content);
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render HTTP 异常响应渲染使用默认异常模板的例子
 
 异常提供 `render` 方法即实现自定义异常渲染。
@@ -832,7 +827,7 @@ public function testRendorWithHttpExceptionViewFor404(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => false,
+            'debug' => false,
             'environment' => 'development',
         ],
     ]);
@@ -849,13 +844,13 @@ public function testRendorWithHttpExceptionViewFor404(): void
 
     $content = $resultResponse->getContent();
 
-    $this->assertStringContainsString('<div id="status-code">404</div>', $content);
-    $this->assertStringContainsString('<p id="title">页面未找到</p>', $content);
-    $this->assertStringContainsString('<p id="sub-title">0 用户发出的请求针对的是不存在的页面</p>', $content);
-    $this->assertSame(404, $resultResponse->getStatusCode());
+    static::assertStringContainsString('<div id="status-code">404</div>', $content);
+    static::assertStringContainsString('<p id="title">页面未找到</p>', $content);
+    static::assertStringContainsString('<p id="sub-title">0 用户发出的请求针对的是不存在的页面</p>', $content);
+    static::assertSame(404, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render HTTP 异常响应渲染
 
 异常提供 `render` 方法即实现自定义异常渲染。
@@ -884,11 +879,11 @@ class Runtime3 extends Runtime
         return '';
     }
 
-    public function getDefaultJsonExceptionData(Throwable $e): array
+    public function getDefaultJsonExceptionData(\Throwable $e): array
     {
         return [
             'error' => [
-                'code'    => $e->getCode(),
+                'code' => $e->getCode(),
                 'message' => $e->getMessage(),
             ],
         ];
@@ -938,7 +933,7 @@ public function testRendorWithHttpExceptionViewButNotFoundViewAndWithDefaultView
 
     $option = new Option([
         'app' => [
-            'debug'       => false,
+            'debug' => false,
             'environment' => 'development',
         ],
     ]);
@@ -955,13 +950,13 @@ public function testRendorWithHttpExceptionViewButNotFoundViewAndWithDefaultView
 
     $content = $resultResponse->getContent();
 
-    $this->assertStringContainsString('<div id="status-code">405</div>', $content);
-    $this->assertStringContainsString('Tests\\Kernel\\Exception8<div class="file">#FILE', $content);
-    $this->assertStringContainsString('<p id="sub-title">0 hello world</p>', $content);
-    $this->assertSame(405, $resultResponse->getStatusCode());
+    static::assertStringContainsString('<div id="status-code">405</div>', $content);
+    static::assertStringContainsString('Tests\\Kernel\\Exception8<div class="file">#FILE', $content);
+    static::assertStringContainsString('<p id="sub-title">0 hello world</p>', $content);
+    static::assertSame(405, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render 调试关闭异常渲染
 
 ``` php
@@ -972,7 +967,7 @@ public function testRenderWithDebugIsOff(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(false);
-    $this->assertFalse($request->isAcceptJson());
+    static::assertFalse($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -980,7 +975,7 @@ public function testRenderWithDebugIsOff(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => false,
+            'debug' => false,
             'environment' => 'development',
         ],
     ]);
@@ -997,13 +992,13 @@ public function testRenderWithDebugIsOff(): void
 
     $content = $resultResponse->getContent();
 
-    $this->assertStringContainsString('<div id="status-code">500</div>', $content);
-    $this->assertStringContainsString('<p id="title">服务器内部错误</p>', $content);
-    $this->assertStringContainsString('<p id="sub-title">0 服务器遇到错误，无法完成请求</p>', $content);
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertStringContainsString('<div id="status-code">500</div>', $content);
+    static::assertStringContainsString('<p id="title">服务器内部错误</p>', $content);
+    static::assertStringContainsString('<p id="sub-title">0 服务器遇到错误，无法完成请求</p>', $content);
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```
-    
+
 ## render 调试开启异常渲染
 
 ``` php
@@ -1014,7 +1009,7 @@ public function testRenderWithDebugIsOn(): void
     $request = $this->createMock(Request::class);
 
     $request->method('isAcceptJson')->willReturn(false);
-    $this->assertFalse($request->isAcceptJson());
+    static::assertFalse($request->isAcceptJson());
 
     $container->singleton('request', function () use ($request) {
         return $request;
@@ -1022,7 +1017,7 @@ public function testRenderWithDebugIsOn(): void
 
     $option = new Option([
         'app' => [
-            'debug'       => true,
+            'debug' => true,
             'environment' => 'development',
         ],
     ]);
@@ -1039,7 +1034,7 @@ public function testRenderWithDebugIsOn(): void
 
     $content = $resultResponse->getContent();
 
-    $this->assertStringContainsString('Tests\\Kernel\\Exception1: hello world', $content);
-    $this->assertSame(500, $resultResponse->getStatusCode());
+    static::assertStringContainsString('Tests\\Kernel\\Exception1: hello world', $content);
+    static::assertSame(500, $resultResponse->getStatusCode());
 }
 ```

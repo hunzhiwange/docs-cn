@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/UniqueTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/UniqueTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -49,19 +49,19 @@ public function testBaseUse(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, exceptId:1),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, exceptId: 1),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,:int:1,_', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,:int:1,_', $rule);
+    static::assertTrue($validate->success());
 
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [139] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` <> :guest_book_id LIMIT 1 | Params:  2 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=1 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` <> 1 LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 }
 ```
-    
+
 ## 排除主键
 
 ``` php
@@ -72,32 +72,32 @@ public function testValidateWithExceptId(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, exceptId:1),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, exceptId: 1),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,:int:1,_', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,:int:1,_', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [139] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` <> :guest_book_id LIMIT 1 | Params:  2 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=1 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` <> 1 LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 排除主键，并且指定主键
 
 ``` php
@@ -108,32 +108,32 @@ public function testValidateWithExceptIdAndPrimaryKey(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, null, 1, 'id'),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, null, 1, 'id'),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,:int:1,id', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,:int:1,id', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [139] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` <> :guest_book_id LIMIT 1 | Params:  2 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=1 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` <> 1 LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 排除主键，复合主键将会被忽略
 
 ``` php
@@ -144,30 +144,31 @@ public function testValidateWithExceptIdAndCompositeIdAndIgnore(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(CompositeId::class, exceptId:1),
+            'name' => $rule = UniqueRule::rule(CompositeId::class, exceptId: 1),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\CompositeId,_,:int:1,_', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\CompositeId,_,:int:1,_', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('composite_id');
     $sqlResult = "SQL: [105] SELECT COUNT(*) AS row_count FROM `composite_id` WHERE `composite_id`.`name` = :composite_id_name LIMIT 1 | Params:  1 | Key: Name: [18] :composite_id_name | paramno=0 | name=[18] \":composite_id_name\" | is_param=1 | param_type=2 (SELECT COUNT(*) AS row_count FROM `composite_id` WHERE `composite_id`.`name` = 'foo' LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
     $connect
         ->table('composite_id')
         ->insert([
-            'id1'   => 1,
-            'id2'   => 2,
-            'name'  => '',
-        ]);
+            'id1' => 1,
+            'id2' => 2,
+            'name' => '',
+        ])
+    ;
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 不排除主键
 
 ``` php
@@ -178,32 +179,32 @@ public function testValidateWithoutExceptId(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class),
+            'name' => $rule = UniqueRule::rule(Guestbook::class),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,_,_', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,_,_', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [99] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name LIMIT 1 | Params:  1 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## unique 参数缺失
 
 ``` php
@@ -219,14 +220,14 @@ public function testCheckParamLengthException(): void
             'name' => 'foo',
         ],
         [
-            'name'     => 'unique',
+            'name' => 'unique',
         ]
     );
 
     $validate->success();
 }
 ```
-    
+
 ## 指定验证数据库字段
 
 ``` php
@@ -237,32 +238,32 @@ public function testValidateWithValidateField(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, 'name', 1),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, 'name', 1),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name,:int:1,_', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name,:int:1,_', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [139] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` <> :guest_book_id LIMIT 1 | Params:  2 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=1 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` <> 1 LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 指定验证数据库字段，支持多个字段
 
 ``` php
@@ -273,32 +274,32 @@ public function testValidateWithValidateMultiField(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, 'name:content', 1),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, 'name:content', 1),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name:content,:int:1,_', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name:content,:int:1,_', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [188] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`content` = :guest_book_content AND `guest_book`.`id` <> :guest_book_id LIMIT 1 | Params:  3 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [19] :guest_book_content | paramno=1 | name=[19] \":guest_book_content\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=2 | name=[14] \":guest_book_id\" | is_param=1 | param_type=1 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`content` = 'foo' AND `guest_book`.`id` <> 1 LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 带附加条件
 
 ``` php
@@ -309,32 +310,32 @@ public function testValidateWithParseAdditional(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, additional:['id' => '1']),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, additional: ['id' => '1']),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,_,_,id,:string:1', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,_,_,id,:string:1', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [138] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` = :guest_book_id LIMIT 1 | Params:  2 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=2 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` = '1' LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## 带附加条件，附加条件支持表达式
 
 ``` php
@@ -345,32 +346,32 @@ public function testValidateWithParseAdditionalCustomOperate(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, additional:['id:>' => '1']),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, additional: ['id:>' => '1']),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,_,_,id:>,:string:1', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,_,_,_,id:>,:string:1', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [138] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` > :guest_book_id LIMIT 1 | Params:  2 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=2 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` > '1' LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'    => 'foo',
+                'name' => 'foo',
                 'content' => '',
             ]),
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 带附加条件，附加条件区分整数和浮点数的字符串
 
 ``` php
@@ -381,19 +382,19 @@ public function testValidateWithStringFloatAndStringInt(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, 'name', '1', additional:['content' => '1.5']),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, 'name', '1', additional: ['content' => '1.5']),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name,:string:1,_,content,:string:1.5', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name,:string:1,_,content,:string:1.5', $rule);
+    static::assertTrue($validate->success());
 
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [188] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` <> :guest_book_id AND `guest_book`.`content` = :guest_book_content LIMIT 1 | Params:  3 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=2 | Key: Name: [19] :guest_book_content | paramno=2 | name=[19] \":guest_book_content\" | is_param=1 | param_type=2 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` <> '1' AND `guest_book`.`content` = '1.5' LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 }
 ```
-    
+
 ## 带附加条件，附加条件为整数和浮点数
 
 ``` php
@@ -404,14 +405,14 @@ public function testValidateWithFloatAndInt(): void
             'name' => 'foo',
         ],
         [
-            'name'     => $rule = UniqueRule::rule(Guestbook::class, 'name', 1, additional:['content' => 1.5]),
+            'name' => $rule = UniqueRule::rule(Guestbook::class, 'name', 1, additional: ['content' => 1.5]),
         ]
     );
 
-    $this->assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name,:int:1,_,content,:float:1.5', $rule);
-    $this->assertTrue($validate->success());
+    static::assertSame('unique:Tests\\Database\\Ddd\\Entity\\Guestbook,name,:int:1,_,content,:float:1.5', $rule);
+    static::assertTrue($validate->success());
     $sql = $this->getLastSql('guest_book');
     $sqlResult = "SQL: [188] SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = :guest_book_name AND `guest_book`.`id` <> :guest_book_id AND `guest_book`.`content` = :guest_book_content LIMIT 1 | Params:  3 | Key: Name: [16] :guest_book_name | paramno=0 | name=[16] \":guest_book_name\" | is_param=1 | param_type=2 | Key: Name: [14] :guest_book_id | paramno=1 | name=[14] \":guest_book_id\" | is_param=1 | param_type=1 | Key: Name: [19] :guest_book_content | paramno=2 | name=[19] \":guest_book_content\" | is_param=1 | param_type=2 (SELECT COUNT(*) AS row_count FROM `guest_book` WHERE `guest_book`.`name` = 'foo' AND `guest_book`.`id` <> 1 AND `guest_book`.`content` = 1.5 LIMIT 1)";
-    $this->assertSame($sql, $sqlResult);
+    static::assertSame($sql, $sqlResult);
 }
 ```

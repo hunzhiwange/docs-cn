@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/Update/UpdateTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/Update/UpdateTest.php)
 :::
-    
+
 将实体变更持久化到数据库。
 
 **Uses**
@@ -41,24 +41,24 @@ $entity->save()->flush();
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -70,10 +70,10 @@ public function testBaseUse(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->save();
 
     $data = <<<'eot'
@@ -87,7 +87,7 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -95,11 +95,11 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ::: tip
 通过 save 方法更新一个实体，并通过 flush 将实体持久化到数据库。
 :::
-    
+
 ## update 更新一个实体
 
 ``` php
@@ -109,10 +109,10 @@ public function testUpdateBaseUse(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->update();
 
     $data = <<<'eot'
@@ -126,7 +126,7 @@ public function testUpdateBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -134,11 +134,11 @@ public function testUpdateBaseUse(): void
     );
 }
 ```
-    
+
 ::: tip
 通过 update 方法保存一个实体，并通过 flush 将实体持久化到数据库。
 :::
-    
+
 ## 更新一个实体支持更新属性白名单
 
 **完整模型**
@@ -147,28 +147,30 @@ public function testUpdateBaseUse(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoUpdatePropWhiteEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::UPDATE_PROP_WHITE => true,
-            self::READONLY          => true,
-        ],
-        'name' => [
-            self::UPDATE_PROP_WHITE => true,
-        ],
-        'description' => [],
-    ];
+    #[Struct([
+        self::UPDATE_PROP_WHITE => true,
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+        self::UPDATE_PROP_WHITE => true,
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $description = null;
 }
 ```
 
@@ -194,7 +196,7 @@ public function testUpdatePropBlackAndWhite(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -202,7 +204,7 @@ public function testUpdatePropBlackAndWhite(): void
     );
 }
 ```
-    
+
 ## fill 设置允许自动填充字段
 
 **完整模型**
@@ -211,38 +213,45 @@ public function testUpdatePropBlackAndWhite(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoUpdateAutoFillEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [
-            self::UPDATE_FILL       => 'name for '.self::UPDATE_FILL,
-        ],
-        'description' => [
-            self::UPDATE_FILL    => null,
-        ],
-        'address' => [
-            self::UPDATE_FILL    => null,
-        ],
-        'foo_bar' => [
-            self::UPDATE_FILL    => null,
-        ],
-        'hello' => [
-            self::UPDATE_FILL      => null,
-        ],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+        self::UPDATE_FILL => 'name for '.self::UPDATE_FILL,
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+        self::UPDATE_FILL => null,
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+        self::UPDATE_FILL => null,
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+        self::UPDATE_FILL => null,
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+        self::UPDATE_FILL => null,
+    ])]
+    protected ?string $hello = null;
 
     protected function fillDescription($old): string
     {
@@ -273,7 +282,8 @@ public function testUpdateAutoFillWithCustomField(): void
     $entity = new DemoUpdateAutoFillEntity(['id' => 5], true);
     $entity
         ->fill(['address', 'hello'])
-        ->update();
+        ->update()
+    ;
 
     $data = <<<'eot'
         [
@@ -287,7 +297,7 @@ public function testUpdateAutoFillWithCustomField(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -295,11 +305,11 @@ public function testUpdateAutoFillWithCustomField(): void
     );
 }
 ```
-    
+
 ::: tip
 默认情况下，不会自动填充，除非指定允许填充字段。
 :::
-    
+
 ## fillAll 设置允许自动填充字段为所有字段
 
 ``` php
@@ -308,7 +318,8 @@ public function testUpdateAutoFillWithAll(): void
     $entity = new DemoUpdateAutoFillEntity(['id' => 5], true);
     $entity
         ->fillAll()
-        ->update();
+        ->update()
+    ;
 
     $data = <<<'eot'
         [
@@ -325,7 +336,7 @@ public function testUpdateAutoFillWithAll(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -333,7 +344,7 @@ public function testUpdateAutoFillWithAll(): void
     );
 }
 ```
-    
+
 ## save 自动判断操作快捷方式支持添加数据
 
 **完整模型**
@@ -342,25 +353,28 @@ public function testUpdateAutoFillWithAll(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoDatabaseEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name'      => [],
-        'create_at' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
 }
 ```
 
@@ -382,7 +396,7 @@ public function testSaveWithProp(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -390,7 +404,7 @@ public function testSaveWithProp(): void
     );
 }
 ```
-    
+
 ## update 更新快捷方式支持添加数据
 
 ``` php
@@ -410,7 +424,7 @@ public function testUpdateWithProp(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -418,7 +432,7 @@ public function testUpdateWithProp(): void
     );
 }
 ```
-    
+
 ## update 更新快捷方式存在更新数据才能够保存
 
 ``` php
@@ -426,10 +440,10 @@ public function testUpdateWithNoDataAndDoNothing(): void
 {
     $entity = new DemoDatabaseEntity(['id' => 1]);
     $this->assertInstanceof(DemoDatabaseEntity::class, $entity->update());
-    $this->assertNull($entity->flushData());
+    static::assertNull($entity->flushData());
 }
 ```
-    
+
 ## update 更新快捷方式存在主键数据才能够保存
 
 ``` php
@@ -442,7 +456,7 @@ public function testUpdateWithPrimaryKeyData(): void
     $entity->update();
 }
 ```
-    
+
 ## save 自动判断操作快捷方式复合主键例子
 
 **完整模型**
@@ -451,23 +465,27 @@ public function testUpdateWithPrimaryKeyData(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class CompositeId extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'composite_id';
 
     public const ID = ['id1', 'id2'];
 
     public const AUTO = null;
 
-    public const STRUCT = [
-        'id1'      => [],
-        'id2'      => [],
-        'name'     => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id1 = null;
+
+    #[Struct([
+    ])]
+    protected ?int $id2 = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -477,13 +495,13 @@ public function testSaveWithCompositeId(): void
 {
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('composite_id')
             ->insert([
-                'id1'     => 2,
-                'id2'     => 3,
+                'id1' => 2,
+                'id2' => 3,
             ])
     );
 
@@ -500,7 +518,7 @@ public function testSaveWithCompositeId(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -510,6 +528,6 @@ public function testSaveWithCompositeId(): void
     $entity->flush();
 
     $sql = 'SQL: [173] UPDATE `composite_id` SET `composite_id`.`name` = :pdonamedparameter_name WHERE `composite_id`.`id1` = :composite_id_id1 AND `composite_id`.`id2` = :composite_id_id2 LIMIT 1 | Params:  3 | Key: Name: [23] :pdonamedparameter_name | paramno=0 | name=[23] ":pdonamedparameter_name" | is_param=1 | param_type=2 | Key: Name: [17] :composite_id_id1 | paramno=1 | name=[17] ":composite_id_id1" | is_param=1 | param_type=1 | Key: Name: [17] :composite_id_id2 | paramno=2 | name=[17] ":composite_id_id2" | is_param=1 | param_type=1 (UPDATE `composite_id` SET `composite_id`.`name` = \'hello\' WHERE `composite_id`.`id1` = 2 AND `composite_id`.`id2` = 3 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
 }
 ```

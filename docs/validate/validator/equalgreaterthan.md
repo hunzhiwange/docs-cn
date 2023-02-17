@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/EqualGreaterThanTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/EqualGreaterThanTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\EqualGreaterThanTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         [3, 2],
@@ -48,21 +48,21 @@ public function testBaseUse($value, $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'equal_greater_than:'.$param,
+            'name' => 'equal_greater_than:'.$param,
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\EqualGreaterThanTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         [2, 3],
@@ -90,14 +90,14 @@ public function testBad($value, $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'equal_greater_than:'.$param,
+            'name' => 'equal_greater_than:'.$param,
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## 特殊例子的数据校验
 
 特别注意字符串和数字的严格区分。
@@ -106,12 +106,12 @@ public function testBad($value, $param): void
 public function testSpecial(): void
 {
     $validate = new Validator();
-    $this->assertTrue($validate->equalGreaterThan('0', '0'));
-    $this->assertFalse($validate->equalGreaterThan(0, '0'));
-    $this->assertFalse($validate->equalGreaterThan('0', 0));
+    static::assertTrue($validate->equalGreaterThan('0', '0'));
+    static::assertFalse($validate->equalGreaterThan(0, '0'));
+    static::assertFalse($validate->equalGreaterThan('0', 0));
 }
 ```
-    
+
 ## equal_greater_than 参数缺失
 
 ``` php
@@ -127,7 +127,7 @@ public function testMissParam(): void
             'name' => '',
         ],
         [
-            'name'     => 'equal_greater_than',
+            'name' => 'equal_greater_than',
         ]
     );
 

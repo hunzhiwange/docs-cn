@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/Replace/ReplaceTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/Replace/ReplaceTest.php)
 :::
-    
+
 替换实体，将实体变更持久化到数据库。
 
 **Uses**
@@ -35,24 +35,24 @@ $entity->replace()->flush();
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -64,10 +64,10 @@ public function testBaseUse(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['id', 'name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['id', 'name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->replace();
 
     $data = <<<'eot'
@@ -79,28 +79,28 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
         )
     );
 
-    $this->assertSame(1, $entity->flush());
+    static::assertSame(1, $entity->flush());
     $sql = 'SQL: [101] INSERT INTO `test` (`test`.`id`,`test`.`name`) VALUES (:pdonamedparameter_id,:pdonamedparameter_name) | Params:  2 | Key: Name: [21] :pdonamedparameter_id | paramno=0 | name=[21] ":pdonamedparameter_id" | is_param=1 | param_type=1 | Key: Name: [23] :pdonamedparameter_name | paramno=1 | name=[23] ":pdonamedparameter_name" | is_param=1 | param_type=2 (INSERT INTO `test` (`test`.`id`,`test`.`name`) VALUES (1,\'foo\'))';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
     $entity->refresh();
     $sql = 'SQL: [64] SELECT `test`.* FROM `test` WHERE `test`.`id` = :test_id LIMIT 1 | Params:  1 | Key: Name: [8] :test_id | paramno=0 | name=[8] ":test_id" | is_param=1 | param_type=1 (SELECT `test`.* FROM `test` WHERE `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
+    static::assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
 }
 ```
-    
+
 ::: tip
 通过 replace 方法替换一个实体，并通过 flush 将实体持久化到数据库。
 :::
-    
+
 ## replace 替换实体新增例子
 
 ``` php
@@ -110,10 +110,10 @@ public function testReplaceBaseUseCreate(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['id', 'name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['id', 'name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->replace();
 
     $data = <<<'eot'
@@ -125,24 +125,24 @@ public function testReplaceBaseUseCreate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
         )
     );
 
-    $this->assertSame(1, $entity->flush());
+    static::assertSame(1, $entity->flush());
     $sql = 'SQL: [101] INSERT INTO `test` (`test`.`id`,`test`.`name`) VALUES (:pdonamedparameter_id,:pdonamedparameter_name) | Params:  2 | Key: Name: [21] :pdonamedparameter_id | paramno=0 | name=[21] ":pdonamedparameter_id" | is_param=1 | param_type=1 | Key: Name: [23] :pdonamedparameter_name | paramno=1 | name=[23] ":pdonamedparameter_name" | is_param=1 | param_type=2 (INSERT INTO `test` (`test`.`id`,`test`.`name`) VALUES (1,\'foo\'))';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
     $entity->refresh();
     $sql = 'SQL: [64] SELECT `test`.* FROM `test` WHERE `test`.`id` = :test_id LIMIT 1 | Params:  1 | Key: Name: [8] :test_id | paramno=0 | name=[8] ":test_id" | is_param=1 | param_type=1 (SELECT `test`.* FROM `test` WHERE `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
+    static::assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
 }
 ```
-    
+
 ## replace.condition 替换实体配合设置扩展查询条件新增例子
 
 replace 新增例子，设置扩展查询条件没有任何作用。
@@ -155,10 +155,10 @@ public function testReplaceBaseUseCreateWithCondition(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['id', 'name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['id', 'name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->condition(['name' => 'hello'])->replace();
 
     $data = <<<'eot'
@@ -170,37 +170,37 @@ public function testReplaceBaseUseCreateWithCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
         )
     );
 
-    $this->assertSame(1, $entity->flush());
+    static::assertSame(1, $entity->flush());
     $sql = 'SQL: [101] INSERT INTO `test` (`test`.`id`,`test`.`name`) VALUES (:pdonamedparameter_id,:pdonamedparameter_name) | Params:  2 | Key: Name: [21] :pdonamedparameter_id | paramno=0 | name=[21] ":pdonamedparameter_id" | is_param=1 | param_type=1 | Key: Name: [23] :pdonamedparameter_name | paramno=1 | name=[23] ":pdonamedparameter_name" | is_param=1 | param_type=2 (INSERT INTO `test` (`test`.`id`,`test`.`name`) VALUES (1,\'foo\'))';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
     $entity->refresh();
     $sql = 'SQL: [64] SELECT `test`.* FROM `test` WHERE `test`.`id` = :test_id LIMIT 1 | Params:  1 | Key: Name: [8] :test_id | paramno=0 | name=[8] ":test_id" | is_param=1 | param_type=1 (SELECT `test`.* FROM `test` WHERE `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
+    static::assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
 }
 ```
-    
+
 ## replace 替换实体更新例子
 
 ``` php
 public function testReplaceBaseUseUpdate(): void
 {
     $connect = $this->createDatabaseConnect();
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('test')
             ->insert([
-                'id'       => 1,
-                'name'     => 'old',
+                'id' => 1,
+                'name' => 'old',
             ])
     );
 
@@ -208,10 +208,10 @@ public function testReplaceBaseUseUpdate(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['id', 'name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['id', 'name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->replace();
 
     $data = <<<'eot'
@@ -223,24 +223,24 @@ public function testReplaceBaseUseUpdate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
         )
     );
 
-    $this->assertSame(1, $entity->flush());
+    static::assertSame(1, $entity->flush());
     $sql = 'SQL: [94] UPDATE `test` SET `test`.`name` = :pdonamedparameter_name WHERE `test`.`id` = :test_id LIMIT 1 | Params:  2 | Key: Name: [23] :pdonamedparameter_name | paramno=0 | name=[23] ":pdonamedparameter_name" | is_param=1 | param_type=2 | Key: Name: [8] :test_id | paramno=1 | name=[8] ":test_id" | is_param=1 | param_type=1 (UPDATE `test` SET `test`.`name` = \'foo\' WHERE `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
     $entity->refresh();
     $sql = 'SQL: [64] SELECT `test`.* FROM `test` WHERE `test`.`id` = :test_id LIMIT 1 | Params:  1 | Key: Name: [8] :test_id | paramno=0 | name=[8] ":test_id" | is_param=1 | param_type=1 (SELECT `test`.* FROM `test` WHERE `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
+    static::assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
 }
 ```
-    
+
 ## replace.condition 替换实体配合设置扩展查询条件更新例子
 
 replace 更新例子，设置扩展查询条件影响更新查询条件。
@@ -250,13 +250,13 @@ replace 更新例子，设置扩展查询条件影响更新查询条件。
 public function testReplaceBaseUseUpdateWithCondition(): void
 {
     $connect = $this->createDatabaseConnect();
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('test')
             ->insert([
-                'id'       => 1,
-                'name'     => 'old',
+                'id' => 1,
+                'name' => 'old',
             ])
     );
 
@@ -264,10 +264,10 @@ public function testReplaceBaseUseUpdateWithCondition(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['id', 'name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame(1, $entity->id);
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['id', 'name'], $entity->changed());
+    static::assertNull($entity->flushData());
     $entity->condition(['name' => 'hello'])->replace();
 
     $data = <<<'eot'
@@ -279,24 +279,24 @@ public function testReplaceBaseUseUpdateWithCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
         )
     );
 
-    $this->assertSame(0, $entity->flush());
+    static::assertSame(0, $entity->flush());
     $sql = 'SQL: [125] UPDATE `test` SET `test`.`name` = :pdonamedparameter_name WHERE `test`.`name` = :test_name AND `test`.`id` = :test_id LIMIT 1 | Params:  3 | Key: Name: [23] :pdonamedparameter_name | paramno=0 | name=[23] ":pdonamedparameter_name" | is_param=1 | param_type=2 | Key: Name: [10] :test_name | paramno=1 | name=[10] ":test_name" | is_param=1 | param_type=2 | Key: Name: [8] :test_id | paramno=2 | name=[8] ":test_id" | is_param=1 | param_type=1 (UPDATE `test` SET `test`.`name` = \'foo\' WHERE `test`.`name` = \'hello\' AND `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
     $entity->refresh();
     $sql = 'SQL: [64] SELECT `test`.* FROM `test` WHERE `test`.`id` = :test_id LIMIT 1 | Params:  1 | Key: Name: [8] :test_id | paramno=0 | name=[8] ":test_id" | is_param=1 | param_type=1 (SELECT `test`.* FROM `test` WHERE `test`.`id` = 1 LIMIT 1)';
-    $this->assertSame($sql, $entity->select()->getLastSql());
-    $this->assertSame(1, $entity->id);
-    $this->assertSame('old', $entity->name);
+    static::assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame(1, $entity->id);
+    static::assertSame('old', $entity->name);
 }
 ```
-    
+
 ## replace 替换快捷方式，记录存在但是不存在更新数据不作任何处理
 
 这里和单纯的更新不一样，单纯的更新不存在更新数据，则会抛出异常。
@@ -306,13 +306,13 @@ public function testReplaceBaseUseUpdateWithCondition(): void
 public function testReplaceWithCompositeIdButNoDataToBeUpdate(): void
 {
     $connect = $this->createDatabaseConnect();
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('composite_id')
             ->insert([
-                'id1'     => 2,
-                'id2'     => 3,
+                'id1' => 2,
+                'id2' => 3,
             ])
     );
 
@@ -328,7 +328,7 @@ public function testReplaceWithCompositeIdButNoDataToBeUpdate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -338,6 +338,6 @@ public function testReplaceWithCompositeIdButNoDataToBeUpdate(): void
     $entity->flush();
 
     $sql = '[FAILED] SQL: [125] INSERT INTO `composite_id` (`composite_id`.`id1`,`composite_id`.`id2`) VALUES (:pdonamedparameter_id1,:pdonamedparameter_id2) | Params:  2 | Key: Name: [22] :pdonamedparameter_id1 | paramno=0 | name=[22] ":pdonamedparameter_id1" | is_param=1 | param_type=1 | Key: Name: [22] :pdonamedparameter_id2 | paramno=1 | name=[22] ":pdonamedparameter_id2" | is_param=1 | param_type=1 (INSERT INTO `composite_id` (`composite_id`.`id1`,`composite_id`.`id2`) VALUES (2,3))';
-    $this->assertSame($sql, $entity->select()->getLastSql());
+    static::assertSame($sql, $entity->select()->getLastSql());
 }
 ```

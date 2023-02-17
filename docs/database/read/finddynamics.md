@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/FindDynamicsTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/FindDynamicsTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -26,18 +26,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
-                ->find10()
+                ->find10(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## find[0-9]start[0-9] 查询指定开始位置指定条数数据
 
 ``` php
@@ -52,19 +53,20 @@ public function testFindStart(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->find10start3(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## findBy 字段条件查询单条数据
 
 方法遵循驼峰法，相应的字段为下划线。
@@ -85,19 +87,20 @@ public function testFindByField(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->findByUserName('1111'),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## findBy 字段条件查询单条数据，字段保持原样
 
 方法遵循驼峰法，尾巴加一个下划线 `_`，相应的字段保持原样。
@@ -118,19 +121,20 @@ public function testFindByFieldWithoutCamelize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->findByUserName_('1111'),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## findAllBy 字段条件查询多条数据，字段保持原样
 
 方法遵循驼峰法，相应的字段为下划线。
@@ -154,19 +158,20 @@ public function testTestfindAllByField(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->findAllByUserNameAndSex('1111', '222'),
+            $connect,
             4
         )
     );
 }
 ```
-    
+
 ## findAllBy 字段条件查询多条数据，字段保持原样
 
 方法遵循驼峰法，尾巴加一个下划线 `_`，相应的字段保持原样。
@@ -190,13 +195,14 @@ public function testTestfindAllByFieldWithoutCamelize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->findAllByUserNameAndSex_('1111', '222'),
+            $connect,
             5
         )
     );

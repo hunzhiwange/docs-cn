@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/EntityConversionTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/EntityConversionTest.php)
 :::
-    
+
 实体所有的属性设置和获取都会经过 `setter` 和 `setter` 处理，每个实体都有通用的 `setter` 和 `getter`，也支持自定义 `setter` 和 `getter`。
 
 我们可以通过自定义 `setter` 和 `setter` 方法实现属性类型转换。
@@ -15,9 +15,10 @@
 <?php
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Support\Collection;
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Tests\Database\DatabaseTestCase as TestCase;
 use Tests\Database\Ddd\Entity\DemoConversionEntity;
+use Tests\Database\Ddd\Entity\DemoEntity;
 ```
 
 ## 基本使用方法
@@ -40,93 +41,110 @@ protected function makeEntity(): DemoConversionEntity
 ``` php
 namespace Tests\Database\Ddd\Entity;
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
-use Leevel\Support\Collection;
-use stdClass;
+use Leevel\Database\Ddd\Struct;
 
 class DemoConversionEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'int1'           => [],
-        'int2'           => [],
-        'float1'         => [],
-        'float2'         => [],
-        'float3'         => [],
-        'string1'        => [],
-        'string2'        => [],
-        'bool1'          => [],
-        'bool2'          => [],
-        'bool3'          => [],
-        'bool4'          => [],
-        'obj1'           => [],
-        'obj2'           => [],
-        'obj3'           => [],
-        'arr1'           => [],
-        'arr2'           => [],
-        'json1'          => [],
-        'json2'          => [],
-        'coll1'          => [],
-        'coll2'          => [],
-        'invalid_setter' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
 
-    private $_id;
+    #[Struct([
+    ])]
+    protected $int1;
 
-    private $_int1;
+    #[Struct([
+    ])]
+    protected $int2;
 
-    private $_int2;
+    #[Struct([
+    ])]
+    protected $int3;
 
-    private $_int3;
+    #[Struct([
+    ])]
+    protected $float1;
 
-    private $_float1;
+    #[Struct([
+    ])]
+    protected $float2;
 
-    private $_float2;
+    #[Struct([
+    ])]
+    protected $float3;
 
-    private $_float3;
+    #[Struct([
+    ])]
+    protected $string1;
 
-    private $_string1;
+    #[Struct([
+    ])]
+    protected $string2;
 
-    private $_string2;
+    #[Struct([
+    ])]
+    protected $bool1;
 
-    private $_bool1;
+    #[Struct([
+    ])]
+    protected $bool2;
 
-    private $_bool2;
+    #[Struct([
+    ])]
+    protected $bool3;
 
-    private $_bool3;
+    #[Struct([
+    ])]
+    protected $bool4;
 
-    private $_bool4;
+    #[Struct([
+    ])]
+    protected $obj1;
 
-    private $_obj1;
+    #[Struct([
+    ])]
+    protected $obj2;
 
-    private $_obj2;
+    #[Struct([
+    ])]
+    protected $obj3;
 
-    private $_obj3;
+    #[Struct([
+    ])]
+    protected $arr1;
 
-    private $_arr1;
+    #[Struct([
+    ])]
+    protected $arr2;
 
-    private $_arr2;
+    #[Struct([
+    ])]
+    protected $json1;
 
-    private $_json1;
+    #[Struct([
+    ])]
+    protected $json2;
 
-    private $_json2;
+    #[Struct([
+    ])]
+    protected $coll1;
 
-    private $_coll1;
+    #[Struct([
+    ])]
+    protected $coll2;
 
-    private $_coll2;
-
-    private $_invalidSetter;
+    #[Struct([
+    ])]
+    protected $invalidSetter;
 
     public function setInt1($value): Entity
     {
@@ -243,7 +261,7 @@ class DemoConversionEntity extends Entity
         return $this->setter('obj1', json_encode($value, JSON_FORCE_OBJECT));
     }
 
-    public function getObj1(): stdClass
+    public function getObj1(): \stdClass
     {
         return json_decode($this->getter('obj1'));
     }
@@ -255,17 +273,17 @@ class DemoConversionEntity extends Entity
         return $this->setter('obj2', json_encode($value, JSON_FORCE_OBJECT));
     }
 
-    public function getObj2(): stdClass
+    public function getObj2(): \stdClass
     {
         return json_decode($this->getter('obj2'));
     }
 
-    public function setObj3(stdClass $value): Entity
+    public function setObj3(\stdClass $value): Entity
     {
         return $this->setter('obj3', json_encode($value));
     }
 
-    public function getObj3(): stdClass
+    public function getObj3(): \stdClass
     {
         return json_decode($this->getter('obj3'));
     }
@@ -317,7 +335,8 @@ class DemoConversionEntity extends Entity
 
     public function getColl1(): Collection
     {
-        return new Collection(json_decode($this->getter('coll1'), true));
+        $data = json_decode($this->getter('coll1'), true);
+        return new Collection([new DemoEntity($data)]);
     }
 
     public function setColl2(array $value): Entity
@@ -327,10 +346,11 @@ class DemoConversionEntity extends Entity
 
     public function getColl2(): Collection
     {
-        return new Collection(json_decode($this->getter('coll2'), true));
+        $data = json_decode($this->getter('coll2'), true);
+        return new Collection([new DemoEntity($data)]);
     }
 
-    public function setInvalidSetter($value)
+    public function setInvalidSetter($value): void
     {
     }
 }
@@ -343,14 +363,14 @@ public function testBaseUse($field, $source, $prop, $conversion): void
     $entity = $this->makeEntity();
     $entity->withProp($field, $source);
 
-    $assertMethod = in_array($field, [
+    $assertMethod = \in_array($field, [
         'obj1', 'obj2',
         'obj3', 'obj4',
         'coll1', 'coll2',
         'collection1', 'collection2',
     ], true) ? 'assertEquals' : 'assertSame';
 
-    $this->assertSame($prop, $this->getTestProperty($entity, 'data')[$field]);
+    static::assertSame($prop, $this->getTestProperty($entity, $field));
     $this->{$assertMethod}($conversion, $entity->prop($field));
 }
 ```

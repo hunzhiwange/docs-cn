@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/Create/CreateTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/Create/CreateTest.php)
 :::
-    
+
 将实体持久化到数据库。
 
 **Uses**
@@ -42,24 +42,24 @@ $entity->save()->flush();
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -71,9 +71,9 @@ public function testBaseUse(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['name'], $entity->changed());
-    $this->assertNull($entity->flushData());
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['name'], $entity->changed());
+    static::assertNull($entity->flushData());
 
     $entity->save();
 
@@ -85,7 +85,7 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -93,11 +93,11 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ::: tip
 通过 save 方法保存一个实体，并通过 flush 将实体持久化到数据库。
 :::
-    
+
 ## create 创建一个实体
 
 ``` php
@@ -107,10 +107,10 @@ public function testCreateBaseUse(): void
     $entity->name = 'foo';
 
     $this->assertInstanceof(Entity::class, $entity);
-    $this->assertSame('foo', $entity->name);
-    $this->assertSame(['name'], $entity->changed());
+    static::assertSame('foo', $entity->name);
+    static::assertSame(['name'], $entity->changed());
 
-    $this->assertNull($entity->flushData());
+    static::assertNull($entity->flushData());
 
     $entity->create();
 
@@ -122,7 +122,7 @@ public function testCreateBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -130,11 +130,11 @@ public function testCreateBaseUse(): void
     );
 }
 ```
-    
+
 ::: tip
 通过 create 方法保存一个实体，并通过 flush 将实体持久化到数据库。
 :::
-    
+
 ## 创建一个实体支持构造器白名单
 
 **完整模型**
@@ -143,25 +143,25 @@ public function testCreateBaseUse(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoConstructPropWhiteEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY             => true,
-            self::CONSTRUCT_PROP_WHITE => true,
-        ],
-        'name' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+        self::CONSTRUCT_PROP_WHITE => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -172,15 +172,15 @@ class DemoConstructPropWhiteEntity extends Entity
 public function testConsturctPropWhite(): void
 {
     $entity = new DemoConstructPropWhiteEntity([
-        'id'   => 5,
+        'id' => 5,
         'name' => 'foo',
     ]);
 
-    $this->assertSame(5, $entity->getId());
-    $this->assertNull($entity->getName());
+    static::assertSame(5, $entity->getId());
+    static::assertNull($entity->getName());
 }
 ```
-    
+
 ## 创建一个实体支持构造器黑名单
 
 **完整模型**
@@ -189,25 +189,25 @@ public function testConsturctPropWhite(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoConstructPropBlackEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY             => true,
-            self::CONSTRUCT_PROP_BLACK => true,
-        ],
-        'name' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+        self::CONSTRUCT_PROP_BLACK => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -218,15 +218,15 @@ class DemoConstructPropBlackEntity extends Entity
 public function testConsturctPropBlack(): void
 {
     $entity = new DemoConstructPropBlackEntity([
-        'id'   => 5,
+        'id' => 5,
         'name' => 'foo',
     ]);
 
-    $this->assertNull($entity->getId());
-    $this->assertSame('foo', $entity->getName());
+    static::assertNull($entity->getId());
+    static::assertSame('foo', $entity->getName());
 }
 ```
-    
+
 ## 创建一个实体支持创建属性白名单
 
 **完整模型**
@@ -235,27 +235,29 @@ public function testConsturctPropBlack(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoCreatePropWhiteEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [
-            self::CREATE_PROP_WHITE => true,
-        ],
-        'description' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+        self::CREATE_PROP_WHITE => true,
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $description = null;
 }
 ```
 
@@ -266,7 +268,7 @@ class DemoCreatePropWhiteEntity extends Entity
 public function testSavePropBlackAndWhite(): void
 {
     $entity = new DemoCreatePropWhiteEntity([
-        'name'        => 'foo',
+        'name' => 'foo',
         'description' => 'hello description',
     ]);
     $entity->save();
@@ -279,7 +281,7 @@ public function testSavePropBlackAndWhite(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -287,7 +289,7 @@ public function testSavePropBlackAndWhite(): void
     );
 }
 ```
-    
+
 ## fill 设置允许自动填充字段
 
 **完整模型**
@@ -296,38 +298,45 @@ public function testSavePropBlackAndWhite(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoCreateAutoFillEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [
-            self::CREATE_FILL       => 'name for '.self::CREATE_FILL,
-        ],
-        'description' => [
-            self::CREATE_FILL   => null,
-        ],
-        'address' => [
-            self::CREATE_FILL    => null,
-        ],
-        'foo_bar' => [
-            self::CREATE_FILL    => null,
-        ],
-        'hello' => [
-            self::CREATE_FILL      => null,
-        ],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+        self::CREATE_FILL => 'name for '.self::CREATE_FILL,
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+        self::CREATE_FILL => null,
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+        self::CREATE_FILL => null,
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+        self::CREATE_FILL => null,
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+        self::CREATE_FILL => null,
+    ])]
+    protected ?string $hello = null;
 
     protected function fillDescription($old): string
     {
@@ -358,7 +367,8 @@ public function testCreateAutoFill(): void
     $entity = new DemoCreateAutoFillEntity();
     $entity
         ->fill()
-        ->create();
+        ->create()
+    ;
 
     $data = <<<'eot'
         [
@@ -366,7 +376,7 @@ public function testCreateAutoFill(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -374,11 +384,11 @@ public function testCreateAutoFill(): void
     );
 }
 ```
-    
+
 ::: tip
 默认情况下，不会自动填充，除非指定允许填充字段。
 :::
-    
+
 ## fillAll 设置允许自动填充字段为所有字段
 
 ``` php
@@ -387,7 +397,8 @@ public function testAutoFillWithAll(): void
     $entity = new DemoCreateAutoFillEntity();
     $entity
         ->fillAll()
-        ->save();
+        ->save()
+    ;
 
     $data = <<<'eot'
         [
@@ -401,7 +412,7 @@ public function testAutoFillWithAll(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -409,7 +420,7 @@ public function testAutoFillWithAll(): void
     );
 }
 ```
-    
+
 ## fill 设置允许自动填充字段指定字段例子
 
 ``` php
@@ -418,7 +429,8 @@ public function testAutoFillWithCustomField(): void
     $entity = new DemoCreateAutoFillEntity();
     $entity
         ->fill(['address'])
-        ->save();
+        ->save()
+    ;
 
     $data = <<<'eot'
         [
@@ -428,7 +440,7 @@ public function testAutoFillWithCustomField(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -436,7 +448,7 @@ public function testAutoFillWithCustomField(): void
     );
 }
 ```
-    
+
 ## save 自动判断操作快捷方式支持添加数据
 
 **完整模型**
@@ -445,25 +457,28 @@ public function testAutoFillWithCustomField(): void
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoDatabaseEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name'      => [],
-        'create_at' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
 }
 ```
 
@@ -482,7 +497,7 @@ public function testSaveWithProp(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()
@@ -490,7 +505,7 @@ public function testSaveWithProp(): void
     );
 }
 ```
-    
+
 ## create 新增快捷方式支持添加数据
 
 ``` php
@@ -507,7 +522,7 @@ public function testCreateWithProp(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->flushData()

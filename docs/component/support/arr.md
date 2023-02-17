@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Support/ArrTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Support/ArrTest.php)
 :::
-    
+
 这里为系统提供的数组使用的功能文档说明。
 
 **Uses**
@@ -11,8 +11,6 @@
 ``` php
 <?php
 
-use Exception;
-use JsonSerializable;
 use Leevel\Support\Arr;
 use Leevel\Support\IArray;
 use Leevel\Support\IJson;
@@ -23,16 +21,16 @@ use Leevel\Support\IJson;
 ``` php
 public function testBaseUse(): void
 {
-    $this->assertTrue(Arr::normalize(true));
-    $this->assertSame(['a', 'b'], Arr::normalize('a,b'));
-    $this->assertSame(['a', 'b'], Arr::normalize(['a', 'b']));
-    $this->assertSame(['a'], Arr::normalize(['a', '']));
-    $this->assertSame(['a'], Arr::normalize(['a', ''], ',', true));
-    $this->assertSame(['a', ' 0 '], Arr::normalize(['a', ' 0 '], ',', true));
-    $this->assertSame(['a', '0'], Arr::normalize(['a', ' 0 '], ','));
+    static::assertTrue(Arr::normalize(true));
+    static::assertSame(['a', 'b'], Arr::normalize('a,b'));
+    static::assertSame(['a', 'b'], Arr::normalize(['a', 'b']));
+    static::assertSame(['a'], Arr::normalize(['a', '']));
+    static::assertSame(['a'], Arr::normalize(['a', ''], ',', true));
+    static::assertSame(['a', ' 0 '], Arr::normalize(['a', ' 0 '], ',', true));
+    static::assertSame(['a', '0'], Arr::normalize(['a', ' 0 '], ','));
 }
 ```
-    
+
 ## normalize 格式化字符串
 
 ``` php
@@ -46,7 +44,7 @@ public function testNormalize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -54,7 +52,7 @@ public function testNormalize(): void
     );
 }
 ```
-    
+
 ## normalize 格式化分隔字符串
 
 ``` php
@@ -69,7 +67,7 @@ public function testNormalizeSplitString(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -77,7 +75,7 @@ public function testNormalizeSplitString(): void
     );
 }
 ```
-    
+
 ## normalize 格式化数组
 
 ``` php
@@ -92,7 +90,7 @@ public function testNormalizeArr(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -100,7 +98,7 @@ public function testNormalizeArr(): void
     );
 }
 ```
-    
+
 ## normalize 格式化数组过滤空格
 
 ``` php
@@ -115,7 +113,7 @@ public function testNormalizeArrFilterEmpty(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -123,7 +121,7 @@ public function testNormalizeArrFilterEmpty(): void
     );
 }
 ```
-    
+
 ## normalize 格式化数组不过滤空格
 
 ``` php
@@ -139,7 +137,7 @@ public function testNormalizeArrNotFilterEmpty(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -147,7 +145,7 @@ public function testNormalizeArrNotFilterEmpty(): void
     );
 }
 ```
-    
+
 ## normalize 格式化数据即不是数组也不是字符串
 
 ``` php
@@ -155,10 +153,10 @@ public function testNormalizeNotArrAndNotString(): void
 {
     $result = Arr::normalize(false);
 
-    $this->assertFalse($result);
+    static::assertFalse($result);
 }
 ```
-    
+
 ## only 允许特定 Key 通过
 
 相当于白名单。
@@ -175,7 +173,7 @@ public function testOnly(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -183,7 +181,7 @@ public function testOnly(): void
     );
 }
 ```
-    
+
 ## except 排除特定 Key 通过
 
 相当于黑名单。
@@ -199,7 +197,7 @@ public function testExcept(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -207,7 +205,7 @@ public function testExcept(): void
     );
 }
 ```
-    
+
 ## filter 数据过滤
 
 基本的字符串会执行一次清理工作。
@@ -228,7 +226,7 @@ public function testFilter(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -236,7 +234,7 @@ public function testFilter(): void
     );
 }
 ```
-    
+
 ## filter 数据过滤待规则
 
 ``` php
@@ -244,7 +242,7 @@ public function testFilterWithRule(): void
 {
     $sourceData = ['foo' => 'bar', 'hello' => 'world ', 'i' => '5'];
     $rule = [
-        'i'   => ['intval'],
+        'i' => ['intval'],
         'foo' => ['md5'],
         'bar' => [function ($v) {
             return $v.' php';
@@ -261,7 +259,7 @@ public function testFilterWithRule(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -269,7 +267,7 @@ public function testFilterWithRule(): void
     );
 }
 ```
-    
+
 ## filter 数据过滤待规则必须是数组
 
 ``` php
@@ -288,7 +286,7 @@ public function testFilterRuleIsNotArr(): void
     Arr::filter($sourceData, $rule);
 }
 ```
-    
+
 ## filter 数据过滤待规则不是一个回调
 
 ``` php
@@ -307,7 +305,7 @@ public function testFilterRuleItemIsNotACallback(): void
     Arr::filter($sourceData, $rule);
 }
 ```
-    
+
 ## filter 数据过滤默认不处理 NULL 值
 
 ``` php
@@ -324,7 +322,7 @@ public function testFilterWithoutMust(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -332,7 +330,7 @@ public function testFilterWithoutMust(): void
     );
 }
 ```
-    
+
 ## filter 数据过滤强制处理 NULL 值
 
 ``` php
@@ -349,7 +347,7 @@ public function testFilterWithMust(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -357,7 +355,7 @@ public function testFilterWithMust(): void
     );
 }
 ```
-    
+
 ## shouldJson 数据过滤强制处理 NULL 值
 
 测试实现了 `\Leevel\Support\IArray` 的对象
@@ -397,7 +395,7 @@ class ArrMyJson implements IJson
 ``` php
 namespace Tests\Support;
 
-class ArrMyJsonSerializable implements JsonSerializable
+class ArrMyJsonSerializable implements \JsonSerializable
 {
     public function jsonSerialize(): mixed
     {
@@ -410,28 +408,28 @@ class ArrMyJsonSerializable implements JsonSerializable
 ``` php
 public function testShouldJson(): void
 {
-    $this->assertTrue(Arr::shouldJson(['foo' => 'bar']));
-    $this->assertTrue(Arr::shouldJson(new ArrMyArray()));
-    $this->assertTrue(Arr::shouldJson(new ArrMyJson()));
-    $this->assertTrue(Arr::shouldJson(new ArrMyJsonSerializable()));
+    static::assertTrue(Arr::shouldJson(['foo' => 'bar']));
+    static::assertTrue(Arr::shouldJson(new ArrMyArray()));
+    static::assertTrue(Arr::shouldJson(new ArrMyJson()));
+    static::assertTrue(Arr::shouldJson(new ArrMyJsonSerializable()));
 }
 ```
-    
+
 ## convertJson 转换 JSON 数据
 
 ``` php
 public function testConvertJson(): void
 {
-    $this->assertSame('{"foo":"bar"}', Arr::convertJson(['foo' => 'bar']));
-    $this->assertSame('{"foo":"bar"}', Arr::convertJson(['foo' => 'bar'], JSON_THROW_ON_ERROR));
-    $this->assertSame('{"hello":"IArray"}', Arr::convertJson(new ArrMyArray()));
-    $this->assertSame('{"hello":"IJson"}', Arr::convertJson(new ArrMyJson()));
-    $this->assertSame('{"hello":"JsonSerializable"}', Arr::convertJson(new ArrMyJsonSerializable()));
-    $this->assertSame('{"成":"都"}', Arr::convertJson(['成' => '都']));
-    $this->assertSame('{"\u6210":"\u90fd"}', Arr::convertJson(['成' => '都'], 0));
+    static::assertSame('{"foo":"bar"}', Arr::convertJson(['foo' => 'bar']));
+    static::assertSame('{"foo":"bar"}', Arr::convertJson(['foo' => 'bar'], JSON_THROW_ON_ERROR));
+    static::assertSame('{"hello":"IArray"}', Arr::convertJson(new ArrMyArray()));
+    static::assertSame('{"hello":"IJson"}', Arr::convertJson(new ArrMyJson()));
+    static::assertSame('{"hello":"JsonSerializable"}', Arr::convertJson(new ArrMyJsonSerializable()));
+    static::assertSame('{"成":"都"}', Arr::convertJson(['成' => '都']));
+    static::assertSame('{"\u6210":"\u90fd"}', Arr::convertJson(['成' => '都'], 0));
 }
 ```
-    
+
 ## inCondition 数据库 IN 查询条件
 
 ``` php
@@ -455,7 +453,7 @@ public function testInCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson($result)
     );
@@ -468,7 +466,7 @@ public function testInCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson($result)
     );
@@ -481,13 +479,13 @@ public function testInCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson($result)
     );
 }
 ```
-    
+
 ## inCondition 数据库 IN 查询条件支持过滤器
 
 ``` php
@@ -508,7 +506,7 @@ public function testInConditionWithFilter(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson($result)
     );
@@ -522,7 +520,7 @@ public function testInConditionWithFilter(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson($result)
     );

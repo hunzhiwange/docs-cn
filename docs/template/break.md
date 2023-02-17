@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/Compiler/CompilerBreakTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/Compiler/CompilerBreakTest.php)
 :::
-    
+
 break 和 continue 是各种循环中非常重要的两个流程标记语言，框架当然也会支持它们。
 
 ## break 标签
@@ -33,10 +33,10 @@ public function testBaseUse(): void
         <?php endforeach; endif; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## ontinue 标签
 
 ``` php
@@ -64,6 +64,6 @@ public function testContinue(): void
         <?php endforeach; endif; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```

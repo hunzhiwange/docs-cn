@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Update/UpdateTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Update/UpdateTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -37,19 +37,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
-                ->update(['name' => '小猪'])
+                ->update(['name' => '小猪']),
+            $connect
         )
     );
 }
 ```
-    
+
 ## update 更新指定条数
 
 ``` php
@@ -72,20 +72,20 @@ public function testWithLimit(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
                 ->limit(5)
-                ->update(['name' => '小猪'])
+                ->update(['name' => '小猪']),
+            $connect
         )
     );
 }
 ```
-    
+
 ## update 更新排序
 
 ``` php
@@ -108,20 +108,20 @@ public function testWithOrderBy(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
                 ->orderBy('id desc')
-                ->update(['name' => '小猪'])
+                ->update(['name' => '小猪']),
+            $connect
         )
     );
 }
 ```
-    
+
 ## update 更新排序和指定条数
 
 ``` php
@@ -144,21 +144,21 @@ public function testWithOrderAndLimit(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
                 ->orderBy('id desc')
                 ->limit(2)
-                ->update(['name' => '小猪'])
+                ->update(['name' => '小猪']),
+            $connect
         )
     );
 }
 ```
-    
+
 ## update 连表更新
 
 ``` php
@@ -181,20 +181,20 @@ public function testWithJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query as t')
                 ->join('test_query_subsql as h', '', 't.id', '=', Condition::raw('[value]'))
                 ->where('id', 503)
-                ->update(['name' => '小猪'])
+                ->update(['name' => '小猪']),
+            $connect
         )
     );
 }
 ```
-    
+
 ## update 更新参数绑定
 
 ``` php
@@ -218,28 +218,28 @@ public function testBind(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
                 ->bind(['小牛逼'])
                 ->update(
                     [
-                        'name'  => Condition::raw(':hello'),
+                        'name' => Condition::raw(':hello'),
                         'value' => Condition::raw('?'),
                     ],
                     [
                         'hello' => 'hello world!',
                     ]
-                )
+                ),
+            $connect
         )
     );
 }
 ```
-    
+
 ## update 更新支持表达式
 
 ``` php
@@ -259,16 +259,16 @@ public function testExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
                 ->update([
                     'name' => Condition::raw('concat([value],[name])'),
-                ])
+                ]),
+            $connect
         )
     );
 }

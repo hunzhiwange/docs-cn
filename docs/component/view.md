@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/ManagerTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/ManagerTest.php)
 :::
-    
+
 视图统一由视图组件完成，通常我们使用代理 `\Leevel\View\Proxy\View` 类进行静态调用。
 
 内置支持的视图驱动类型包括 html、phpui，未来可能增加其他驱动。
@@ -139,10 +139,10 @@ public function testBaseUse(): void
     $manager = $this->createManager();
     $manager->setVar('foo', 'bar');
     $result = $manager->display('html_test');
-    $this->assertSame('hello html,bar.', $result);
+    static::assertSame('hello html,bar.', $result);
 }
 ```
-    
+
 ## PHP 自身作为模板
 
 ``` php
@@ -151,11 +151,11 @@ public function testPhpUi(): void
     $manager = $this->createManager('phpui');
 
     $manager->setVar('hello', 'world');
-    $this->assertSame('world', $manager->getVar('hello'));
-    $this->assertSame('world', $manager->connect('phpui')->getVar('hello'));
+    static::assertSame('world', $manager->getVar('hello'));
+    static::assertSame('world', $manager->connect('phpui')->getVar('hello'));
 }
 ```
-    
+
 ## getVar 获取变量值
 
 ``` php
@@ -164,11 +164,11 @@ public function testGetVar(): void
     $manager = $this->createManager();
 
     $manager->setVar('hello', 'world');
-    $this->assertSame('world', $manager->getVar('hello'));
-    $this->assertSame(null, $manager->getVar('hello2'));
+    static::assertSame('world', $manager->getVar('hello'));
+    static::assertNull($manager->getVar('hello2'));
 }
 ```
-    
+
 ## deleteVar 删除变量值
 
 ``` php
@@ -177,15 +177,15 @@ public function testDeleteVar(): void
     $manager = $this->createManager('phpui');
 
     $manager->setVar('hello', 'world');
-    $this->assertSame('world', $manager->getVar('hello'));
-    $this->assertSame('world', $manager->connect('phpui')->getVar('hello'));
+    static::assertSame('world', $manager->getVar('hello'));
+    static::assertSame('world', $manager->connect('phpui')->getVar('hello'));
 
     $manager->deleteVar(['hello']);
-    $this->assertNull($manager->getVar('hello'));
-    $this->assertNull($manager->connect('phpui')->getVar('hello'));
+    static::assertNull($manager->getVar('hello'));
+    static::assertNull($manager->connect('phpui')->getVar('hello'));
 }
 ```
-    
+
 ## clearVar 清空变量值
 
 ``` php
@@ -194,15 +194,15 @@ public function testClearVar(): void
     $manager = $this->createManager();
 
     $manager->setVar('foo', 'bar');
-    $this->assertSame('bar', $manager->getVar('foo'));
-    $this->assertSame('bar', $manager->connect('html')->getVar('foo'));
+    static::assertSame('bar', $manager->getVar('foo'));
+    static::assertSame('bar', $manager->connect('html')->getVar('foo'));
 
     $manager->clearVar();
-    $this->assertNull($manager->getVar('foo'));
-    $this->assertNull($manager->connect('html')->getVar('foo'));
+    static::assertNull($manager->getVar('foo'));
+    static::assertNull($manager->connect('html')->getVar('foo'));
 }
 ```
-    
+
 ## display 加载视图文件
 
 ``` php
@@ -211,7 +211,7 @@ public function testDisplay(): void
     $manager = $this->createManager('phpui');
 
     $manager->setVar('foo', 'bar');
-    $this->assertSame(
+    static::assertSame(
         'Hi here! bar',
         $manager->display(__DIR__.'/assert/hello.php')
     );

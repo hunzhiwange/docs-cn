@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Docs/Started/DirectoryDoc.php](https://github.com/hunzhiwange/framework/blob/master/tests/Docs/Started/DirectoryDoc.php)
 :::
-    
+
 QueryPHP 遵循 **“约定优于配置”** 的原则，主张通过领域驱动设计来构建更可靠的软件。
 
 ## 基本结构

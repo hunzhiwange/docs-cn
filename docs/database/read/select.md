@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/SelectTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/SelectTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -28,18 +28,18 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test')
-                ->select('select *from test where id = ?', [1])
+                ->select('select *from test where id = ?', [1]),
+            $connect
         )
     );
 }
 ```
-    
+
 ## select 直接查询
 
 ``` php
@@ -54,19 +54,20 @@ public function testSelect(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->select(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## select 查询支持闭包
 
 ``` php
@@ -85,21 +86,22 @@ public function testSelectClosure(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->select(function ($select) {
+                ->select(function ($select): void {
                     $select->where('id', 1);
                 }),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## select 查询支持 \Leevel\Database\Select 对象
 
 ``` php
@@ -120,14 +122,16 @@ public function testSelectObject(): void
 
     $select = $connect
         ->table('test')
-        ->where('id', 5);
+        ->where('id', 5)
+    ;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->select($select),
+            $connect,
             3
         )
     );

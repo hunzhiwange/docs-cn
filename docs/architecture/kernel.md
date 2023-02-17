@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Kernel/KernelTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Kernel/KernelTest.php)
 :::
-    
+
 QueryPHP 流程为入口接受 HTTP 请求，经过内核 kernel 传入请求，经过路由解析调用控制器执行业务，最后返回响应结果。
 
 入口文件 `www/index.php`
@@ -62,8 +62,6 @@ public function handle(Request $request): Response;
 ``` php
 <?php
 
-use Error;
-use Exception;
 use Leevel\Di\Container;
 use Leevel\Di\IContainer;
 use Leevel\Http\JsonResponse;
@@ -79,7 +77,6 @@ use Leevel\Log\ILog;
 use Leevel\Option\IOption;
 use Leevel\Router\IRouter;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 ```
 
 ## 基本使用
@@ -133,11 +130,11 @@ public function testBaseUse(bool $debug): void
     $this->assertInstanceof(IApp::class, $kernel->getApp());
     $this->assertInstanceof(Response::class, $resultResponse = $kernel->handle($request));
     $kernel->terminate($request, $resultResponse);
-    $this->assertTrue($GLOBALS['DemoBootstrapForKernel']);
+    static::assertTrue($GLOBALS['DemoBootstrapForKernel']);
     unset($GLOBALS['DemoBootstrapForKernel']);
 }
 ```
-    
+
 ## JSON 响应例子
 
 ``` php
@@ -159,10 +156,10 @@ public function testWithResponseIsJson(): void
     $this->assertInstanceof(IApp::class, $kernel->getApp());
 
     $this->assertInstanceof(Response::class, $resultResponse = $kernel->handle($request));
-    $this->assertSame('{"foo":"bar"}', $resultResponse->getContent());
+    static::assertSame('{"foo":"bar"}', $resultResponse->getContent());
 }
 ```
-    
+
 ## 异常处理
 
 路由抛出异常，返回异常响应。
@@ -173,7 +170,7 @@ protected function createRouterWithException(): IRouter
 {
     $request = $this->createMock(Request::class);
     $router = $this->createMock(IRouter::class);
-    $router->method('dispatch')->will($this->throwException(new Exception('hello foo bar.')));
+    $router->method('dispatch')->will(static::throwException(new \Exception('hello foo bar.')));
 
     return $router;
 }
@@ -198,13 +195,13 @@ public function testRouterWillThrowException(): void
     $this->assertInstanceof(IApp::class, $kernel->getApp());
 
     $this->assertInstanceof(Response::class, $resultResponse = $kernel->handle($request));
-    $this->assertStringContainsString('hello foo bar.', $resultResponse->getContent());
+    static::assertStringContainsString('hello foo bar.', $resultResponse->getContent());
 
-    $this->assertStringContainsString('<span>hello foo bar.</span>', $resultResponse->getContent());
-    $this->assertStringContainsString('<span class="exc-title-primary">Exception</span>', $resultResponse->getContent());
+    static::assertStringContainsString('<span>hello foo bar.</span>', $resultResponse->getContent());
+    static::assertStringContainsString('<span class="exc-title-primary">Exception</span>', $resultResponse->getContent());
 }
 ```
-    
+
 ## 错误处理
 
 路由出现错误，返回错误响应。
@@ -215,7 +212,7 @@ protected function createRouterWithError(): IRouter
 {
     $request = $this->createMock(Request::class);
     $router = $this->createMock(IRouter::class);
-    $router->method('dispatch')->will($this->throwException(new Error('hello bar foo.')));
+    $router->method('dispatch')->will(static::throwException(new \Error('hello bar foo.')));
 
     return $router;
 }
@@ -241,7 +238,7 @@ public function testRouterWillThrowError(): void
 
     $this->assertInstanceof(Response::class, $resultResponse = $kernel->handle($request));
 
-    $this->assertStringContainsString('<span>hello bar foo.</span>', $resultResponse->getContent());
-    $this->assertStringContainsString('<span class="exc-title-primary">ErrorException</span>', $resultResponse->getContent());
+    static::assertStringContainsString('<span>hello bar foo.</span>', $resultResponse->getContent());
+    static::assertStringContainsString('<span class="exc-title-primary">ErrorException</span>', $resultResponse->getContent());
 }
 ```

@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/BindTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/BindTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Database\Condition;
-use PDO;
 use Tests\Database\DatabaseTestCase as TestCase;
 ```
 
@@ -33,19 +32,20 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->bind('id', 1)
                 ->where('id', '=', Condition::raw(':id'))
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 命名参数绑定，支持绑定类型
 
 ``` php
@@ -66,20 +66,21 @@ public function testBindWithType(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->bind('id', 1, PDO::PARAM_INT)
+                ->bind('id', 1, \PDO::PARAM_INT)
                 ->where('id', '=', Condition::raw(':id'))
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## 命名参数绑定，绑定值支持类型定义
 
 ``` php
@@ -100,20 +101,21 @@ public function testWithTypeAndValueCanBeArray(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->bind('id', [1, PDO::PARAM_INT])
+                ->bind('id', [1, \PDO::PARAM_INT])
                 ->where('id', '=', Condition::raw(':id'))
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## 命名参数绑定，支持多个字段绑定
 
 ``` php
@@ -137,21 +139,22 @@ public function testNameBind(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->bind(['id' => [1, PDO::PARAM_INT], 'name'=>'小鸭子'])
+                ->bind(['id' => [1, \PDO::PARAM_INT], 'name' => '小鸭子'])
                 ->where('id', '=', Condition::raw(':id'))
                 ->where('hello', 'like', Condition::raw(':name'))
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## 问号 `?` 参数绑定，支持多个字段绑定
 
 ``` php
@@ -175,15 +178,16 @@ public function testQuestionMarkBind(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->bind([[5, PDO::PARAM_INT], '小鸭子'])
+                ->bind([[5, \PDO::PARAM_INT], '小鸭子'])
                 ->where('id', '=', Condition::raw('?'))
                 ->where('hello', 'like', Condition::raw('?'))
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             4
         )
     );

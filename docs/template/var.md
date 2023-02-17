@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/Compiler/CompilerVarTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/Compiler/CompilerVarTest.php)
 :::
-    
+
 变量是最基本的用法，这里模板引擎做了大量的工作支持更好。
 
 ## 最简单一个普通变量
@@ -22,14 +22,14 @@ public function testBaseUse(): void
         <?php echo $name; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ::: tip
 模板标签的 “{{” 和 “$” 之间可以有空格，建议保持一个空格，保持整洁。
 :::
-    
+
 ## 输出一个数组
 
 ``` php
@@ -46,10 +46,10 @@ public function testArraySupport(): void
         我的梦想是写好”<?php echo $value['name']; ?>“，我相信”<?php echo $value['description']; ?>“。
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 输出一个对象
 
 我们编写这样子一个简单对象，然后再赋值。
@@ -68,10 +68,10 @@ public function testObject(): void
         我的梦想是写好”<?php echo $demo->name; ?>“，我相信”<?php echo $demo->description; ?>“。
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 无限级支持
 
 ``` php
@@ -88,10 +88,10 @@ public function testLevel(): void
         我的梦想是写好”<?php echo $demo->name->child->child->child; ?>“，我相信”<?php echo $demo->description; ?>“。
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 运算符.加减法运算
 
 我们有的时候需要进行一些字符串的操作，以及变量之间的运算，当然直接使用 PHP 可以进行这样子的操作。这里，我们给出的是另一种简单的语法规则。
@@ -112,10 +112,10 @@ public function testOperator(): void
         <?php echo $value-$value2; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 运算符.乘除余数
 
 ``` php
@@ -140,10 +140,10 @@ public function testOperator2(): void
         <?php echo $value3%$list['key']; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 运算符.连接字符
 
 ``` php
@@ -160,10 +160,10 @@ public function testOperator3(): void
         <?php echo $value3.'start - '.$value.$value2.'- end'; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数支持
 
 仅仅是输出变量并不能满足模板输出的需要，内置模板引擎支持对模板变量使用调节器和格式化功能，其实也就是提供函数支持，并支持多个函数同时使用。
@@ -196,7 +196,7 @@ public function testFunction(): void
         <?php echo function2(arg1,arg2,function1($varName)); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 
     // 模板中如果不加 ** 的格式为
     $source = <<<'eot'
@@ -207,14 +207,14 @@ public function testFunction(): void
         <?php echo function2(function1($varName), arg1,arg2); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ::: tip
 函数的定义和使用顺序的对应关系，通常来说函数的第一个参数就是前面的变量或者前一个函数使用的结果，如果你的变量并不是函数的第一个参数，需要使用定位符号 “**”。
 :::
-    
+
 ## 函数支持.基本用法
 
 ``` php
@@ -231,10 +231,10 @@ public function testFunction2(): void
         <?php echo substr(strtoupper($content), 0,3); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数支持.占位符
 
 ``` php
@@ -251,10 +251,10 @@ public function testFunction3(): void
         <?php echo date("Y-m-d",$date); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数支持.快捷方法
 
 并且还提供了在模板文件中直接调用函数的快捷方法，无需通过模板变量，包括两种方式：
@@ -273,10 +273,10 @@ public function testFunction4(): void
         <?php echo function1($var); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数支持.静态方法
 
 使用静态函数来格式化参数。
@@ -297,10 +297,10 @@ public function testFunction5(): void
         <?php echo \Leevel\Support\Str::formatDate($currentTime); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数支持.执行方法但不输出
 
 ``` php
@@ -317,7 +317,7 @@ public function testFunction6(): void
         <?php function1($var); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 
     // 例 1
     $source = <<<'eot'
@@ -328,10 +328,10 @@ public function testFunction6(): void
         <?php echo('Hello world!'); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数支持.对象方法
 
 如果我们需要在模板中使用对象的方法，那么通过代码版本的变量语法可以很方便地输出。
@@ -350,14 +350,14 @@ public function testFunction7(): void
         <?php echo $demo->test(); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ::: tip
 程序编译后默认是输出值，所以最好在类的方法中最好不要直接输出值，直接返回，这样可以交给模版来做数据处理。
 :::
-    
+
 ## 函数支持.默认值
 
 如果输出的模板变量没有值，但是我们需要在显示的时候赋予一个默认值的话，可以使用 default 语法，格式：
@@ -378,7 +378,7 @@ public function testFunction8(): void
     $source = <<<'eot'
         {{~ $name='' }}
         {{ $name|default="Hello，我最爱的雪碧！" }}
-        
+
         {{~ $name='肯德基更配！' }}
         {{ $name|default="Hello，我最爱的雪碧！" }}
         eot;
@@ -386,15 +386,15 @@ public function testFunction8(): void
     $compiled = <<<'eot'
         <?php $name=''; ?>
         <?php echo $name ?: "Hello，我最爱的雪碧！"; ?>
-        
+
         <?php $name='肯德基更配！'; ?>
         <?php echo $name ?: "Hello，我最爱的雪碧！"; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ::: tip
 “default=” 之间不能有空格，否则无法识别。
 :::

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Update/UpdateColumnTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Update/UpdateColumnTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -37,19 +37,20 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->where('id', 503)
-                ->updateColumn('name', '小小小鸟，怎么也飞不高。')
+                ->updateColumn('name', '小小小鸟，怎么也飞不高。'),
+            $connect
         )
     );
 }
 ```
-    
+
 ## updateColumn 支持表达式
 
 ``` php
@@ -69,14 +70,15 @@ public function testExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test_query')
                 ->where('id', 503)
-                ->updateColumn('name', Condition::raw('concat([value],[name])'))
+                ->updateColumn('name', Condition::raw('concat([value],[name])')),
+            $connect
         )
     );
 }

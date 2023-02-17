@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/UnionTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/UnionTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -36,18 +36,20 @@ public function testBaseUse(): void
 
     $union1 = $connect
         ->table('test_query', 'tid as id,name as value')
-        ->where('first_name', '=', '222');
+        ->where('first_name', '=', '222')
+    ;
     $union2 = 'SELECT id,value FROM test_query WHERE id > 3';
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'tid AS id,tname as value')
                 ->union($union1)
                 ->union($union2)
                 ->union($union1)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -66,22 +68,23 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql2,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'tid as id,tname as value')
                 ->union([$union1, $union2, $union1])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ::: tip
 参数支持字符串、子查询器以及它们构成的一维数组。
 :::
-    
+
 ## union 联合查询支持条件构造器自身为子查询
 
 ``` php
@@ -104,15 +107,17 @@ public function testConditionSelfAsExpression(): void
     $union1 = $connect
         ->table('test_query', 'tid as id,name as value')
         ->where('first_name', '=', '222')
-        ->databaseCondition();
+        ->databaseCondition()
+    ;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'tid AS id,tname as value')
                 ->union($union1)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -131,19 +136,20 @@ public function testConditionSelfAsExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql2,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'tid as id,tname as value')
                 ->union([$union1, $union1])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## unionAll 联合查询不去重
 
 ``` php
@@ -161,13 +167,14 @@ public function testUnionAll(): void
 
     $union1 = 'SELECT id,value FROM test_query WHERE id > 1';
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'tid as id,tname as value')
                 ->unionAll($union1)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

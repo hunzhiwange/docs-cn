@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/MinLengthTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/MinLengthTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,7 +18,7 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\MinLengthTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         [2, 1],
@@ -48,21 +47,21 @@ public function testBaseUse($value, $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'min_length:'.$param,
+            'name' => 'min_length:'.$param,
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\MinLengthTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         [2, 2],
@@ -72,7 +71,7 @@ public function badProvider(): array
         ['foo', 4],
         ['world', 6],
         ['中国no1', 6],
-        [new stdClass(), 0],
+        [new \stdClass(), 0],
         [['foo', 'bar'], 0],
         [[1, 2], 0],
         [1, 2],
@@ -94,10 +93,10 @@ public function testBad($value, $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'min_length:'.$param,
+            'name' => 'min_length:'.$param,
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

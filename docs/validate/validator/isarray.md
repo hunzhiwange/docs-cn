@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/IsArrayTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/IsArrayTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\IsArrayTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         [['this', 'is', 'an array']],
@@ -40,21 +40,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'is_array',
+            'name' => 'is_array',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\IsArrayTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['this is a string'],
@@ -80,10 +80,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'is_array',
+            'name' => 'is_array',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

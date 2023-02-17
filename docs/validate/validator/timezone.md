@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/TimezoneTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/TimezoneTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\TimezoneTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['-0400'],
@@ -32,8 +32,6 @@ public function baseUseProvider(): array
         ['Asia/Singapore'], //  新加坡
         ['PRC'], // 设置中国时区
         ['Etc/GMT'], // 格林威治标准时间
-        ['Etc/GMT+8'], // 比林威治标准时间慢 8 小时
-        ['Etc/GMT-8'], // 比林威治标准时间快 8 小时
     ];
 }
 ```
@@ -49,21 +47,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'timezone',
+            'name' => 'timezone',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\TimezoneTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['Asia/foo'],
@@ -90,10 +88,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'timezone',
+            'name' => 'timezone',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

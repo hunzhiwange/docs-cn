@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/EqualToTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/EqualToTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,7 +18,7 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\EqualToTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['foo', 'foo', 'name2'],
@@ -37,32 +36,32 @@ public function testBaseUse($value, $valueCompare, string $param): void
 {
     $validate = new Validator(
         [
-            'name'  => $value,
+            'name' => $value,
             'name2' => $valueCompare,
             'name3' => 'test',
         ],
         [
-            'name'     => 'equal_to:'.$param,
+            'name' => 'equal_to:'.$param,
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\EqualToTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['foo', 'foo2', 'name2'],
         ['bar', 'bar2', 'name2'],
-        [new stdClass(), new stdClass(), 'name2'], // 非全等
-        [new stdClass(), '', 'name3'], // 非全等
+        [new \stdClass(), new \stdClass(), 'name2'], // 非全等
+        [new \stdClass(), '', 'name3'], // 非全等
         [['foo', 'bar'], '', 'name3'],
     ];
 }
@@ -76,19 +75,19 @@ public function testBad($value, $valueCompare, string $param): void
 {
     $validate = new Validator(
         [
-            'name'  => $value,
+            'name' => $value,
             'name2' => $valueCompare,
-            'name3' => new stdClass(),
+            'name3' => new \stdClass(),
         ],
         [
-            'name'     => 'equal_to:'.$param,
+            'name' => 'equal_to:'.$param,
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## equal_to 参数缺失
 
 ``` php
@@ -104,7 +103,7 @@ public function testMissParam(): void
             'name' => '',
         ],
         [
-            'name'     => 'equal_to',
+            'name' => 'equal_to',
         ]
     );
 

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Di/ProviderTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Di/ProviderTest.php)
 :::
-    
+
 IOC 容器是整个框架最核心的部分，负责服务的管理和解耦。
 
 服务提供者将服务注入到 IOC 容器中，通常来说服务会依赖一些配置和调用其它服务等完成组装，还有有一定复杂度。
@@ -32,7 +32,7 @@ use Leevel\Di\Provider;
 ``` php
 namespace Tests\Di;
 
-class PrividerTest extends Provider
+final class PrividerTest extends Provider
 {
     public function register(): void
     {
@@ -87,14 +87,14 @@ public function testBaseUse(): void
 
     $test->register();
 
-    $this->assertSame('world', $container->make('foo')->hello());
-    $this->assertSame('world', $container->make('bar')->hello());
-    $this->assertSame('world', $container->make('hello')->hello());
+    static::assertSame('world', $container->make('foo')->hello());
+    static::assertSame('world', $container->make('bar')->hello());
+    static::assertSame('world', $container->make('hello')->hello());
 
-    $this->assertFalse($test->isDeferred());
+    static::assertFalse($test->isDeferred());
 }
 ```
-    
+
 ## 延迟服务提供者
 
 **fixture 定义**
@@ -152,16 +152,16 @@ public function testDeferred(): void
 
     $test->register();
 
-    $this->assertSame('bar', $container->make('world')->foo());
-    $this->assertSame('hello', $container->make('hello'));
+    static::assertSame('bar', $container->make('world')->foo());
+    static::assertSame('hello', $container->make('hello'));
 
     $container->alias($test->providers());
 
-    $this->assertSame('bar', $container->make('hello')->foo());
-    $this->assertTrue($test->isDeferred());
+    static::assertSame('bar', $container->make('hello')->foo());
+    static::assertTrue($test->isDeferred());
 }
 ```
-    
+
 ## bootstrap 服务注册后的引导程序
 
 ``` php
@@ -177,7 +177,7 @@ public function testBootstrap(): void
     }
 
     $test->bootstrap();
-    $this->assertSame('bootstrap', $_SERVER['test.privider']);
+    static::assertSame('bootstrap', $_SERVER['test.privider']);
 
     if (isset($_SERVER['test.privider'])) {
         unset($_SERVER['test.privider']);

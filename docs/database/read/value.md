@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/ValueTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/ValueTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -26,13 +26,14 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->value('id')
+                ->value('id'),
+            $connect
         )
     );
 }

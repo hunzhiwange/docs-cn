@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/CommentTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/CommentTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -31,14 +31,15 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->comment('FORCE_MASTER')
                 ->where('id', '=', 5)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

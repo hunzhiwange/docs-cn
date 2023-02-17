@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Auth/HashTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Auth/HashTest.php)
 :::
-    
+
 密码哈希主要用于登陆验证密码，功能非常简单，仅提供密码加密方法 `password` 和校验方法 `verify`。
 
 **password 原型**
@@ -42,10 +42,10 @@ public function testBaseUse(): void
 {
     $hash = new Hash();
     $hashPassword = $hash->password('123456');
-    $this->assertTrue($hash->verify('123456', $hashPassword));
+    static::assertTrue($hash->verify('123456', $hashPassword));
 }
 ```
-    
+
 ## 密码哈希带配置例子
 
 底层使用的是 `password_hash` 函数，详细见下面的链接。
@@ -58,6 +58,6 @@ public function testWithCost(): void
 {
     $hash = new Hash();
     $hashPassword = $hash->password('123456', ['cost' => 12]);
-    $this->assertTrue($hash->verify('123456', $hashPassword));
+    static::assertTrue($hash->verify('123456', $hashPassword));
 }
 ```

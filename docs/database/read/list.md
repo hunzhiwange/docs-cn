@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/ListTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/ListTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -26,18 +26,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->list('name')
+                ->list('name'),
+            $connect
         )
     );
 }
 ```
-    
+
 ## list 查询字段逗号分隔
 
 ``` php
@@ -52,19 +53,20 @@ public function testStringByCommaSeparation(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->list('name,id'),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## list 查询字段多个字符串
 
 ``` php
@@ -79,19 +81,20 @@ public function testMoreString(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->list('name', 'id'),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## list 查询字段数组
 
 ``` php
@@ -106,19 +109,20 @@ public function testArray(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->list(['name', 'id']),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## list 查询字段数组和字符串混合
 
 ``` php
@@ -133,13 +137,14 @@ public function testArrayAndString(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->list(['name'], 'id'),
+            $connect,
             4
         )
     );

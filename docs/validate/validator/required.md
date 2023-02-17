@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/RequiredTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/RequiredTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\RequiredTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['foo'],
@@ -41,21 +41,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'required',
+            'name' => 'required',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\RequiredTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         [null],
@@ -77,10 +77,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'required',
+            'name' => 'required',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

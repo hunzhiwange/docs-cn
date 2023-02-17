@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Docs/Started/SpecificationDoc.php](https://github.com/hunzhiwange/framework/blob/master/tests/Docs/Started/SpecificationDoc.php)
 :::
-    
+
 `QueryPHP` 遵循 `PSR-2` 命名规范和 `PSR-4` 自动加载规范。
 
 ## 文件和目录

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/AcceptedTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/AcceptedTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\AcceptedTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['yes'],
@@ -43,21 +43,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'accepted',
+            'name' => 'accepted',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\AcceptedTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['foo'],
@@ -81,10 +81,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'accepted',
+            'name' => 'accepted',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

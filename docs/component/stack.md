@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Support/StackTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Support/StackTest.php)
 :::
-    
+
 栈（stack）又名堆栈，它是一种运算受限的线性表。限定仅在表尾进行插入和删除操作的线性表。这一端被称为栈顶，相对地，把另一端称为栈底。
 
 在 PHP 双向链表的基础上加上数据类型验证功能，不少业务场景中保证链表中数据一致性。
@@ -32,26 +32,26 @@ use Leevel\Support\Stack;
 public function testBaseUse(): void
 {
     $stack = new Stack();
-    $this->assertSame(0, $stack->count());
+    static::assertSame(0, $stack->count());
 
     // 入栈 5
     $stack->push(5);
-    $this->assertSame(1, $stack->count());
+    static::assertSame(1, $stack->count());
 
     // 入栈 6
     $stack->push(6);
-    $this->assertSame(2, $stack->count());
+    static::assertSame(2, $stack->count());
 
     // 出栈，后进先出
-    $this->assertSame(6, $stack->pop());
-    $this->assertSame(1, $stack->count());
+    static::assertSame(6, $stack->pop());
+    static::assertSame(1, $stack->count());
 
     // 出栈，后进先出
-    $this->assertSame(5, $stack->pop());
-    $this->assertSame(0, $stack->count());
+    static::assertSame(5, $stack->pop());
+    static::assertSame(0, $stack->count());
 }
 ```
-    
+
 ## 栈支持元素类型限定
 
 ``` php

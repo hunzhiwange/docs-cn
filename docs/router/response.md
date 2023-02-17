@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Router/ResponseTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Router/ResponseTest.php)
 :::
-    
+
 QueryPHP 路由响应封装了常用的响应，比如模板、JSON、文件下载、URL 重定向等。
 
 使用容器 response 服务
@@ -30,8 +30,6 @@ use Leevel\Router\Response as RouterResponse;
 use Leevel\Router\Url;
 use Leevel\View\IView;
 use Leevel\View\Manager;
-use SplFileInfo;
-use SplFileObject;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 ```
@@ -51,14 +49,14 @@ public function testBaseUse(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('hello', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
+    static::assertSame('hello', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
     $headers = $response->headers->all();
     unset($headers['date']);
-    $this->assertSame(['cache-control' => ['no-cache, private']], $headers);
+    static::assertSame(['cache-control' => ['no-cache, private']], $headers);
 }
 ```
-    
+
 ## make 返回一个响应
 
 ``` php
@@ -74,12 +72,12 @@ public function testMake(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('foo.bar', $response->getContent());
-    $this->assertSame(404, $response->getStatusCode());
-    $this->assertSame(['foo' => ['bar']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('foo.bar', $response->getContent());
+    static::assertSame(404, $response->getStatusCode());
+    static::assertSame(['foo' => ['bar']], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## view 返回视图响应
 
 **fixture 定义**
@@ -104,12 +102,12 @@ public function testView(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('hello view1 for bar.', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame([], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('hello view1 for bar.', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame([], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## view 返回视图响应支持自定义后缀
 
 **fixture 定义**
@@ -134,13 +132,13 @@ public function testViewWithCustomExt(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('hello view1.foo for bar new.', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
+    static::assertSame('hello view1.foo for bar new.', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
     $headers = $response->headers->all();
-    $this->assertSame([], $this->getFilterHeaders($headers));
+    static::assertSame([], $this->getFilterHeaders($headers));
 }
 ```
-    
+
 ## view 返回视图成功消息
 
 默认错误模板为 `success`。
@@ -167,12 +165,12 @@ public function testViewSuccess(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('success! message is it is success.,url is ,time is 1.', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame([], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('success! message is it is success.,url is ,time is 1.', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame([], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## setViewSuccessTemplate 返回视图成功消息支持设置视图正确模板
 
 **fixture 定义**
@@ -199,12 +197,12 @@ public function testViewSuccess3(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('success custom! message is it is success3.,url is http://queryphp.com,time is 3.', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame([], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('success custom! message is it is success3.,url is http://queryphp.com,time is 3.', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame([], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## view 返回视图失败消息
 
 默认错误模板为 `fail`。
@@ -231,12 +229,12 @@ public function testViewFail(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('fail! message is it is fail.,url is ,time is 3.', $response->getContent());
-    $this->assertSame(404, $response->getStatusCode());
-    $this->assertSame([], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('fail! message is it is fail.,url is ,time is 3.', $response->getContent());
+    static::assertSame(404, $response->getStatusCode());
+    static::assertSame([], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## setViewFailTemplate 返回视图失败消息支持设置视图错误模板
 
 **fixture 定义**
@@ -263,12 +261,12 @@ public function testViewFail3(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('fail custom! message is it is fail3.,url is http://queryphp.com,time is 3.', $response->getContent());
-    $this->assertSame(404, $response->getStatusCode());
-    $this->assertSame([], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('fail custom! message is it is fail3.,url is http://queryphp.com,time is 3.', $response->getContent());
+    static::assertSame(404, $response->getStatusCode());
+    static::assertSame([], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## json 返回 JSON 响应
 
 ``` php
@@ -285,12 +283,12 @@ public function testJson(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(JsonResponse::class, $response);
 
-    $this->assertSame('{}', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame(['content-type' => ['application/json']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('{}', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame(['content-type' => ['application/json']], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## json 返回 JSON 响应支持数组
 
 ``` php
@@ -307,12 +305,12 @@ public function testJson3(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(JsonResponse::class, $response);
 
-    $this->assertSame('{"foo":"bar","hello":"world"}', $response->getContent());
-    $this->assertSame(404, $response->getStatusCode());
-    $this->assertSame(['foo' => ['bar'], 'content-type' => ['application/json']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('{"foo":"bar","hello":"world"}', $response->getContent());
+    static::assertSame(404, $response->getStatusCode());
+    static::assertSame(['foo' => ['bar'], 'content-type' => ['application/json']], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## json 返回 JSON 响应支持原生 JSON 字符串
 
 ``` php
@@ -329,12 +327,12 @@ public function testJson4(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(JsonResponse::class, $response);
 
-    $this->assertSame('{"foo":"bar","hello":"world"}', $response->getContent());
-    $this->assertSame(404, $response->getStatusCode());
-    $this->assertSame(['foo' => ['bar'], 'content-type' => ['application/json']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('{"foo":"bar","hello":"world"}', $response->getContent());
+    static::assertSame(404, $response->getStatusCode());
+    static::assertSame(['foo' => ['bar'], 'content-type' => ['application/json']], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## jsonp 返回 JSONP 响应
 
 ``` php
@@ -351,12 +349,12 @@ public function testJsonp(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(JsonResponse::class, $response);
 
-    $this->assertSame('/**/foo({});', $response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame(['content-type' => ['text/javascript']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame('/**/foo({});', $response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame(['content-type' => ['text/javascript']], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## download 返回下载响应
 
 ``` php
@@ -372,12 +370,12 @@ public function testDownload(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('attachment; filename=download.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('attachment; filename=download.txt', $response->headers->all()['content-disposition'][0]);
 }
 ```
-    
+
 ## download 返回下载响应支持 \SplFileInfo
 
 ``` php
@@ -388,17 +386,17 @@ public function testDownload2(): void
 
     $factory = new RouterResponse($view, $redirect);
 
-    $response = $factory->download(new SplFileInfo(__DIR__.'/assert/download.txt'));
+    $response = $factory->download(new \SplFileInfo(__DIR__.'/assert/download.txt'));
 
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('attachment; filename=download.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('attachment; filename=download.txt', $response->headers->all()['content-disposition'][0]);
 }
 ```
-    
+
 ## download 返回下载响应支持 \SplFileObject
 
 ``` php
@@ -409,17 +407,17 @@ public function testDownload3(): void
 
     $factory = new RouterResponse($view, $redirect);
 
-    $response = $factory->download(new SplFileObject(__DIR__.'/assert/download.txt'));
+    $response = $factory->download(new \SplFileObject(__DIR__.'/assert/download.txt'));
 
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('attachment; filename=download.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('attachment; filename=download.txt', $response->headers->all()['content-disposition'][0]);
 }
 ```
-    
+
 ## download 返回下载响应支持自定义文件名
 
 ``` php
@@ -435,13 +433,13 @@ public function testDownload4(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('attachment; filename=foo.txt', $response->headers->all()['content-disposition'][0]);
-    $this->assertSame('bar', $response->headers->all()['foo'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('attachment; filename=foo.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertSame('bar', $response->headers->all()['foo'][0]);
 }
 ```
-    
+
 ## file 返回文件响应
 
 ``` php
@@ -457,12 +455,12 @@ public function testFile(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('inline; filename=download.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('inline; filename=download.txt', $response->headers->all()['content-disposition'][0]);
 }
 ```
-    
+
 ## file 返回文件响应支持 \SplFileInfo
 
 ``` php
@@ -473,17 +471,17 @@ public function testFile2(): void
 
     $factory = new RouterResponse($view, $redirect);
 
-    $response = $factory->file(new SplFileInfo(__DIR__.'/assert/download.txt'));
+    $response = $factory->file(new \SplFileInfo(__DIR__.'/assert/download.txt'));
 
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('inline; filename=download.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('inline; filename=download.txt', $response->headers->all()['content-disposition'][0]);
 }
 ```
-    
+
 ## file 返回文件响应支持 \SplFileObject
 
 ``` php
@@ -494,17 +492,17 @@ public function testFile3(): void
 
     $factory = new RouterResponse($view, $redirect);
 
-    $response = $factory->file(new SplFileObject(__DIR__.'/assert/download.txt'));
+    $response = $factory->file(new \SplFileObject(__DIR__.'/assert/download.txt'));
 
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(BinaryFileResponse::class, $response);
-    $this->assertFalse($response->getContent());
-    $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame('inline; filename=download.txt', $response->headers->all()['content-disposition'][0]);
+    static::assertFalse($response->getContent());
+    static::assertSame(200, $response->getStatusCode());
+    static::assertSame('inline; filename=download.txt', $response->headers->all()['content-disposition'][0]);
 }
 ```
-    
+
 ## redirect 返回一个 URL 生成跳转响应
 
 ``` php
@@ -535,12 +533,12 @@ public function testRedirect(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(RedirectResponse::class, $response);
-    $this->assertSame($content, $response->getContent());
-    $this->assertSame(302, $response->getStatusCode());
-    $this->assertSame(['location' => ['http://www.queryphp.com/hello/world']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame($content, $response->getContent());
+    static::assertSame(302, $response->getStatusCode());
+    static::assertSame(['location' => ['http://www.queryphp.com/hello/world']], $this->getFilterHeaders($response->headers->all()));
 }
 ```
-    
+
 ## redirectRaw 返回一个跳转响应
 
 ``` php
@@ -571,8 +569,8 @@ public function testRedirectRaw(): void
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(Response::class, $response);
     $this->assertInstanceof(RedirectResponse::class, $response);
-    $this->assertSame($content, $response->getContent());
-    $this->assertSame(302, $response->getStatusCode());
-    $this->assertSame(['location' => ['http://queryphp.com/raw']], $this->getFilterHeaders($response->headers->all()));
+    static::assertSame($content, $response->getContent());
+    static::assertSame(302, $response->getStatusCode());
+    static::assertSame(['location' => ['http://queryphp.com/raw']], $this->getFilterHeaders($response->headers->all()));
 }
 ```

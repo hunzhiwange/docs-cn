@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Http/ResponseTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Http/ResponseTest.php)
 :::
-    
+
 QueryPHP 响应对象构建在 Symfony HttpFoundation 之上，增加了少量的功能。
 
 ::: warning 注意
@@ -26,10 +26,10 @@ public function testSetHeader(): void
 {
     $response = new Response();
     $response->setHeader('foo', 'bar');
-    $this->assertSame('bar', $response->headers->get('foo'));
+    static::assertSame('bar', $response->headers->get('foo'));
 }
 ```
-    
+
 ## withHeaders 批量设置响应头
 
 ``` php
@@ -37,10 +37,10 @@ public function testWithHeaders(): void
 {
     $response = new Response();
     $response->withHeaders(['foo' => 'bar']);
-    $this->assertSame('bar', $response->headers->get('foo'));
+    static::assertSame('bar', $response->headers->get('foo'));
 }
 ```
-    
+
 ## setCookie 设置 COOKIE
 
 ``` php
@@ -48,10 +48,10 @@ public function testSetCookie(): void
 {
     $response = new Response();
     $response->setCookie('foo', 'bar');
-    $this->assertCount(1, $response->headers->getCookies());
+    static::assertCount(1, $response->headers->getCookies());
 }
 ```
-    
+
 ## withCookies 批量设置 COOKIE
 
 ``` php
@@ -59,6 +59,6 @@ public function testWithCookies(): void
 {
     $response = new Response();
     $response->withCookies(['hello' => 'world']);
-    $this->assertCount(1, $response->headers->getCookies());
+    static::assertCount(1, $response->headers->getCookies());
 }
 ```

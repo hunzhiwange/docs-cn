@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/FindAllTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/FindAllTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -26,18 +26,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->findAll()
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## all.find 查询多条数据
 
 ``` php
@@ -52,14 +53,15 @@ public function testAllFind(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->all()
-                ->find()
+                ->find(),
+            $connect
         )
     );
 }

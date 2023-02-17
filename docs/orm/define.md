@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/EntityDefineTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/EntityDefineTest.php)
 :::
-    
+
 实体初始化会校验一些必须定义的常量 `const`，这是实体对应的数据库表的一些映射，这简化了 ORM 底层后续处理逻辑。
 
 
@@ -13,7 +13,6 @@
 <?php
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
 use Tests\Database\DatabaseTestCase as TestCase;
 use Tests\Database\Ddd\Entity\DemoEntity;
 ```
@@ -35,24 +34,24 @@ use Tests\Database\Ddd\Entity\DemoEntity;
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY => true,
-        ],
-        'name' => [],
-    ];
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -64,13 +63,12 @@ public function testBaseUse(): void
 
     $this->assertInstanceof(Entity::class, $entity);
 
-    $this->assertSame(DemoEntity::STRUCT, $entity->fields());
-    $this->assertSame(DemoEntity::TABLE, $entity->table());
-    $this->assertSame([DemoEntity::ID], $entity->primaryKey());
-    $this->assertSame(DemoEntity::AUTO, $entity->autoIncrement());
+    static::assertSame(DemoEntity::TABLE, $entity->table());
+    static::assertSame([DemoEntity::ID], $entity->primaryKey());
+    static::assertSame(DemoEntity::AUTO, $entity->autoIncrement());
 }
 ```
-    
+
 ## 基本常量未定义将会抛出异常
 
 **测试模型**
@@ -80,7 +78,6 @@ namespace Tests\Database\Ddd;
 
 class Test1Entity extends Entity
 {
-    use GetterSetter;
 }
 ```
 

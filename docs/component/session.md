@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Session/SessionTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Session/SessionTest.php)
 :::
-    
+
 QueryPHP 提供了 Session (会话) 可以用于保存用户登录状态。
 
 内置支持的 session 驱动类型包括 file、redis，未来可能增加其他驱动。
@@ -185,32 +185,32 @@ public function testBaseUse(): void
     $session = $this->createFileSessionHandler();
 
     $this->assertInstanceof(ISession::class, $session);
-    $this->assertFalse($session->isStart());
-    $this->assertSame('', $session->getId());
-    $this->assertSame('UID', $session->getName());
+    static::assertFalse($session->isStart());
+    static::assertSame('', $session->getId());
+    static::assertSame('UID', $session->getName());
 
     $session->start();
-    $this->assertTrue($session->isStart());
+    static::assertTrue($session->isStart());
 
     $session->set('hello', 'world');
-    $this->assertSame(['hello' => 'world'], $session->all());
-    $this->assertTrue($session->has('hello'));
-    $this->assertSame('world', $session->get('hello'));
+    static::assertSame(['hello' => 'world'], $session->all());
+    static::assertTrue($session->has('hello'));
+    static::assertSame('world', $session->get('hello'));
 
     $session->delete('hello');
-    $this->assertSame([], $session->all());
-    $this->assertFalse($session->has('hello'));
-    $this->assertNull($session->get('hello'));
+    static::assertSame([], $session->all());
+    static::assertFalse($session->has('hello'));
+    static::assertNull($session->get('hello'));
 
     $session->start();
-    $this->assertTrue($session->isStart());
-    $this->assertTrue($session->open('foo', 'bar'));
-    $this->assertTrue($session->close());
-    $this->assertTrue($session->destroy('foo'));
-    $this->assertSame(0, $session->gc(500));
+    static::assertTrue($session->isStart());
+    static::assertTrue($session->open('foo', 'bar'));
+    static::assertTrue($session->close());
+    static::assertTrue($session->destroy('foo'));
+    static::assertSame(0, $session->gc(500));
 }
 ```
-    
+
 ## setExpire 设置过期时间
 
 过期时间规则如下：
@@ -227,7 +227,7 @@ public function testSetExpire(): void
 
     $session->setExpire(50);
     $session->set('hello', 'world');
-    $this->assertSame(['hello' => 'world'], $session->all());
+    static::assertSame(['hello' => 'world'], $session->all());
 
     $session->start();
     $session->save();
@@ -235,11 +235,11 @@ public function testSetExpire(): void
     $sessionId = $session->getId();
     $dirPath = __DIR__.'/cache';
     $filePath = $dirPath.'/'.$sessionId.'.php';
-    $this->assertFileExists($filePath);
-    $this->assertStringContainsString('[50,', file_get_contents($filePath));
+    static::assertFileExists($filePath);
+    static::assertStringContainsString('[50,', file_get_contents($filePath));
 }
 ```
-    
+
 ## put 批量插入
 
 ``` php
@@ -248,16 +248,16 @@ public function testPut(): void
     $session = $this->createFileSessionHandler();
 
     $session->put('hello', 'world');
-    $this->assertSame(['hello' => 'world'], $session->all());
+    static::assertSame(['hello' => 'world'], $session->all());
 
     $session->put(['foo' => 'bar']);
-    $this->assertSame(['hello' => 'world', 'foo' => 'bar'], $session->all());
+    static::assertSame(['hello' => 'world', 'foo' => 'bar'], $session->all());
 
     $session->put(['foo' => 'bar']);
-    $this->assertSame(['hello' => 'world', 'foo' => 'bar'], $session->all());
+    static::assertSame(['hello' => 'world', 'foo' => 'bar'], $session->all());
 }
 ```
-    
+
 ## clear 清空 session
 
 ``` php
@@ -266,13 +266,13 @@ public function testClear(): void
     $session = $this->createFileSessionHandler();
 
     $session->set('hello', ['sub' => 'me', 'foo' => 'bar', 'hello' => 'world']);
-    $this->assertSame(['hello' => ['sub' => 'me', 'foo' => 'bar', 'hello' => 'world']], $session->all());
+    static::assertSame(['hello' => ['sub' => 'me', 'foo' => 'bar', 'hello' => 'world']], $session->all());
 
     $session->clear();
-    $this->assertSame([], $session->all());
+    static::assertSame([], $session->all());
 }
 ```
-    
+
 ## flash 闪存一个数据，当前请求和下一个请求可用
 
 ``` php
@@ -292,7 +292,7 @@ public function testFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -315,7 +315,7 @@ public function testFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -323,7 +323,7 @@ public function testFlash(): void
     );
 }
 ```
-    
+
 ## flashs 批量闪存数据，当前请求和下一个请求可用
 
 ``` php
@@ -345,7 +345,7 @@ public function testFlashs(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -353,7 +353,7 @@ public function testFlashs(): void
     );
 }
 ```
-    
+
 ## nowFlash 闪存一个 flash 用于当前请求使用,下一个请求将无法获取
 
 ``` php
@@ -372,7 +372,7 @@ public function testNowFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -380,7 +380,7 @@ public function testNowFlash(): void
     );
 }
 ```
-    
+
 ## nowFlashs 批量闪存数据,用于当前请求使用，下一个请求将无法获取
 
 ``` php
@@ -401,7 +401,7 @@ public function testNowFlashs(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -409,7 +409,7 @@ public function testNowFlashs(): void
     );
 }
 ```
-    
+
 ## rebuildFlash 保持所有闪存数据
 
 ``` php
@@ -430,7 +430,7 @@ public function testRebuildFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -451,7 +451,7 @@ public function testRebuildFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -459,7 +459,7 @@ public function testRebuildFlash(): void
     );
 }
 ```
-    
+
 ## keepFlash 保持闪存数据
 
 ``` php
@@ -480,7 +480,7 @@ public function testKeepFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -501,7 +501,7 @@ public function testKeepFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -509,7 +509,7 @@ public function testKeepFlash(): void
     );
 }
 ```
-    
+
 ## getFlash 返回闪存数据
 
 ``` php
@@ -519,19 +519,19 @@ public function testGetFlash(): void
 
     $session->nowFlashs(['hello' => 'world', 'foo' => 'bar']);
 
-    $this->assertSame('world', $session->getFlash('hello'));
-    $this->assertSame('bar', $session->getFlash('foo'));
+    static::assertSame('world', $session->getFlash('hello'));
+    static::assertSame('bar', $session->getFlash('foo'));
 
     $session->flash('test', ['foo', 'bar']);
-    $this->assertSame(['foo', 'bar'], $session->getFlash('test'));
-    $this->assertNull($session->getFlash('notFound'));
+    static::assertSame(['foo', 'bar'], $session->getFlash('test'));
+    static::assertNull($session->getFlash('notFound'));
 
     $session->flash('bar', ['sub' => ['foo' => 'bar']]);
-    $this->assertSame(['foo', 'bar'], $session->getFlash('test'));
-    $this->assertNull($session->getFlash('test\\notFound'));
+    static::assertSame(['foo', 'bar'], $session->getFlash('test'));
+    static::assertNull($session->getFlash('test\\notFound'));
 }
 ```
-    
+
 ## clearFlash 清理所有闪存数据
 
 ``` php
@@ -553,7 +553,7 @@ public function testClearFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -572,7 +572,7 @@ public function testClearFlash(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $flash,
         $this->varJson(
             $session->all()
@@ -580,19 +580,19 @@ public function testClearFlash(): void
     );
 }
 ```
-    
+
 ## setPrevUrl.prevUrl 设置和返回前一个请求地址
 
 ``` php
 public function testPrevUrl(): void
 {
     $session = $this->createFileSessionHandler();
-    $this->assertNull($session->prevUrl());
+    static::assertNull($session->prevUrl());
     $session->setPrevUrl('foo');
-    $this->assertSame('foo', $session->prevUrl());
+    static::assertSame('foo', $session->prevUrl());
 }
 ```
-    
+
 ## destroySession 终止会话
 
 ``` php
@@ -600,18 +600,18 @@ public function testDestroy(): void
 {
     $session = $this->createFileSessionHandler();
 
-    $this->assertFalse($session->isStart());
-    $this->assertSame('', $session->getId());
-    $this->assertSame('UID', $session->getName());
+    static::assertFalse($session->isStart());
+    static::assertSame('', $session->getId());
+    static::assertSame('UID', $session->getName());
 
     $session->start();
-    $this->assertTrue($session->isStart());
-    $this->assertNotNull($session->getId());
-    $this->assertNotNull($session->getName());
+    static::assertTrue($session->isStart());
+    static::assertNotNull($session->getId());
+    static::assertNotNull($session->getName());
 
     $session->destroySession();
-    $this->assertFalse($session->isStart());
-    $this->assertSame('', $session->getId());
-    $this->assertSame('UID', $session->getName());
+    static::assertFalse($session->isStart());
+    static::assertSame('', $session->getId());
+    static::assertSame('UID', $session->getName());
 }
 ```

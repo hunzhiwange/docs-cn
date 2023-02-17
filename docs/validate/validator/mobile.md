@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/MobileTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/MobileTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,7 +18,7 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\MobileTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         [13000003333],
@@ -45,21 +44,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'mobile',
+            'name' => 'mobile',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\MobileTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['130222000333311'],
@@ -68,7 +67,7 @@ public function badProvider(): array
         ['143311222333444'],
         ['17333322222444'],
         [' '],
-        [new stdClass()],
+        [new \stdClass()],
         [['foo', 'bar']],
         [[1, 2]],
         [true],
@@ -91,10 +90,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'mobile',
+            'name' => 'mobile',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

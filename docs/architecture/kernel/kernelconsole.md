@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Kernel/KernelConsoleTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Kernel/KernelConsoleTest.php)
 :::
-    
+
 QueryPHP 命令行流程为入口接受输入，经过内核 kernel 传入输入，经过命令行应用程序调用命令执行业务，最后返回输出结果。
 
 入口文件 `leevel`
@@ -142,7 +142,7 @@ namespace Tests\Kernel\Commands;
 
 use Leevel\Console\Command;
 
-class Test extends Command
+final class Test extends Command
 {
     protected string $name = 'test';
 
@@ -150,7 +150,7 @@ class Test extends Command
 
     protected string $help = <<<'EOF'
         The <info>%command.name%</info> command to show how to make a command:
-        
+
           <info>php %command.full_name%</info>
         EOF;
 
@@ -178,7 +178,7 @@ class Foo extends Command
 
     protected string $help = <<<'EOF'
         The <info>%command.name%</info> command to show how to make a command:
-        
+
           <info>php %command.full_name%</info>
         EOF;
 
@@ -206,7 +206,7 @@ class Bar extends Command
 
     protected string $help = <<<'EOF'
         The <info>%command.name%</info> command to show how to make a command:
-        
+
           <info>php %command.full_name%</info>
         EOF;
 
@@ -245,9 +245,9 @@ public function testBaseUse(): void
     $kernel = new KernelConsole1($app);
     $this->assertInstanceof(IKernelConsole::class, $kernel);
     $this->assertInstanceof(IApp::class, $kernel->getApp());
-    $this->assertSame(0, $kernel->handle());
+    static::assertSame(0, $kernel->handle());
     $kernel->terminate(0);
-    $this->assertTrue($GLOBALS['DemoBootstrapForKernelConsole']);
+    static::assertTrue($GLOBALS['DemoBootstrapForKernelConsole']);
     unset($GLOBALS['DemoBootstrapForKernelConsole']);
 }
 ```

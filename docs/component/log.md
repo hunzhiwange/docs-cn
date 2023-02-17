@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Log/LogTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Log/LogTest.php)
 :::
-    
+
 日志记录统一由日志组件完成，通常我们使用代理 `\Leevel\Log\Proxy\Log` 类进行静态调用。
 
 内置支持的 log 驱动类型包括 file、syslog，未来可能增加其他驱动。
@@ -203,7 +203,7 @@ use Monolog\Logger;
 
 ``` php
 # Tests\Log\LogTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['emergency'],
@@ -226,19 +226,18 @@ public function testBaseUse(string $level): void
 
     $this->assertInstanceof(ILog::class, $log);
 
-    $this->assertNull($log->{$level}('foo', ['hello', 'world']));
+    static::assertNull($log->{$level}('foo', ['hello', 'world']));
 
     $logData = $this->getTestProperty($log, 'logs');
-    $this->assertSame([$level =>
-        [
-            ILOG::DEFAULT_MESSAGE_CATEGORY => [[$level, 'foo', ['hello', 'world']]],
-        ],
+    static::assertSame([$level => [
+        ILOG::DEFAULT_MESSAGE_CATEGORY => [[$level, 'foo', ['hello', 'world']]],
+    ],
     ], $logData);
-    $this->assertInstanceOf(Logger::class, $log->getMonolog());
+    static::assertInstanceOf(Logger::class, $log->getMonolog());
     Helper::deleteDirectory(__DIR__.'/cacheLog');
 }
 ```
-    
+
 ## 日志支持等级过滤
 
 ``` php
@@ -247,23 +246,24 @@ public function testLogFilterLevel(): void
     $log = $this->createFileConnect([
         'level' => [
             ILOG::DEFAULT_MESSAGE_CATEGORY => ILog::LEVEL_INFO,
-        ]
+        ],
     ]);
     $log->info('foo', ['hello', 'world']);
     $log->debug('foo', ['hello', 'world']);
     $logData = $this->getTestProperty($log, 'logs');
-    $this->assertSame([
+    static::assertSame(
+        [
             ILog::LEVEL_INFO => [
                 ILOG::DEFAULT_MESSAGE_CATEGORY => [
-                    [ILog::LEVEL_INFO, 'foo', ['hello', 'world']]
-                ]
+                    [ILog::LEVEL_INFO, 'foo', ['hello', 'world']],
+                ],
             ],
         ],
         $logData
     );
 }
 ```
-    
+
 ## 日志支持消息分类
 
 系统提供的等级 `level` 无法满足更精细化的日志需求，于是对消息 `message` 定义了一套规则来满足更精细的分类。
@@ -280,7 +280,7 @@ public function testLogMessageCategory(): void
     $log->info('[SQL] foo', ['hello', 'world']);
     $log->info('[SQL:FAILED] foo', ['hello', 'world']);
     $logData = $this->getTestProperty($log, 'logs');
-    $this->assertSame([
+    static::assertSame([
         ILog::LEVEL_INFO => [
             'SQL' => [[ILog::LEVEL_INFO, '[SQL] foo', ['hello', 'world']]],
             'SQL:FAILED' => [[ILog::LEVEL_INFO, '[SQL:FAILED] foo', ['hello', 'world']]],

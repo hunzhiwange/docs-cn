@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/JoinTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/JoinTest.php)
 :::
-    
+
 ## join 函数原型
 
 ``` php
@@ -42,18 +42,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->join('test_query_subsql', 'name,value', 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 附加条件
 
 ``` php
@@ -73,19 +74,20 @@ public function testWithCondition(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->join(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## join 附加条件支持数组和表达式
 
 实质上 where 支持语法特性都支持。
@@ -107,19 +109,20 @@ public function testWithConditionSupportArrayAndExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->join('test_query_subsql', 'name,value', ['hello' => 'world', ['test', '>', Condition::raw('[name]')]])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## join 附加条件支持闭包
 
 ``` php
@@ -142,23 +145,25 @@ public function testWithConditionIsClosure(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->join('test_query_subsql', 'name,value', function ($select) {
+                ->join('test_query_subsql', 'name,value', function ($select): void {
                     $select
                         ->where('id', '<', 5)
-                        ->where('name', 'like', 'hello');
+                        ->where('name', 'like', 'hello')
+                    ;
                 })
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## innerJoin 查询
 
 ``` php
@@ -178,18 +183,19 @@ public function testInnerJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->innerJoin(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## leftJoin 查询
 
 ``` php
@@ -209,18 +215,19 @@ public function testLeftJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->leftJoin(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## rightJoin 查询
 
 ``` php
@@ -240,53 +247,19 @@ public function testRightJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->rightJoin(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
-        )
-    );
-}
-```
-    
-## fullJoin 查询
-
-``` php
-public function testFullJoin(): void
-{
-    $connect = $this->createDatabaseConnectMock();
-
-    $sql = <<<'eot'
-        [
-            "SELECT `test_query`.*,`t`.`name` AS `nikename`,`t`.`value` AS `tt` FROM `test_query` FULL JOIN `test_query_subsql` `t` ON `t`.`name` = :t_name",
-            {
-                "t_name": [
-                    "小牛"
-                ]
-            },
-            false
-        ]
-        eot;
-
-    $this->assertSame(
-        $sql,
-        $this->varJson(
+                ->findAll(),
             $connect
-                ->table('test_query')
-                ->fullJoin(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
         )
     );
 }
 ```
-    
-::: tip
-MySQL 不支持 FULL JOIN，仅示例。
-:::
-    
+
 ## crossJoin 查询
 
 自然连接不用设置 on 条件。
@@ -304,18 +277,19 @@ public function testCrossJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->crossJoin(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## naturalJoin 查询
 
 自然连接不用设置 on 条件。
@@ -333,18 +307,19 @@ public function testNaturalJoin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->naturalJoin(['t' => 'test_query_subsql'], ['name as nikename', 'tt' => 'value'])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 查询支持表支持查询对象
 
 ``` php
@@ -366,18 +341,19 @@ public function testInnerJoinWithTableIsSelect(): void
 
     $joinTable = $connect->table('test_query_subsql as b');
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->innerJoin($joinTable, ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 查询支持表支持查询条件对象
 
 ``` php
@@ -399,20 +375,22 @@ public function testInnerJoinWithTableIsCondition(): void
 
     $joinTable = $connect
         ->table('test_query_subsql as b')
-        ->databaseCondition();
+        ->databaseCondition()
+    ;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->innerJoin($joinTable, ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 查询支持表支持闭包
 
 ``` php
@@ -432,20 +410,21 @@ public function testInnerJoinWithTableIsClosure(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->innerJoin(function ($select) {
+                ->innerJoin(function ($select): void {
                     $select->table('test_query_subsql as b');
                 }, ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 查询支持表支持数组别名
 
 ``` php
@@ -467,20 +446,22 @@ public function testInnerJoinWithTableIsArrayCondition(): void
 
     $joinTable = $connect
         ->table('test_query_subsql as b')
-        ->databaseCondition();
+        ->databaseCondition()
+    ;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->innerJoin(['foo' => $joinTable], ['name as nikename', 'tt' => 'value'], 'name', '=', '小牛')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 查询支持表支持表达式
 
 ``` php
@@ -496,18 +477,19 @@ public function testInnerJsonWithTableNameIsExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->innerJoin('(SELECT * FROM test_query_subsql)', ['name as nikename', 'tt' => 'value'], 'name', '=', Condition::raw('[test_query.name]'))
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## join 查询支持表支持表达式别名
 
 ``` php
@@ -523,13 +505,14 @@ public function testInnerJsonWithTableNameIsExpressionWithAsCustomAlias(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->innerJoin('(SELECT * FROM test_query_subsql) as bar', ['name as nikename', 'tt' => 'value'], 'name', '=', Condition::raw('[test_query.name]'))
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

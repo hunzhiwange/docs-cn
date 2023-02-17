@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/AfterTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/AfterTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,7 +18,7 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\AfterTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['2018-08-15', '2018-08-14'],
@@ -37,32 +36,32 @@ public function testBaseUse($value, string $param): void
 {
     $validate = new Validator(
         [
-            'name'  => $value,
+            'name' => $value,
             'name2' => '2018-08-10',
         ],
         [
-            'name'     => 'after:'.$param,
+            'name' => 'after:'.$param,
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\AfterTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['2018-08-14', '2018-08-14'],
         ['2018-08-14', '2018-08-15'],
         ['2018-08-15', 'name2'],
         ['2018-08-15', '2018-08-14|date_format:Y-m'],
-        [new stdClass(), '1.1'],
+        [new \stdClass(), '1.1'],
         [[], '2018-08-15'],
         [true, '2018-08-15'],
         [false, '2018-08-15'],
@@ -81,14 +80,14 @@ public function testBad($value, string $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'after:'.$param,
+            'name' => 'after:'.$param,
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## 日期格式化不一致无法通过验证
 
 ``` php
@@ -96,17 +95,17 @@ public function testMakeDateTimeFormatWithNewDateTimeExceptionError(): void
 {
     $validate = new Validator(
         [
-            'name'  => '2018-08-10',
+            'name' => '2018-08-10',
         ],
         [
-            'name'     => 'after:foobar|date_format:y',
+            'name' => 'after:foobar|date_format:y',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## after 参数缺失
 
 ``` php
@@ -122,7 +121,7 @@ public function testMissParam(): void
             'name' => '',
         ],
         [
-            'name'     => 'after',
+            'name' => 'after',
         ]
     );
 

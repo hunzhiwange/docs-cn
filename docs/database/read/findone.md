@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/FindOneTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/FindOneTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -26,18 +26,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->findOne()
+                ->findOne(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## one.find 查询单条数据
 
 ``` php
@@ -52,14 +53,15 @@ public function testOneFind(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->one()
-                ->find()
+                ->find(),
+            $connect
         )
     );
 }

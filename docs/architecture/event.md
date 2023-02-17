@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Event/DispatchTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Event/DispatchTest.php)
 :::
-    
+
 QueryPHP 提供了一个事件组件 `\Leevel\Event\Dispatch` 对象。
 
 事件适合一些业务后续处理的扩展，比如提交订单的后续通知消息接入，不但提高了可扩展性，而且还降低了系统的耦合性。
@@ -30,7 +30,7 @@ use Leevel\Event\Observer;
 /**
  * {@inheritDoc}
  */
-public function register(array|object|string $event, Closure|SplObserver|string $listener, int $priority = 500): void;
+public function register(array|object|string $event, \Closure|\SplObserver|string $listener, int $priority = 500): void;
 ```
 
 **handle 函数原型**
@@ -40,7 +40,7 @@ public function register(array|object|string $event, Closure|SplObserver|string 
 /**
  * {@inheritDoc}
  */
-public function handle(object|string $event, ...$params): void;
+public function handle(object|string $event, ...$params): void // @phpstan-ignore-line;
 ```
 
 **fixture 定义**
@@ -52,7 +52,7 @@ namespace Tests\Event;
 
 class Listener1 extends Listener
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $_SERVER['event_name'] = $event;
         $_SERVER['test'] = 'hello';
@@ -88,13 +88,13 @@ public function testBaseUse(): void
     $dispatch->register('event1', Listener1::class);
     $dispatch->handle('event1');
 
-    $this->assertSame($_SERVER['test'], 'hello');
-    $this->assertSame($_SERVER['event_name'], 'event1');
+    static::assertSame($_SERVER['test'], 'hello');
+    static::assertSame($_SERVER['event_name'], 'event1');
 
     unset($_SERVER['test'], $_SERVER['event_name']);
 }
 ```
-    
+
 ## register 注册监听器支持监听器对象实例
 
 第二个参数 `$listener` 支持传递对象实例。
@@ -115,7 +115,7 @@ class Listener2 extends Listener
         $this->arg1 = $arg1;
     }
 
-    public function handle()
+    public function handle(): void
     {
         $_SERVER['test'] = $this->arg1;
     }
@@ -134,12 +134,12 @@ public function testListenerInstance(): void
     $dispatch->register('event1', new Listener2('arg_foo'));
     $dispatch->handle('event1');
 
-    $this->assertSame($_SERVER['test'], 'arg_foo');
+    static::assertSame($_SERVER['test'], 'arg_foo');
 
     unset($_SERVER['test']);
 }
 ```
-    
+
 ## register 注册监听器支持事件对象实例
 
 第一个参数 `$event` 支持传递对象实例。
@@ -169,7 +169,7 @@ namespace Tests\Event;
 
 class Listener3 extends Listener
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $_SERVER['test'] = $event->arg1;
     }
@@ -188,12 +188,12 @@ public function testEventInstance(): void
     $dispatch->register($event = new Event1('event_arg_foo'), Listener3::class);
     $dispatch->handle($event);
 
-    $this->assertSame($_SERVER['test'], 'event_arg_foo');
+    static::assertSame($_SERVER['test'], 'event_arg_foo');
 
     unset($_SERVER['test']);
 }
 ```
-    
+
 ## register 注册监听器支持同时为多个事件绑定监听器
 
 ``` php
@@ -204,12 +204,12 @@ public function testEventAsArray(): void
     $dispatch->register([$event], Listener3::class);
     $dispatch->handle($event);
 
-    $this->assertSame($_SERVER['test'], 'event_arg_foo');
+    static::assertSame($_SERVER['test'], 'event_arg_foo');
 
     unset($_SERVER['test']);
 }
 ```
-    
+
 ## register 注册监听器支持优先级
 
 第三个参数 `$priority` 表示注册的监听器的优先级，越小越靠前执行，默认为 500。
@@ -223,7 +223,7 @@ namespace Tests\Event;
 
 class Listener4 extends Listener
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $_SERVER['test'] = 'l4';
     }
@@ -237,7 +237,7 @@ namespace Tests\Event;
 
 class Listener5 extends Listener
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $_SERVER['test'] = 'l5';
     }
@@ -253,7 +253,7 @@ public function testPriority(): void
     $dispatch->register('foo', Listener5::class);
     $dispatch->handle('foo');
 
-    $this->assertSame($_SERVER['test'], 'l5');
+    static::assertSame($_SERVER['test'], 'l5');
 
     $dispatch = new Dispatch(new Container());
 
@@ -262,11 +262,11 @@ public function testPriority(): void
     $dispatch->register('foo', Listener5::class, 4);
     $dispatch->handle('foo');
 
-    $this->assertSame($_SERVER['test'], 'l4');
+    static::assertSame($_SERVER['test'], 'l4');
     unset($_SERVER['test']);
 }
 ```
-    
+
 ## register 注册监听器支持事件通配符
 
 `*` 表示通配符事件，匹配的事件会执行对应的监听器。
@@ -280,7 +280,7 @@ namespace Tests\Event;
 
 class WildcardsListener extends Listener
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $_SERVER['wildcard'] = 'wildcard';
     }
@@ -295,21 +295,21 @@ public function testWildcards(): void
     $dispatch->register('wildcards*event', WildcardsListener::class);
     $dispatch->handle('wildcards123456event');
 
-    $this->assertSame($_SERVER['wildcard'], 'wildcard');
+    static::assertSame($_SERVER['wildcard'], 'wildcard');
     unset($_SERVER['wildcard']);
 
     $dispatch->handle('wildcards7896event');
 
-    $this->assertSame($_SERVER['wildcard'], 'wildcard');
+    static::assertSame($_SERVER['wildcard'], 'wildcard');
     unset($_SERVER['wildcard']);
 
     $dispatch->handle('wildcards_foobar_event');
 
-    $this->assertSame($_SERVER['wildcard'], 'wildcard');
+    static::assertSame($_SERVER['wildcard'], 'wildcard');
     unset($_SERVER['wildcard']);
 }
 ```
-    
+
 ## delete 删除事件所有监听器
 
 **fixture 定义**
@@ -321,7 +321,7 @@ namespace Tests\Event;
 
 class ForRemoveListener extends Listener
 {
-    public function handle($event)
+    public function handle($event): void
     {
         $_SERVER['remove'] = 'remove';
     }
@@ -336,16 +336,16 @@ public function testDeleteListeners(): void
     $dispatch->register('testevent', ForRemoveListener::class);
     $dispatch->handle('testevent');
 
-    $this->assertSame($_SERVER['remove'], 'remove');
+    static::assertSame($_SERVER['remove'], 'remove');
     unset($_SERVER['remove']);
 
     $dispatch->delete('testevent');
     $dispatch->handle('testevent');
 
-    $this->assertFalse(isset($_SERVER['remove']));
+    static::assertFalse(isset($_SERVER['remove']));
 }
 ```
-    
+
 ## delete 删除通配符事件所有监听器
 
 ``` php
@@ -355,16 +355,16 @@ public function testDeleteWildcardListeners(): void
     $dispatch->register('wildcards*event', WildcardsListener::class);
     $dispatch->handle('wildcards123456event');
 
-    $this->assertSame($_SERVER['wildcard'], 'wildcard');
+    static::assertSame($_SERVER['wildcard'], 'wildcard');
     unset($_SERVER['wildcard']);
 
     $dispatch->delete('wildcards*event');
     $dispatch->handle('wildcards7896event');
 
-    $this->assertFalse(isset($_SERVER['wildcard']));
+    static::assertFalse(isset($_SERVER['wildcard']));
 }
 ```
-    
+
 ## has 判断事件监听器是否存在
 
 ``` php
@@ -372,16 +372,16 @@ public function testHas(): void
 {
     $dispatch = new Dispatch(new Container());
 
-    $this->assertSame([], $dispatch->get('testevent'));
-    $this->assertFalse($dispatch->has('testevent'));
+    static::assertSame([], $dispatch->get('testevent'));
+    static::assertFalse($dispatch->has('testevent'));
 
     $dispatch->register('testevent', Listener1::class);
 
-    $this->assertSame([500 => [Listener1::class]], $dispatch->get('testevent'));
-    $this->assertTrue($dispatch->has('testevent'));
+    static::assertSame([500 => [Listener1::class]], $dispatch->get('testevent'));
+    static::assertTrue($dispatch->has('testevent'));
 }
 ```
-    
+
 ## 独立类监听器必须包含 handle 方法
 
 **fixture 定义**
@@ -393,7 +393,7 @@ namespace Tests\Event;
 
 class ListenerWithoutRunOrHandleMethod extends Listener
 {
-    public function notFound($event)
+    public function notFound($event): void
     {
     }
 }
@@ -413,7 +413,7 @@ public function testListenerWithoutRunOrHandleMethod(): void
     $dispatch->handle('testevent');
 }
 ```
-    
+
 ## 独立类监听器自动转换为 \Leevel\Event\Observer
 
 一般来说监听器需要继承至 `\Leevel\Event\Observer`，本质上事件使用的是观察者设计模式，而监听器是观察者角色。
@@ -429,7 +429,7 @@ namespace Tests\Event;
 
 class ListenerNotExtends
 {
-    public function handle()
+    public function handle(): void
     {
         $_SERVER['autochange'] = 'autochange';
     }
@@ -444,11 +444,11 @@ public function testListenerNotInstanceofSplObserverWillAutoChange(): void
     $dispatch->register('testevent', ListenerNotExtends::class);
     $dispatch->handle('testevent');
 
-    $this->assertSame($_SERVER['autochange'], 'autochange');
+    static::assertSame($_SERVER['autochange'], 'autochange');
     unset($_SERVER['autochange']);
 }
 ```
-    
+
 ## 独立类监听器必须包含 handle 方法
 
 **fixture 定义**
@@ -477,7 +477,7 @@ public function testListenerNotInstanceofSplObserverWithoutHandle(): void
     $dispatch->handle('testevent');
 }
 ```
-    
+
 ## 监听器支持闭包
 
 一般来说监听器需要继承至 `\Leevel\Event\Observer`，本质上事件使用的是观察者设计模式，而监听器是观察者角色。
@@ -489,12 +489,12 @@ public function testListenerNotInstanceofSplObserverWithoutHandle(): void
 public function testListenerIsClosure(): void
 {
     $dispatch = new Dispatch(new Container());
-    $dispatch->register('testevent', function () {
+    $dispatch->register('testevent', function (): void {
         $_SERVER['isclosure'] = 'isclosure';
     });
     $dispatch->handle('testevent');
 
-    $this->assertSame($_SERVER['isclosure'], 'isclosure');
+    static::assertSame($_SERVER['isclosure'], 'isclosure');
     unset($_SERVER['isclosure']);
 }
 ```

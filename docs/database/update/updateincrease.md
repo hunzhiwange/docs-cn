@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Update/UpdateIncreaseTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Update/UpdateIncreaseTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -34,19 +34,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', 503)
-                ->updateIncrease('num', 3)
+                ->updateIncrease('num', 3),
+            $connect
         )
     );
 }
 ```
-    
+
 ## updateIncrease 支持参数绑定
 
 ``` php
@@ -64,14 +64,14 @@ public function testBind(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
                 ->table('test_query')
                 ->where('id', Condition::raw('?'))
-                ->updateIncrease('num', 3, [503])
+                ->updateIncrease('num', 3, [503]),
+            $connect
         )
     );
 }

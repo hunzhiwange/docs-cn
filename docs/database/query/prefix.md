@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/PrefixTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/PrefixTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -31,19 +31,20 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->prefix('SQL_CALC_FOUND_ROWS')
                 ->where('id', '=', 5)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## prefix 示例用法
 
 ``` php
@@ -63,14 +64,15 @@ public function testSqlNoCache(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->prefix('SQL_NO_CACHE')
                 ->where('id', '=', 5)
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );

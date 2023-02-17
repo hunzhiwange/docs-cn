@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/GroupByTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/GroupByTest.php)
 :::
-    
+
 ## groupBy 函数原型
 
 ``` php
@@ -31,25 +31,27 @@ public function testBaseUse(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.`tid` AS `id`,`test_query`.`tname` AS `value` FROM `test_query` GROUP BY `test_query`.`id`,`test_query`.`name`",
+            "SELECT `test_query`.`name`,`test_query`.`id`,SUM(tid) as t FROM `test_query` GROUP BY `test_query`.`id`,`test_query`.`name`",
             [],
             false
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table('test_query', 'tid as id,tname as value')
+                ->table('test_query', 'name,id')
+                ->columns(Condition::raw('SUM(tid) as t'))
                 ->groupBy('id')
                 ->groupBy('name')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## groupBy 字段指定表名
 
 ``` php
@@ -59,25 +61,26 @@ public function testWithTable(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.`tid` AS `id`,`test_query`.`tname` AS `value` FROM `test_query` GROUP BY `test_query`.`id`",
+            "SELECT `test_query`.`id` FROM `test_query` GROUP BY `test_query`.`id`",
             [],
             false
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table('test_query', 'tid as id,tname as value')
+                ->table('test_query', 'id')
                 ->groupBy('test_query.id')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## groupBy 字段表达式
 
 ``` php
@@ -87,7 +90,7 @@ public function testWithExpression(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.`tid` AS `id`,`test_query`.`tname` AS `value` FROM `test_query` GROUP BY `test_query`.`num` HAVING SUM(`test_query`.`num`) > :SUM_test_query_num",
+            "SELECT `test_query`.`num` FROM `test_query` GROUP BY `test_query`.`num` HAVING SUM(`test_query`.`num`) > :SUM_test_query_num",
             {
                 "SUM_test_query_num": [
                     9
@@ -97,20 +100,21 @@ public function testWithExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table('test_query', 'tid as id,tname as value')
+                ->table('test_query', 'num')
                 ->groupBy(Condition::raw('[num]'))
                 ->having(Condition::raw('SUM([num])'), '>', 9)
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## groupBy 复合型
 
 ``` php
@@ -120,25 +124,26 @@ public function testWithComposite(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.`tid` AS `id`,`test_query`.`tname` AS `value` FROM `test_query` GROUP BY `test_query`.`title`,`test_query`.`id`,concat('1234',`test_query`.`id`,'ttt')",
+            "SELECT `test_query`.`title`,`test_query`.`id` FROM `test_query` GROUP BY `test_query`.`title`,`test_query`.`id`,concat('1234',`test_query`.`id`,'ttt')",
             [],
             false
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table('test_query', 'tid as id,tname as value')
+                ->table('test_query', 'title,id')
                 ->groupBy('title,id,'.Condition::raw("concat('1234',[id],'ttt')"))
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## groupBy 字段数组支持
 
 ``` php
@@ -148,19 +153,20 @@ public function testWithArray(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.`tid` AS `id`,`test_query`.`tname` AS `value` FROM `test_query` GROUP BY `test_query`.`title`,`test_query`.`id`,`test_query`.`ttt`,`test_query`.`value`",
+            "SELECT `test_query`.`title`,`test_query`.`id`,`test_query`.`ttt`,`test_query`.`value` FROM `test_query` GROUP BY `test_query`.`title`,`test_query`.`id`,`test_query`.`ttt`,`test_query`.`value`",
             [],
             false
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->table('test_query', 'tid as id,tname as value')
+                ->table('test_query', 'title,id,ttt,value')
                 ->groupBy(['title,id,ttt', 'value'])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             4
         )
     );

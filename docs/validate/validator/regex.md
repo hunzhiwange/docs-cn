@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/RegexTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/RegexTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,7 +18,7 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\RegexTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         [2, '/^[0-9]+$/'],
@@ -43,26 +42,26 @@ public function testBaseUse($value, string $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'regex:'.$param,
+            'name' => 'regex:'.$param,
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\RegexTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['中国', '/^[0-9]+$/'],
         ['成都', '/^[0-9]+$/'],
-        [new stdClass(), 0],
+        [new \stdClass(), 0],
         [['foo', 'bar'], 0],
         [[1, 2], 0],
         [[[], []], 0],
@@ -81,14 +80,14 @@ public function testBad($value, $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'regex:'.$param,
+            'name' => 'regex:'.$param,
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## regex 参数缺失
 
 ``` php
@@ -104,7 +103,7 @@ public function testMissParam(): void
             'name' => '',
         ],
         [
-            'name'     => 'regex',
+            'name' => 'regex',
         ]
     );
 

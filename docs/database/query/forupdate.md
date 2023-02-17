@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/ForUpdateTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/ForUpdateTest.php)
 :::
-    
+
 对数据库悲观锁的支持，排它锁和共享锁。
 
 
@@ -67,18 +67,19 @@ public function testForUpdate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->forUpdate()
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## forUpdate 取消排它锁 FOR UPDATE 查询
 
 ``` php
@@ -94,20 +95,21 @@ public function testCancelForUpdate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->forUpdate()
                 ->forUpdate(false)
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## lockShare 共享锁 LOCK SHARE 查询
 
 **第一步事务中加入排它锁未提交**
@@ -160,18 +162,19 @@ public function testLockShare(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->lockShare()
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## lockShare 取消共享锁 LOCK SHARE 查询
 
 ``` php
@@ -187,14 +190,15 @@ public function testCancelLockShare(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->lockShare()
                 ->lockShare(false)
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );

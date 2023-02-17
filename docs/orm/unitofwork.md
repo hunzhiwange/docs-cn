@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/UnitOfWorkTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/UnitOfWorkTest.php)
 :::
-    
+
 用事务工作单元更好地处理数据库相关工作。
 
 **Uses**
@@ -11,7 +11,6 @@
 ``` php
 <?php
 
-use Exception;
 use Leevel\Database\Ddd\Entity;
 use Leevel\Database\Ddd\UnitOfWork;
 use Tests\Database\DatabaseTestCase as TestCase;
@@ -32,29 +31,29 @@ public function testBaseUse(): void
     $this->assertInstanceof(UnitOfWork::class, $work);
 
     $post = new Post([
-        'title'   => 'hello world',
+        'title' => 'hello world',
         'user_id' => 1,
         'summary' => 'post summary',
     ]);
 
-    $this->assertNull($post->id);
+    static::assertNull($post->id);
 
     $work->persist($post);
 
     $work->flush();
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('post summary', $post->summary);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('post summary', $post->summary);
 }
 ```
-    
+
 ::: tip
 通过 persist 方法保存一个实体，并通过 flush 将实体持久化到数据库。
 :::
-    
+
 ## 保存多个实体
 
 ``` php
@@ -65,27 +64,27 @@ public function testPersist(): void
     $this->assertInstanceof(UnitOfWork::class, $work);
 
     $post = new Post([
-        'title'   => 'hello world',
+        'title' => 'hello world',
         'user_id' => 1,
         'summary' => 'post summary',
     ]);
 
-    $this->assertNull($post->id);
+    static::assertNull($post->id);
 
     $post2 = new Post([
-        'title'   => 'hello world',
+        'title' => 'hello world',
         'user_id' => 2,
         'summary' => 'foo bar',
     ]);
 
-    $this->assertNull($post2->id);
+    static::assertNull($post2->id);
 
     $work->persist($post);
     $work->persist($post2);
-    $work->on($post2, function () {
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
@@ -98,31 +97,31 @@ public function testPersist(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('post summary', $post->summary);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('post summary', $post->summary);
 
-    $this->assertSame(2, $post2->id);
-    $this->assertSame(2, $post2['id']);
-    $this->assertSame(2, $post2->getId());
-    $this->assertSame(2, $post2->userId);
-    $this->assertSame('foo bar', $post2->summary);
+    static::assertSame(2, $post2->id);
+    static::assertSame(2, $post2['id']);
+    static::assertSame(2, $post2->getId());
+    static::assertSame(2, $post2->userId);
+    static::assertSame('foo bar', $post2->summary);
 }
 ```
-    
+
 ::: tip
 底层会开启一个事务，只有全部保存成功才会真正持久化到数据库。
 :::
-    
+
 ## 新增实体
 
 ``` php
@@ -133,36 +132,36 @@ public function testCreate(): void
     $this->assertInstanceof(UnitOfWork::class, $work);
 
     $post = new Post([
-        'title'   => 'hello world',
+        'title' => 'hello world',
         'user_id' => 1,
         'summary' => 'post summary',
     ]);
 
     $post2 = new Post([
-        'title'   => 'hello world',
+        'title' => 'hello world',
         'user_id' => 2,
         'summary' => 'foo bar',
     ]);
 
-    $this->assertNull($post->id);
-    $this->assertNull($post2->id);
-    $this->assertFalse($work->created($post));
-    $this->assertFalse($work->created($post2));
-    $this->assertFalse($work->registered($post));
-    $this->assertFalse($work->registered($post2));
+    static::assertNull($post->id);
+    static::assertNull($post2->id);
+    static::assertFalse($work->created($post));
+    static::assertFalse($work->created($post2));
+    static::assertFalse($work->registered($post));
+    static::assertFalse($work->registered($post2));
 
     $work->create($post);
     $work->create($post2);
 
-    $this->assertTrue($work->created($post));
-    $this->assertTrue($work->created($post2));
-    $this->assertTrue($work->registered($post));
-    $this->assertTrue($work->registered($post2));
+    static::assertTrue($work->created($post));
+    static::assertTrue($work->created($post2));
+    static::assertTrue($work->registered($post));
+    static::assertTrue($work->registered($post2));
 
-    $work->on($post2, function () {
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
@@ -175,36 +174,36 @@ public function testCreate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertFalse($work->created($post));
-    $this->assertFalse($work->created($post2));
-    $this->assertFalse($work->registered($post));
-    $this->assertFalse($work->registered($post2));
+    static::assertFalse($work->created($post));
+    static::assertFalse($work->created($post2));
+    static::assertFalse($work->registered($post));
+    static::assertFalse($work->registered($post2));
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('post summary', $post->summary);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('post summary', $post->summary);
 
-    $this->assertSame(2, $post2->id);
-    $this->assertSame(2, $post2['id']);
-    $this->assertSame(2, $post2->getId());
-    $this->assertSame(2, $post2->userId);
-    $this->assertSame('foo bar', $post2->summary);
+    static::assertSame(2, $post2->id);
+    static::assertSame(2, $post2['id']);
+    static::assertSame(2, $post2->getId());
+    static::assertSame(2, $post2->userId);
+    static::assertSame('foo bar', $post2->summary);
 }
 ```
-    
+
 ::: tip
 底层执行的是 insert 语句，只有全部保存成功才会真正持久化到数据库。
 :::
-    
+
 ## 更新实体
 
 ``` php
@@ -216,26 +215,26 @@ public function testUpdate(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 2,
-                'summary'   => 'foo bar',
+                'title' => 'hello world',
+                'user_id' => 2,
+                'summary' => 'foo bar',
                 'delete_at' => 0,
             ])
     );
@@ -249,24 +248,24 @@ public function testUpdate(): void
     $this->assertInstanceof(Post::class, $post);
     $this->assertInstanceof(Post::class, $post2);
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('post summary', $post->summary);
-    $this->assertSame('hello world', $post->title);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('post summary', $post->summary);
+    static::assertSame('hello world', $post->title);
 
-    $this->assertSame(2, $post2->id);
-    $this->assertSame(2, $post2['id']);
-    $this->assertSame(2, $post2->getId());
-    $this->assertSame(2, $post2->userId);
-    $this->assertSame('foo bar', $post2->summary);
-    $this->assertSame('hello world', $post2->title);
+    static::assertSame(2, $post2->id);
+    static::assertSame(2, $post2['id']);
+    static::assertSame(2, $post2->getId());
+    static::assertSame(2, $post2->userId);
+    static::assertSame('foo bar', $post2->summary);
+    static::assertSame('hello world', $post2->title);
 
-    $this->assertFalse($work->updated($post));
-    $this->assertFalse($work->updated($post2));
-    $this->assertFalse($work->registered($post));
-    $this->assertFalse($work->registered($post2));
+    static::assertFalse($work->updated($post));
+    static::assertFalse($work->updated($post2));
+    static::assertFalse($work->registered($post));
+    static::assertFalse($work->registered($post2));
 
     $post->title = 'new post title';
     $post->summary = 'new post summary';
@@ -277,15 +276,15 @@ public function testUpdate(): void
     $work->update($post);
     $work->update($post2);
 
-    $this->assertTrue($work->updated($post));
-    $this->assertTrue($work->updated($post2));
-    $this->assertTrue($work->registered($post));
-    $this->assertTrue($work->registered($post2));
+    static::assertTrue($work->updated($post));
+    static::assertTrue($work->updated($post2));
+    static::assertTrue($work->registered($post));
+    static::assertTrue($work->registered($post2));
 
-    $work->on($post2, function () {
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
@@ -298,38 +297,38 @@ public function testUpdate(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertFalse($work->updated($post));
-    $this->assertFalse($work->updated($post2));
-    $this->assertFalse($work->registered($post));
-    $this->assertFalse($work->registered($post2));
+    static::assertFalse($work->updated($post));
+    static::assertFalse($work->updated($post2));
+    static::assertFalse($work->registered($post));
+    static::assertFalse($work->registered($post2));
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('new post title', $post->title);
-    $this->assertSame('new post summary', $post->summary);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('new post title', $post->title);
+    static::assertSame('new post summary', $post->summary);
 
-    $this->assertSame(2, $post2->id);
-    $this->assertSame(2, $post2['id']);
-    $this->assertSame(2, $post2->getId());
-    $this->assertSame(2, $post2->userId);
-    $this->assertSame('new post2 title', $post2->title);
-    $this->assertSame('new post2 summary', $post2->summary);
+    static::assertSame(2, $post2->id);
+    static::assertSame(2, $post2['id']);
+    static::assertSame(2, $post2->getId());
+    static::assertSame(2, $post2->userId);
+    static::assertSame('new post2 title', $post2->title);
+    static::assertSame('new post2 summary', $post2->summary);
 }
 ```
-    
+
 ::: tip
 底层执行的是 update 语句，只有全部保存成功才会真正持久化到数据库。
 :::
-    
+
 ## 删除实体
 
 ``` php
@@ -341,26 +340,26 @@ public function testDelete(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 2,
-                'summary'   => 'foo bar',
+                'title' => 'hello world',
+                'user_id' => 2,
+                'summary' => 'foo bar',
                 'delete_at' => 0,
             ])
     );
@@ -374,38 +373,38 @@ public function testDelete(): void
     $this->assertInstanceof(Post::class, $post);
     $this->assertInstanceof(Post::class, $post2);
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('post summary', $post->summary);
-    $this->assertSame('hello world', $post->title);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('post summary', $post->summary);
+    static::assertSame('hello world', $post->title);
 
-    $this->assertSame(2, $post2->id);
-    $this->assertSame(2, $post2['id']);
-    $this->assertSame(2, $post2->getId());
-    $this->assertSame(2, $post2->userId);
-    $this->assertSame('foo bar', $post2->summary);
-    $this->assertSame('hello world', $post2->title);
+    static::assertSame(2, $post2->id);
+    static::assertSame(2, $post2['id']);
+    static::assertSame(2, $post2->getId());
+    static::assertSame(2, $post2->userId);
+    static::assertSame('foo bar', $post2->summary);
+    static::assertSame('hello world', $post2->title);
 
-    $this->assertFalse($work->deleted($post));
-    $this->assertFalse($work->deleted($post2));
-    $this->assertFalse($work->registered($post));
-    $this->assertFalse($work->registered($post2));
+    static::assertFalse($work->deleted($post));
+    static::assertFalse($work->deleted($post2));
+    static::assertFalse($work->registered($post));
+    static::assertFalse($work->registered($post2));
 
     $work->delete($post);
     $work->delete($post2);
-    $work->on($post2, function () {
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
-    $this->assertTrue($work->deleted($post));
-    $this->assertTrue($work->deleted($post2));
-    $this->assertTrue($work->registered($post));
-    $this->assertTrue($work->registered($post2));
+    static::assertTrue($work->deleted($post));
+    static::assertTrue($work->deleted($post2));
+    static::assertTrue($work->registered($post));
+    static::assertTrue($work->registered($post2));
 
     $work->flush();
 
@@ -416,58 +415,58 @@ public function testDelete(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertFalse($work->deleted($post));
-    $this->assertFalse($work->deleted($post2));
-    $this->assertFalse($work->registered($post));
-    $this->assertFalse($work->registered($post2));
+    static::assertFalse($work->deleted($post));
+    static::assertFalse($work->deleted($post2));
+    static::assertFalse($work->registered($post));
+    static::assertFalse($work->registered($post2));
 
     $postAfter = Post::select()->findEntity(1);
     $post2After = Post::select()->findEntity(2);
 
-    $this->assertNull($postAfter->id);
-    $this->assertNull($postAfter['id']);
-    $this->assertNull($postAfter->getId());
-    $this->assertNull($postAfter->userId);
-    $this->assertNull($postAfter->title);
-    $this->assertNull($postAfter->summary);
+    static::assertNull($postAfter->id);
+    static::assertNull($postAfter['id']);
+    static::assertNull($postAfter->getId());
+    static::assertNull($postAfter->userId);
+    static::assertNull($postAfter->title);
+    static::assertNull($postAfter->summary);
 
-    $this->assertNull($post2After->id);
-    $this->assertNull($post2After['id']);
-    $this->assertNull($post2After->getId());
-    $this->assertNull($post2After->userId);
-    $this->assertNull($post2After->title);
-    $this->assertNull($post2After->summary);
+    static::assertNull($post2After->id);
+    static::assertNull($post2After['id']);
+    static::assertNull($post2After->getId());
+    static::assertNull($post2After->userId);
+    static::assertNull($post2After->title);
+    static::assertNull($post2After->summary);
 
     $postAfter = Post::withSoftDeleted()->findEntity(1);
     $post2After = Post::withSoftDeleted()->findEntity(2);
 
-    $this->assertSame(1, $postAfter->id);
-    $this->assertSame(1, $postAfter['id']);
-    $this->assertSame(1, $postAfter->getId());
-    $this->assertSame(1, $postAfter->userId);
-    $this->assertSame('post summary', $postAfter->summary);
-    $this->assertSame('hello world', $postAfter->title);
+    static::assertSame(1, $postAfter->id);
+    static::assertSame(1, $postAfter['id']);
+    static::assertSame(1, $postAfter->getId());
+    static::assertSame(1, $postAfter->userId);
+    static::assertSame('post summary', $postAfter->summary);
+    static::assertSame('hello world', $postAfter->title);
 
-    $this->assertSame(2, $post2After->id);
-    $this->assertSame(2, $post2After['id']);
-    $this->assertSame(2, $post2After->getId());
-    $this->assertSame(2, $post2After->userId);
-    $this->assertSame('foo bar', $post2After->summary);
-    $this->assertSame('hello world', $post2After->title);
+    static::assertSame(2, $post2After->id);
+    static::assertSame(2, $post2After['id']);
+    static::assertSame(2, $post2After->getId());
+    static::assertSame(2, $post2After->userId);
+    static::assertSame('foo bar', $post2After->summary);
+    static::assertSame('hello world', $post2After->title);
 }
 ```
-    
+
 ::: tip
 底层执行的是 delete 语句，只有全部保存成功才会真正持久化到数据库。
 :::
-    
+
 ## 刷新实体
 
 ``` php
@@ -479,34 +478,34 @@ public function testRefresh(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
     ], true);
 
-    $this->assertSame(1, $post->getId());
-    $this->assertSame('old', $post->getSummary());
-    $this->assertSame('old', $post->getTitle());
+    static::assertSame(1, $post->getId());
+    static::assertSame('old', $post->getSummary());
+    static::assertSame('old', $post->getTitle());
 
     $work->persist($post);
     $work->refresh($post);
 
-    $this->assertSame(1, $post->getId());
-    $this->assertSame('post summary', $post->getSummary());
-    $this->assertSame('hello world', $post->getTitle());
+    static::assertSame(1, $post->getId());
+    static::assertSame('post summary', $post->getSummary());
+    static::assertSame('hello world', $post->getTitle());
     $post->title = 'new title';
 
     $work->flush();
@@ -516,19 +515,19 @@ public function testRefresh(): void
     $this->assertInstanceof(Entity::class, $post);
     $this->assertInstanceof(Post::class, $post);
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->userId);
-    $this->assertSame('post summary', $post->summary);
-    $this->assertSame('new title', $post->title);
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->userId);
+    static::assertSame('post summary', $post->summary);
+    static::assertSame('new title', $post->title);
 }
 ```
-    
+
 ::: tip
 底层执行的是 select 语句，这个操作会读取数据库最新信息并刷新实体的属性。
 :::
-    
+
 ## 手工启动事务 beginTransaction
 
 ``` php
@@ -540,14 +539,14 @@ public function testBeginTransaction(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
@@ -566,15 +565,15 @@ public function testBeginTransaction(): void
         $work->rollBack();
     }
 
-    $this->assertSame(1, $post->getId());
-    $this->assertSame('new title', $post->getTitle());
+    static::assertSame(1, $post->getId());
+    static::assertSame('new title', $post->getTitle());
 }
 ```
-    
+
 ::: tip
 通常来说事务工作单元会自动帮你处理事务，可以通过手工 beginTransaction，成功 commit 或者失败 rollBack，系统提供了 API 让你也手工开启事务处理。
 :::
-    
+
 ## 执行失败事务回滚 rollBack
 
 ``` php
@@ -588,15 +587,15 @@ public function testFlushButRollBack(): void
     $work = UnitOfWork::make();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
         'user_id' => 0,
     ]);
 
     $post2 = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
         'user_id' => 0,
     ]);
@@ -607,11 +606,11 @@ public function testFlushButRollBack(): void
     $work->flush();
 }
 ```
-    
+
 ::: tip
 底层会自动运行一个事务，如果执行失败自动回滚，不会更新数据库。
 :::
-    
+
 ## 事务包裹在闭包中 transaction
 
 ``` php
@@ -623,19 +622,19 @@ public function testTransaction(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
-    $work->transaction(function ($w) {
+    $work->transaction(function ($w): void {
         $post = Post::select()->findEntity(1);
         $w->update($post);
 
@@ -644,15 +643,15 @@ public function testTransaction(): void
 
     $newPost = Post::select()->findEntity(1);
 
-    $this->assertSame(1, $newPost->getId());
-    $this->assertSame('new title', $newPost->getTitle());
+    static::assertSame(1, $newPost->getId());
+    static::assertSame('new title', $newPost->getTitle());
 }
 ```
-    
+
 ::: tip
 可以将事务包裹在一个闭包中，如果执行失败自动回滚，不会更新数据库。
 :::
-    
+
 ## 事务包裹在闭包中失败回滚 transaction 
 
 ``` php
@@ -669,17 +668,17 @@ public function testTransactionAndRollBack(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $work->transaction(function ($w) {
+    $work->transaction(function ($w): void {
         $post = new Post([
-            'id'      => 1,
-            'title'   => 'old',
+            'id' => 1,
+            'title' => 'old',
             'summary' => 'old',
             'user_id' => 0,
         ]);
 
         $post2 = new Post([
-            'id'      => 1,
-            'title'   => 'old',
+            'id' => 1,
+            'title' => 'old',
             'summary' => 'old',
             'user_id' => 0,
         ]);
@@ -688,14 +687,14 @@ public function testTransactionAndRollBack(): void
         $w->create($post2);
     });
 
-    $this->assertSame(0, $connect->table('post')->findCount());
+    static::assertSame(0, $connect->table('post')->findCount());
 }
 ```
-    
+
 ::: tip
 可以将事务包裹在一个闭包中，执行失败自动回滚测试，不会更新数据库。
 :::
-    
+
 ## 设置实体 setEntity
 
 ``` php
@@ -707,14 +706,14 @@ public function testSetRootEntity(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
@@ -728,22 +727,22 @@ public function testSetRootEntity(): void
 
     $work->flush();
 
-    $this->assertSame(1, $post->getId());
-    $this->assertSame('new title', $post->getTitle());
+    static::assertSame(1, $post->getId());
+    static::assertSame('new title', $post->getTitle());
 
     $newPost = Post::select()->findEntity(1);
 
-    $this->assertSame(1, $newPost->getId());
-    $this->assertSame('new title', $newPost->getTitle());
+    static::assertSame(1, $newPost->getId());
+    static::assertSame('new title', $newPost->getTitle());
 
     $work->setEntity($post, null);
 }
 ```
-    
+
 ::: tip
 系统默认读取基础的数据库配置来处理数据相关信息，设置跟实体还可以更改事务处理的数据库连接。
 :::
-    
+
 ## 更改数据库连接 setConnect
 
 ``` php
@@ -757,14 +756,14 @@ public function testSetConnectNotFoundWillThrowException(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
@@ -776,18 +775,18 @@ public function testSetConnectNotFoundWillThrowException(): void
 
     try {
         $work->flush();
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         $work->setConnect(null);
 
         throw $e;
     }
 }
 ```
-    
+
 ::: tip
 如果没有存在的连接，则会报错。
 :::
-    
+
 ## 保持实体支持缓存
 
 ``` php
@@ -798,8 +797,8 @@ public function testPersistStageManagedEntityDoNothing(): void
     $connect = $this->createDatabaseConnect();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
         'user_id' => 0,
     ]);
@@ -809,14 +808,14 @@ public function testPersistStageManagedEntityDoNothing(): void
 
     $work->flush();
 
-    $this->assertSame(1, $connect->table('post')->findCount());
+    static::assertSame(1, $connect->table('post')->findCount());
 }
 ```
-    
+
 ::: tip
 保存两个一样的实体，第二个实体并不会被添加。
 :::
-    
+
 ## 重新保存已删除的实体实体
 
 ``` php
@@ -826,37 +825,37 @@ public function testPersistStageRemovedEntity(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
     $post = Post::select()->findEntity(1);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame('hello world', $post->getTitle());
-    $this->assertSame('post summary', $post->getSummary());
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(1, $post->getId());
+    static::assertSame('hello world', $post->getTitle());
+    static::assertSame('post summary', $post->getSummary());
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
     $work->delete($post);
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
     $work->persist($post);
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
     $work->flush();
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
-    $this->assertSame(1, $connect->table('post')->findCount());
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(1, $connect->table('post')->findCount());
 }
 ```
-    
+
 ::: tip
 这样被删除的实体并不会被删除。
 :::
-    
+
 ## 注册更新的实体不能重新被创建
 
 ``` php
@@ -876,7 +875,7 @@ public function testCreateButAlreadyInUpdates(): void
     $work->create($post);
 }
 ```
-    
+
 ## 注册删除的实体不能重新被创建
 
 ``` php
@@ -896,7 +895,7 @@ public function testCreateButAlreadyInDeletes(): void
     $work->create($post);
 }
 ```
-    
+
 ## 注册替换的实体不能重新被创建
 
 ``` php
@@ -916,7 +915,7 @@ public function testCreateButAlreadyInReplaces(): void
     $work->create($post);
 }
 ```
-    
+
 ## 不能多次创建同一个实体
 
 ``` php
@@ -937,7 +936,7 @@ public function testCreateManyTimes(): void
     $work->create($post);
 }
 ```
-    
+
 ## 已经删除的实体不能够被更新
 
 ``` php
@@ -957,7 +956,7 @@ public function testUpdateButAlreadyInDeletes(): void
     $work->update($post);
 }
 ```
-    
+
 ## 已经创建的实体不能够被更新
 
 ``` php
@@ -977,7 +976,7 @@ public function testUpdateButAlreadyInCreates(): void
     $work->update($post);
 }
 ```
-    
+
 ## 已经替换的实体不能够被更新
 
 ``` php
@@ -997,7 +996,7 @@ public function testUpdateButAlreadyInReplaces(): void
     $work->update($post);
 }
 ```
-    
+
 ## update 不能多次更新同一个实体
 
 ``` php
@@ -1018,7 +1017,7 @@ public function testUpdateManyTimes(): void
     $work->update($post);
 }
 ```
-    
+
 ## delete.create 已创建的实体可以被删除
 
 ``` php
@@ -1035,10 +1034,10 @@ public function testDeleteCreated(): void
 
     $work->flush();
 
-    $this->assertSame(0, $connect->table('post')->findCount());
+    static::assertSame(0, $connect->table('post')->findCount());
 }
 ```
-    
+
 ## delete.update 删除已更新的实体
 
 ``` php
@@ -1048,14 +1047,14 @@ public function testDeleteUpdated(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
@@ -1071,13 +1070,13 @@ public function testDeleteUpdated(): void
 
     $postNew = Post::select()->findEntity(1);
 
-    $this->assertSame(1, $connect->table('post')->findCount());
-    $this->assertSame(0, $connect->table('post')->where('delete_at', 0)->findCount());
-    $this->assertNull($postNew->id);
-    $this->assertNull($postNew->title);
+    static::assertSame(1, $connect->table('post')->findCount());
+    static::assertSame(0, $connect->table('post')->where('delete_at', 0)->findCount());
+    static::assertNull($postNew->id);
+    static::assertNull($postNew->title);
 }
 ```
-    
+
 ## delete.replace 删除已替换的实体
 
 ``` php
@@ -1087,14 +1086,14 @@ public function testDeleteReplaced(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
@@ -1110,13 +1109,13 @@ public function testDeleteReplaced(): void
 
     $postNew = Post::select()->findEntity(1);
 
-    $this->assertSame(1, $connect->table('post')->findCount());
-    $this->assertSame(0, $connect->table('post')->where('delete_at', 0)->findCount());
-    $this->assertNull($postNew->id);
-    $this->assertNull($postNew->title);
+    static::assertSame(1, $connect->table('post')->findCount());
+    static::assertSame(0, $connect->table('post')->where('delete_at', 0)->findCount());
+    static::assertNull($postNew->id);
+    static::assertNull($postNew->title);
 }
 ```
-    
+
 ## repository 取得实体仓储
 
 ``` php
@@ -1129,7 +1128,7 @@ public function testRepository(): void
     $this->assertInstanceof(GuestbookRepository::class, $repository);
 }
 ```
-    
+
 ## repository 取得实体仓储支持实体实例
 
 ``` php
@@ -1142,7 +1141,7 @@ public function testRepository2(): void
     $this->assertInstanceof(GuestbookRepository::class, $repository);
 }
 ```
-    
+
 ## remove 移除未被管理的实体不做任何处理直接返回
 
 ``` php
@@ -1154,10 +1153,10 @@ public function testRemoveStageNewDoNothing(): void
 
     $work->remove($post = new Post());
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除管理的新增实体直接删除
 
 ``` php
@@ -1168,12 +1167,12 @@ public function testRemoveStageCreateManaged(): void
     $this->assertInstanceof(UnitOfWork::class, $work);
 
     $work->create($post = new Post(['id' => 5]));
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
     $work->remove($post);
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除管理的更新实体直接删除
 
 ``` php
@@ -1184,12 +1183,12 @@ public function testRemoveStageUpdateManaged(): void
     $this->assertInstanceof(UnitOfWork::class, $work);
 
     $work->update($post = new Post(['id' => 5], true));
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
     $work->remove($post);
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除未被管理的实体到前置区域不做任何处理直接返回
 
 ``` php
@@ -1201,10 +1200,10 @@ public function testRemoveBeforeStageNewDoNothing(): void
 
     $work->removeBefore($post = new Post());
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除未被管理的实体到后置区域不做任何处理直接返回
 
 ``` php
@@ -1216,10 +1215,10 @@ public function testRemoveAfterBeforeStageNewDoNothing(): void
 
     $work->removeAfter($post = new Post());
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除未被管理的实体不做任何处理直接返回
 
 ``` php
@@ -1231,10 +1230,10 @@ public function testForceRemoveStageNewDoNothing(): void
 
     $work->forceRemove($post = new Post());
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除未被管理的实体到前置区域不做任何处理直接返回
 
 ``` php
@@ -1246,10 +1245,10 @@ public function testForceRemoveBeforeStageNewDoNothing(): void
 
     $work->forceRemoveBefore($post = new Post());
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除未被管理的实体到后置区域不做任何处理直接返回
 
 ``` php
@@ -1261,10 +1260,10 @@ public function testForceRemoveAfterStageNewDoNothing(): void
 
     $work->forceRemoveAfter($post = new Post());
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已删除的实体不做任何处理直接返回
 
 ``` php
@@ -1277,10 +1276,10 @@ public function testRemoveStageRemovedDoNothing(): void
     $work->delete($post = new Post(['id' => 5]));
     $work->remove($post);
 
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已删除的实体到前置区域不做任何处理直接返回
 
 ``` php
@@ -1293,10 +1292,10 @@ public function testRemoveBeforeStageRemovedDoNothing(): void
     $work->delete($post = new Post(['id' => 5]));
     $work->removeBefore($post);
 
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已删除的实体到后置区域不做任何处理直接返回
 
 ``` php
@@ -1309,10 +1308,10 @@ public function testRemoveAfterStageRemovedDoNothing(): void
     $work->delete($post = new Post(['id' => 5]));
     $work->removeAfter($post);
 
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已删除的实体不做任何处理直接返回
 
 ``` php
@@ -1325,10 +1324,10 @@ public function testForceRemoveStageRemovedDoNothing(): void
     $work->delete($post = new Post(['id' => 5]));
     $work->forceRemove($post);
 
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已删除的实体到前置区域不做任何处理直接返回
 
 ``` php
@@ -1341,10 +1340,10 @@ public function testForceRemoveBeforeStageRemovedDoNothing(): void
     $work->delete($post = new Post(['id' => 5]));
     $work->forceRemoveBefore($post);
 
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已删除的实体到后置区域不做任何处理直接返回
 
 ``` php
@@ -1357,10 +1356,10 @@ public function testForceRemoveAfterStageRemovedDoNothing(): void
     $work->delete($post = new Post(['id' => 5]));
     $work->forceRemoveAfter($post);
 
-    $this->assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_REMOVED, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已经被管理的新增实体将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1372,18 +1371,18 @@ public function testRemoveStageManagedWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post);
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->remove($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已经被管理的新增实体到前置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1395,18 +1394,18 @@ public function testRemoveBeforeStageManagedWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post);
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->removeBefore($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已经被管理的新增实体到后置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1418,18 +1417,18 @@ public function testRemoveAfterStageManagedWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post);
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->removeAfter($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已经被管理的新增实体将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1441,26 +1440,26 @@ public function testForceRemoveStageManagedWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post);
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->forceRemove($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->flush();
 
-    $sql = null;
-    $this->assertSame(
+    $sql = '';
+    static::assertSame(
         $sql,
         $post->select()->getLastSql(),
     );
 }
 ```
-    
+
 ## forceRemove 强制移除已经被管理的新增实体到前置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1472,26 +1471,26 @@ public function testForceRemoveBeforeStageManagedWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post);
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->forceRemoveBefore($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->flush();
 
-    $sql = null;
-    $this->assertSame(
+    $sql = '';
+    static::assertSame(
         $sql,
         $post->select()->getLastSql(),
     );
 }
 ```
-    
+
 ## forceRemove 强制移除已经被管理的新增实体到后置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1503,26 +1502,26 @@ public function testForceRemoveAfterStageManagedWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post);
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->forceRemoveAfter($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->flush();
 
-    $sql = null;
-    $this->assertSame(
+    $sql = '';
+    static::assertSame(
         $sql,
         $post->select()->getLastSql(),
     );
 }
 ```
-    
+
 ## remove 移除已经被管理的替换实体将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1534,18 +1533,18 @@ public function testRemoveStageManagedReplaceWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post, 'replace');
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->remove($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已经被管理的替换实体到前置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1557,18 +1556,18 @@ public function testRemoveBeforeStageManagedReplaceWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post, 'replace');
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->removeBefore($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## remove 移除已经被管理的替换实体到后置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1580,18 +1579,18 @@ public function testRemoveAfterStageManagedReplaceWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post, 'replace');
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->removeAfter($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已经被管理的替换实体将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1603,18 +1602,18 @@ public function testForceRemoveStageManagedReplaceWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post, 'replace');
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->forceRemove($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已经被管理的替换实体到前置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1626,18 +1625,18 @@ public function testForceRemoveBeforeStageManagedReplaceWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post, 'replace');
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->forceRemoveBefore($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## forceRemove 强制移除已经被管理的替换实体到后置区域将会清理已管理状态，但是不做删除然后直接返回
 
 ``` php
@@ -1649,18 +1648,18 @@ public function testForceRemoveAfterStageManagedReplaceWillDelete(): void
 
     $post = new Post();
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 
     $work->persist($post, 'replace');
 
-    $this->assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_MANAGED, $work->getEntityState($post));
 
     $work->forceRemoveAfter($post);
 
-    $this->assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
+    static::assertSame(UnitOfWork::STATE_NEW, $work->getEntityState($post));
 }
 ```
-    
+
 ## persist 保持实体自动识别为更新状态
 
 ``` php
@@ -1671,8 +1670,8 @@ public function testPersistAsSaveUpdate(): void
     $connect = $this->createDatabaseConnect();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
     ], true);
 
@@ -1680,10 +1679,10 @@ public function testPersistAsSaveUpdate(): void
 
     $work->flush();
 
-    $this->assertSame(0, $connect->table('post')->findCount());
+    static::assertSame(0, $connect->table('post')->findCount());
 }
 ```
-    
+
 ## persist 保持实体为更新状态
 
 ``` php
@@ -1694,8 +1693,8 @@ public function testPersistAsUpdate(): void
     $connect = $this->createDatabaseConnect();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
     ]);
 
@@ -1703,10 +1702,10 @@ public function testPersistAsUpdate(): void
 
     $work->flush();
 
-    $this->assertSame(0, $connect->table('post')->findCount());
+    static::assertSame(0, $connect->table('post')->findCount());
 }
 ```
-    
+
 ## persist 保持实体为替换状态
 
 ``` php
@@ -1716,21 +1715,21 @@ public function testPersistAsReplace(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'old',
+        'id' => 1,
+        'title' => 'old',
         'summary' => 'old',
         'user_id' => 1,
     ]);
@@ -1741,13 +1740,13 @@ public function testPersistAsReplace(): void
 
     $updatedPost = Post::select()->findEntity(1);
 
-    $this->assertSame(1, $updatedPost->id);
-    $this->assertSame('old', $updatedPost->title);
-    $this->assertSame(1, $updatedPost->userId);
-    $this->assertSame('old', $updatedPost->summary);
+    static::assertSame(1, $updatedPost->id);
+    static::assertSame('old', $updatedPost->title);
+    static::assertSame(1, $updatedPost->userId);
+    static::assertSame('old', $updatedPost->summary);
 }
 ```
-    
+
 ## persist 已经持久化并且脱离管理的实体状态不能被再次保持
 
 ``` php
@@ -1769,7 +1768,7 @@ public function testPersistStageDetachedEntity(): void
     $work->persist($post);
 }
 ```
-    
+
 ## remove 已经持久化并且脱离管理的实体状态不能被再次移除
 
 ``` php
@@ -1791,7 +1790,7 @@ public function testRemoveStageDetachedEntity(): void
     $work->remove($post);
 }
 ```
-    
+
 ## on 保持的实体回调
 
 ``` php
@@ -1800,7 +1799,7 @@ public function testOnCallbacks(): void
     $work = UnitOfWork::make();
 
     $post = new Post([
-        'title'   => 'new',
+        'title' => 'new',
         'user_id' => 0,
     ]);
     $guestBook = new Guestbook(['name' => '']);
@@ -1808,7 +1807,7 @@ public function testOnCallbacks(): void
     $work->persist($post);
     $work->persist($guestBook);
 
-    $work->on($post, function ($p) use ($guestBook) {
+    $work->on($post, function ($p) use ($guestBook): void {
         $guestBook->content = 'guest_book content was post id is '.$p->id;
     });
 
@@ -1816,12 +1815,12 @@ public function testOnCallbacks(): void
 
     $newGuestbook = Guestbook::select()->findEntity(1);
 
-    $this->assertSame('guest_book content was post id is 1', $newGuestbook->content);
+    static::assertSame('guest_book content was post id is 1', $newGuestbook->content);
 
     $work->clear();
 }
 ```
-    
+
 ## on 替换的实体回调
 
 ``` php
@@ -1830,7 +1829,7 @@ public function testOnCallbacksForReplace(): void
     $work = UnitOfWork::make();
 
     $post = new Post([
-        'title'   => 'new',
+        'title' => 'new',
         'user_id' => 0,
     ]);
     $guestBook = new Guestbook(['name' => '']);
@@ -1838,7 +1837,7 @@ public function testOnCallbacksForReplace(): void
     $work->replace($post);
     $work->replace($guestBook);
 
-    $work->on($post, function ($p) use ($guestBook) {
+    $work->on($post, function ($p) use ($guestBook): void {
         $guestBook->content = 'guest_book content was post id is '.$p->id;
     });
 
@@ -1846,12 +1845,12 @@ public function testOnCallbacksForReplace(): void
 
     $newGuestbook = Guestbook::select()->findEntity(1);
 
-    $this->assertSame('guest_book content was post id is 1', $newGuestbook->content);
+    static::assertSame('guest_book content was post id is 1', $newGuestbook->content);
 
     $work->clear();
 }
 ```
-    
+
 ## on 更新的实体回调
 
 ``` php
@@ -1861,25 +1860,25 @@ public function testOnCallbacksForUpdate(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
             ->insert([
-                'name'      => '',
-                'content'   => 'hello world',
+                'name' => '',
+                'content' => 'hello world',
             ])
     );
 
@@ -1889,7 +1888,7 @@ public function testOnCallbacksForUpdate(): void
     $work->update($post);
     $work->update($guestBook);
 
-    $work->on($post, function ($p) use ($guestBook) {
+    $work->on($post, function ($p) use ($guestBook): void {
         $guestBook->content = 'guest_book content was post id is '.$p->id;
     });
 
@@ -1899,12 +1898,12 @@ public function testOnCallbacksForUpdate(): void
 
     $newGuestbook = Guestbook::select()->findEntity(1);
 
-    $this->assertSame('guest_book content was post id is 1', $newGuestbook->content);
+    static::assertSame('guest_book content was post id is 1', $newGuestbook->content);
 
     $work->clear();
 }
 ```
-    
+
 ## on 删除的实体回调
 
 ``` php
@@ -1914,14 +1913,14 @@ public function testOnCallbacksForDelete(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
@@ -1929,18 +1928,18 @@ public function testOnCallbacksForDelete(): void
     $post = Post::select()->findEntity(1);
     $work->persist($post)->remove($post);
 
-    $work->on($post, function ($p) {
+    $work->on($post, function ($p): void {
         // post has already removed,do nothing
     });
 
     $work->flush($post);
 
     $newPost = Post::select()->findEntity(1);
-    $this->assertSame(1, $newPost->id);
+    static::assertSame(1, $newPost->id);
     $work->clear();
 }
 ```
-    
+
 ## replace 注册替换实体
 
 ``` php
@@ -1949,26 +1948,26 @@ public function testReplace(): void
     $work = UnitOfWork::make();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'new',
+        'id' => 1,
+        'title' => 'new',
         'user_id' => 0,
     ]);
     $post2 = new Post([
-        'id'      => 2,
-        'title'   => 'new2',
+        'id' => 2,
+        'title' => 'new2',
         'user_id' => 2,
     ]);
 
-    $this->assertFalse($work->replaced($post));
-    $this->assertFalse($work->replaced($post2));
+    static::assertFalse($work->replaced($post));
+    static::assertFalse($work->replaced($post2));
     $work->replace($post);
     $work->replace($post2);
-    $this->assertTrue($work->replaced($post));
-    $this->assertTrue($work->replaced($post2));
-    $work->on($post2, function () {
+    static::assertTrue($work->replaced($post));
+    static::assertTrue($work->replaced($post2));
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
@@ -1981,28 +1980,28 @@ public function testReplace(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertFalse($work->replaced($post));
-    $this->assertFalse($work->replaced($post2));
+    static::assertFalse($work->replaced($post));
+    static::assertFalse($work->replaced($post2));
 
     $createPost = Post::select()->findEntity(1);
     $this->assertInstanceof(Post::class, $createPost);
-    $this->assertSame(1, $createPost->id);
-    $this->assertSame('new', $createPost->title);
+    static::assertSame(1, $createPost->id);
+    static::assertSame('new', $createPost->title);
 
     $createPost = Post::select()->findEntity(2);
     $this->assertInstanceof(Post::class, $createPost);
-    $this->assertSame(2, $createPost->id);
-    $this->assertSame('new2', $createPost->title);
+    static::assertSame(2, $createPost->id);
+    static::assertSame('new2', $createPost->title);
 }
 ```
-    
+
 ## replace 注册替换实体到前置区域
 
 ``` php
@@ -2011,26 +2010,26 @@ public function testReplaceBefore(): void
     $work = UnitOfWork::make();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'new',
+        'id' => 1,
+        'title' => 'new',
         'user_id' => 0,
     ]);
     $post2 = new Post([
-        'id'      => 2,
-        'title'   => 'new2',
+        'id' => 2,
+        'title' => 'new2',
         'user_id' => 2,
     ]);
 
-    $this->assertFalse($work->replaced($post));
-    $this->assertFalse($work->replaced($post2));
+    static::assertFalse($work->replaced($post));
+    static::assertFalse($work->replaced($post2));
     $work->replace($post);
     $work->replaceBefore($post2);
-    $this->assertTrue($work->replaced($post));
-    $this->assertTrue($work->replaced($post2));
-    $work->on($post2, function () {
+    static::assertTrue($work->replaced($post));
+    static::assertTrue($work->replaced($post2));
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
@@ -2043,28 +2042,28 @@ public function testReplaceBefore(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertFalse($work->replaced($post));
-    $this->assertFalse($work->replaced($post2));
+    static::assertFalse($work->replaced($post));
+    static::assertFalse($work->replaced($post2));
 
     $createPost = Post::select()->findEntity(1);
     $this->assertInstanceof(Post::class, $createPost);
-    $this->assertSame(1, $createPost->id);
-    $this->assertSame('new', $createPost->title);
+    static::assertSame(1, $createPost->id);
+    static::assertSame('new', $createPost->title);
 
     $createPost = Post::select()->findEntity(2);
     $this->assertInstanceof(Post::class, $createPost);
-    $this->assertSame(2, $createPost->id);
-    $this->assertSame('new2', $createPost->title);
+    static::assertSame(2, $createPost->id);
+    static::assertSame('new2', $createPost->title);
 }
 ```
-    
+
 ## replace 注册替换实体到后置区域
 
 ``` php
@@ -2073,26 +2072,26 @@ public function testReplaceAfter(): void
     $work = UnitOfWork::make();
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'new',
+        'id' => 1,
+        'title' => 'new',
         'user_id' => 0,
     ]);
     $post2 = new Post([
-        'id'      => 2,
-        'title'   => 'new2',
+        'id' => 2,
+        'title' => 'new2',
         'user_id' => 2,
     ]);
 
-    $this->assertFalse($work->replaced($post));
-    $this->assertFalse($work->replaced($post2));
+    static::assertFalse($work->replaced($post));
+    static::assertFalse($work->replaced($post2));
     $work->replaceAfter($post);
     $work->replace($post2);
-    $this->assertTrue($work->replaced($post));
-    $this->assertTrue($work->replaced($post2));
-    $work->on($post2, function () {
+    static::assertTrue($work->replaced($post));
+    static::assertTrue($work->replaced($post2));
+    $work->on($post2, function (): void {
         $GLOBALS['unitofwork'][] = 1;
     });
-    $work->on($post, function () {
+    $work->on($post, function (): void {
         $GLOBALS['unitofwork'][] = 2;
     });
 
@@ -2105,28 +2104,28 @@ public function testReplaceAfter(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['unitofwork']
         )
     );
 
-    $this->assertFalse($work->replaced($post));
-    $this->assertFalse($work->replaced($post2));
+    static::assertFalse($work->replaced($post));
+    static::assertFalse($work->replaced($post2));
 
     $createPost = Post::select()->findEntity(1);
     $this->assertInstanceof(Post::class, $createPost);
-    $this->assertSame(1, $createPost->id);
-    $this->assertSame('new', $createPost->title);
+    static::assertSame(1, $createPost->id);
+    static::assertSame('new', $createPost->title);
 
     $createPost = Post::select()->findEntity(2);
     $this->assertInstanceof(Post::class, $createPost);
-    $this->assertSame(2, $createPost->id);
-    $this->assertSame('new2', $createPost->title);
+    static::assertSame(2, $createPost->id);
+    static::assertSame('new2', $createPost->title);
 }
 ```
-    
+
 ## replace 注册替换实体更新例子
 
 ``` php
@@ -2136,21 +2135,21 @@ public function testReplaceAsUpdate(): void
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('post')
             ->insert([
-                'title'     => 'hello world',
-                'user_id'   => 1,
-                'summary'   => 'post summary',
+                'title' => 'hello world',
+                'user_id' => 1,
+                'summary' => 'post summary',
                 'delete_at' => 0,
             ])
     );
 
     $post = new Post([
-        'id'      => 1,
-        'title'   => 'new',
+        'id' => 1,
+        'title' => 'new',
         'summary' => 'new',
         'user_id' => 1,
     ]);
@@ -2161,13 +2160,13 @@ public function testReplaceAsUpdate(): void
 
     $updatedPost = Post::select()->findEntity(1);
 
-    $this->assertSame(1, $updatedPost->id);
-    $this->assertSame('new', $updatedPost->title);
-    $this->assertSame(1, $updatedPost->userId);
-    $this->assertSame('new', $updatedPost->summary);
+    static::assertSame(1, $updatedPost->id);
+    static::assertSame('new', $updatedPost->title);
+    static::assertSame(1, $updatedPost->userId);
+    static::assertSame('new', $updatedPost->summary);
 }
 ```
-    
+
 ## 已创建的实体不能够被替换
 
 ``` php
@@ -2187,7 +2186,7 @@ public function testReplaceButAlreadyInCreates(): void
     $work->replace($post);
 }
 ```
-    
+
 ## 已更新的实体不能够被替换
 
 ``` php
@@ -2207,7 +2206,7 @@ public function testReplaceButAlreadyInUpdates(): void
     $work->replace($post);
 }
 ```
-    
+
 ## 同一个实体不能被替换多次
 
 ``` php
@@ -2228,7 +2227,7 @@ public function testReplaceManyTimes(): void
     $work->replace($post);
 }
 ```
-    
+
 ## 已删除的实体不能够被替换
 
 ``` php
@@ -2248,7 +2247,7 @@ public function testReplaceButAlreadyInDeletes(): void
     $work->replace($post);
 }
 ```
-    
+
 ## 同一个实体不能够被删除多次
 
 ``` php
@@ -2269,7 +2268,7 @@ public function testDeleteManyTimes(): void
     $work->delete($post);
 }
 ```
-    
+
 ## 不能多次创建同一个实体
 
 ``` php
@@ -2280,19 +2279,19 @@ public function testPersistAsCompositeIdReplace2(): void
     $connect = $this->createDatabaseConnect();
 
     $compositeId = new CompositeId([
-        'id1'      => 1,
-        'id2'      => 2,
-        'name'     => 'old',
+        'id1' => 1,
+        'id2' => 2,
+        'name' => 'old',
     ]);
 
     $work->persist($compositeId);
 
     $work->flush();
 
-    $this->assertSame(1, $connect->table('composite_id')->findCount());
+    static::assertSame(1, $connect->table('composite_id')->findCount());
 }
 ```
-    
+
 ## persist 保持实体为替换支持复合主键
 
 ``` php
@@ -2303,15 +2302,15 @@ public function testPersistAsCompositeIdReplace(): void
     $connect = $this->createDatabaseConnect();
 
     $compositeId = new CompositeId([
-        'id1'      => 1,
-        'id2'      => 2,
-        'name'     => 'old',
+        'id1' => 1,
+        'id2' => 2,
+        'name' => 'old',
     ]);
 
     $work->persist($compositeId, 'replace');
 
     $work->flush();
 
-    $this->assertSame(1, $connect->table('composite_id')->findCount());
+    static::assertSame(1, $connect->table('composite_id')->findCount());
 }
 ```

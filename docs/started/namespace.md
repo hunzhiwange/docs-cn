@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Docs/Started/NamespaceDoc.php](https://github.com/hunzhiwange/framework/blob/master/tests/Docs/Started/NamespaceDoc.php)
 :::
-    
+
 QueryPHP 采用命名空间的方式来有效地组织项目代码，系统在运行过程中会自动注册一些命名空间，完全依赖 `Composer` 来管理文件自动加载。
 
 ## 系统注册命名空间

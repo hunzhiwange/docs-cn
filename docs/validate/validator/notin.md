@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/NotInTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/NotInTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\NotInTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['0.1', '1,5'],
@@ -43,21 +43,21 @@ public function testBaseUse($value, string $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'not_in:'.$param,
+            'name' => 'not_in:'.$param,
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\NotInTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         [1, '1,5'],
@@ -86,14 +86,14 @@ public function testBad($value, string $param): void
             'name' => $value,
         ],
         [
-            'name'     => 'not_in:'.$param,
+            'name' => 'not_in:'.$param,
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```
-    
+
 ## not_in 参数缺失
 
 ``` php
@@ -109,7 +109,7 @@ public function testMissParam(): void
             'name' => '',
         ],
         [
-            'name'     => 'not_in',
+            'name' => 'not_in',
         ]
     );
 

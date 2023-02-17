@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/Compiler/CompilerForTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/Compiler/CompilerForTest.php)
 :::
-    
+
 如果我们需要在模板中使用 for 循环，那么通过 for 标签可以很方便地输出。
 
 ## node 简单版
@@ -25,10 +25,10 @@ public function testForNode(): void
         <?php endfor; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## node 完整版
 
 ``` php
@@ -47,6 +47,6 @@ public function testForNode2(): void
         <?php endfor; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```

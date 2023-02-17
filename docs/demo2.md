@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Kernel/Utils/Assert/Doc/Demo2.php](https://github.com/hunzhiwange/framework/blob/master/tests/Kernel/Utils/Assert/Doc/Demo2.php)
 :::
-    
+
 demo doc
 just test
 

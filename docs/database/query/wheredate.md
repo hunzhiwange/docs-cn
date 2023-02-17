@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/TimeTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/TimeTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -36,11 +36,12 @@ public function testBaseUse(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereDate('create_date', '+5 month')
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -48,7 +49,7 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ## whereDay 时间查询
 
 ``` php
@@ -74,11 +75,12 @@ public function testWhereDay(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereDay('create_date', 5)
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -86,7 +88,7 @@ public function testWhereDay(): void
     );
 }
 ```
-    
+
 ## whereMonth 时间查询
 
 ``` php
@@ -112,11 +114,12 @@ public function testWhereMonth(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereMonth('create_date', 5)
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -124,7 +127,7 @@ public function testWhereMonth(): void
     );
 }
 ```
-    
+
 ## whereYear 时间查询
 
 ``` php
@@ -149,11 +152,12 @@ public function testWhereYear(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereYear('create_date', 2018)
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -161,7 +165,7 @@ public function testWhereYear(): void
     );
 }
 ```
-    
+
 ## time().where.endTime 时间查询，等价于 whereDate
 
 ``` php
@@ -186,13 +190,14 @@ public function testTime(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->time()
                 ->where('create_date', '+5 month')
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -200,7 +205,7 @@ public function testTime(): void
     );
 }
 ```
-    
+
 ## time(date).where.endTime 时间查询，等价于 whereDate
 
 ``` php
@@ -225,13 +230,14 @@ public function testTimeDateIsDefault(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->time('date')
                 ->where('create_date', '+5 month')
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -239,7 +245,7 @@ public function testTimeDateIsDefault(): void
     );
 }
 ```
-    
+
 ## time(day).where.endTime 时间查询，等价于 whereDay
 
 ``` php
@@ -265,13 +271,14 @@ public function testTimeDay(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->time('day')
                 ->where('create_date', 5)
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -279,7 +286,7 @@ public function testTimeDay(): void
     );
 }
 ```
-    
+
 ## time(month).where.endTime 时间查询，等价于 whereMonth
 
 ``` php
@@ -305,13 +312,14 @@ public function testTimeMonth(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->time('month')
                 ->where('create_date', 5)
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -319,7 +327,7 @@ public function testTimeMonth(): void
     );
 }
 ```
-    
+
 ## time(year).where.endTime 时间查询，等价于 whereYear
 
 ``` php
@@ -344,13 +352,14 @@ public function testTimeYear(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->time('year')
                 ->where('create_date', 2018)
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),

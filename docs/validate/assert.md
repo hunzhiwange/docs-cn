@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/AssertTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/AssertTest.php)
 :::
-    
+
 这里为系统提供的基础的断言功能，断言的规则与验证器共享校验规则。
 
 **Uses**
@@ -34,10 +34,10 @@ public function testBaseUse(): void
     Assert::notEmpty(55);
     Assert::notEmpty(66);
     Assert::lessThan(4, [5]);
-    $this->assertSame(1, 1);
+    static::assertSame(1, 1);
 }
 ```
-    
+
 ## 断言失败默认错误消息
 
 ``` php
@@ -51,7 +51,7 @@ public function testAssertFailedWithDefaultMessage(): void
     Assert::notEmpty(0);
 }
 ```
-    
+
 ## 断言失败自定义消息
 
 ``` php
@@ -65,7 +65,7 @@ public function testAssertFailedWithCustomMessage(): void
     Assert::notEmpty(0);
 }
 ```
-    
+
 ## 可选断言支持
 
 如果值为 `null` 直接返回正确结果。
@@ -75,10 +75,10 @@ public function testAssertOptional(): void
 {
     Assert::optionalNotEmpty(null);
 
-    $this->assertSame(1, 1);
+    static::assertSame(1, 1);
 }
 ```
-    
+
 ## 可选断言失败
 
 ``` php
@@ -92,7 +92,7 @@ public function testAssertOptionalFailed(): void
     Assert::optionalNotEmpty(0);
 }
 ```
-    
+
 ## 断言支持多个校验
 
 必须每一个都满足规则才算校验成功。
@@ -102,10 +102,10 @@ public function testAssertMulti(): void
 {
     Assert::multiNotEmpty([3, ['hello'], 'bar', 'yes']);
 
-    $this->assertSame(1, 1);
+    static::assertSame(1, 1);
 }
 ```
-    
+
 ## 断言支持多个校验
 
 必须每一个都满足规则才算校验成功。
@@ -121,7 +121,7 @@ public function testAssertMultiFailed(): void
     Assert::multiNotEmpty([3, ['hello'], '', 'yes']);
 }
 ```
-    
+
 ## 断言支持多个校验也支持可选
 
 必须每一个都满足规则才算校验成功, 可选会跳过验证，可选必须在最前面，即不支持 `multiOptional` 这种写法。
@@ -131,10 +131,10 @@ public function testAssertMultiWithOptional(): void
 {
     Assert::optionalMultiNotEmpty([null, ['hello'], 'bar', 'yes', null]);
 
-    $this->assertSame(1, 1);
+    static::assertSame(1, 1);
 }
 ```
-    
+
 ## 断言支持链式表达式
 
 我们可以使用链式表达式来校验规则。
@@ -153,12 +153,13 @@ public function testAssertChain(): void
 {
     Assert::make(5, 'Assert success.')
         ->notEmpty()
-        ->lessThan([7]);
+        ->lessThan([7])
+    ;
 
-    $this->assertSame(1, 1);
+    static::assertSame(1, 1);
 }
 ```
-    
+
 ## 断言链式表达式支持可选和多个校验
 
 链式表达式数据值只支持单个，但是可以调用多个校验方法，系统做了统一兼容。一般来说多个校验这种用法在链式调用中没有必要，如果调用了也是没有什么问题。
@@ -172,12 +173,13 @@ public function testAssertChainSupportOptionalMulti(): void
         ->lessThan([7])
         ->multiNotEmpty()
         ->optionalNotEmpty()
-        ->optionalMultiNotEmpty();
+        ->optionalMultiNotEmpty()
+    ;
 
-    $this->assertSame(1, 1);
+    static::assertSame(1, 1);
 }
 ```
-    
+
 ## 断言支持延迟释放
 
 可以将所有错误几种抛出。
@@ -199,12 +201,13 @@ public function testAssertLazyChain(): void
         ->lessThan([7], '5 not less than 3')
         ->lessThan([8], '5 not less than 4')
         ->lessThan([9], '5 not less than 2')
-        ->flush();
+        ->flush()
+    ;
 
     $this->assert($result);
 }
 ```
-    
+
 ## 断言失败延迟释放
 
 ``` php
@@ -220,10 +223,11 @@ public function testAssertLazyChainFailed(): void
         ->lessThan([3], '5 not less than 3')
         ->lessThan([4], '5 not less than 4')
         ->lessThan([2], '5 not less than 2')
-        ->flush();
+        ->flush()
+    ;
 }
 ```
-    
+
 ## 断言失败延迟释放自定义格式化
 
 ``` php
@@ -243,6 +247,7 @@ public function testAssertLazyChainFailedWithCustomFormat(): void
         ->lessThan([2], '5 not less than 2')
         ->flush(function (array $error): string {
             return implode(PHP_EOL, $error);
-        });
+        })
+    ;
 }
 ```

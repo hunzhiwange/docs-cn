@@ -3,14 +3,13 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/NumberTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/NumberTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
 use Leevel\Validate\Validator;
-use stdClass;
 ```
 
 ## 验证通过的数据
@@ -19,13 +18,13 @@ use stdClass;
 
 ``` php
 # Tests\Validate\Validator\NumberTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['42'],
         [1337],
         [0x539],
-        [02471],
+        [0o2471],
         [0b10100111001],
         [1337e0],
         [9.1],
@@ -44,26 +43,26 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'number',
+            'name' => 'number',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\NumberTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['not numeric'],
         [[]],
-        [new stdClass()],
+        [new \stdClass()],
         [['foo', 'bar']],
         [[1, 2]],
         ['this is a string'],
@@ -87,10 +86,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'number',
+            'name' => 'number',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

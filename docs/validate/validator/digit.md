@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Validate/Validator/DigitTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Validate/Validator/DigitTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -18,7 +18,7 @@ use Leevel\Validate\Validator;
 
 ``` php
 # Tests\Validate\Validator\DigitTest::baseUseProvider
-public function baseUseProvider(): array
+public static function baseUseProvider(): array
 {
     return [
         ['01'],
@@ -40,21 +40,21 @@ public function testBaseUse($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'digit',
+            'name' => 'digit',
         ]
     );
 
-    $this->assertTrue($validate->success());
+    static::assertTrue($validate->success());
 }
 ```
-    
+
 ## 未验证通过的数据
 
 以下是未通过的校验数据示例。
 
 ``` php
 # Tests\Validate\Validator\DigitTest::badProvider
-public function badProvider(): array
+public static function badProvider(): array
 {
     return [
         ['1820.20'],
@@ -79,10 +79,10 @@ public function testBad($value): void
             'name' => $value,
         ],
         [
-            'name'     => 'digit',
+            'name' => 'digit',
         ]
     );
 
-    $this->assertFalse($validate->success());
+    static::assertFalse($validate->success());
 }
 ```

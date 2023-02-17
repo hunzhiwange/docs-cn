@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/WhereTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/WhereTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -35,18 +35,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', '=', 1)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件默认为等于 `=`
 
 ``` php
@@ -66,19 +67,20 @@ public function testBaseUse2(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 2)
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持多次调用
 
 ``` php
@@ -104,21 +106,22 @@ public function testBaseUse3(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 2)
                 ->where('name', '>', '狗蛋')
                 ->where('value', 'like', '小鸭子')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持数组方式
 
 ``` php
@@ -138,18 +141,19 @@ public function testArray(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where(['name', 'like', '技术'])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持二维数组多个条件
 
 ``` php
@@ -172,22 +176,23 @@ public function testMultiDimensionalArray(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([
                     ['name', 'like', '技术'],
                     ['value', '<>', '结局'],
                 ])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## orWhere 查询条件
 
 ``` php
@@ -210,19 +215,20 @@ public function testOrWhere(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('name', 'like', '技术')
                 ->orWhere('value', '<>', '结局')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## whereBetween 查询条件
 
 ``` php
@@ -245,13 +251,14 @@ public function testWhereBetween(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereBetween('id', [1, 100])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -270,13 +277,14 @@ public function testWhereBetween(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'between', [1, 10])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
@@ -302,22 +310,23 @@ public function testWhereBetween(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereBetween([
                     ['id', [1, 100]],
                     ['name', [5, 22]],
                 ])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## whereNotBetween 查询条件
 
 ``` php
@@ -340,13 +349,14 @@ public function testWhereNotBetween(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereNotBetween('id', [1, 10])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -365,19 +375,20 @@ public function testWhereNotBetween(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'not between', [1, 10])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## whereIn 查询条件
 
 ``` php
@@ -400,13 +411,14 @@ public function testWhereIn(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereIn('id', [2, 50])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -425,13 +437,14 @@ public function testWhereIn(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'in', '1,10')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
@@ -451,19 +464,20 @@ public function testWhereIn(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'in', [2, 50])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ## whereNotIn 查询条件
 
 ``` php
@@ -486,13 +500,14 @@ public function testWhereNotIn(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereNotIn('id', [2, 50])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -511,19 +526,20 @@ public function testWhereNotIn(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'not in', '1,10')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## whereNull 查询条件
 
 ``` php
@@ -539,29 +555,31 @@ public function testWhereNull(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereNull('id')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'null')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## whereNotNull 查询条件
 
 ``` php
@@ -577,29 +595,31 @@ public function testWhereNotNull(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereNotNull('id')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'not null')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## where 查询条件未指定值默认为 null
 
 ``` php
@@ -615,18 +635,19 @@ public function testWhereDefaultNull(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件指定值为 null
 
 ``` php
@@ -642,18 +663,19 @@ public function testWhereEqualNull(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', '=', null)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## whereLike 查询条件
 
 ``` php
@@ -673,29 +695,31 @@ public function testWhereLike(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereLike('id', '5')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'like', '5')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## whereNotLike 查询条件
 
 ``` php
@@ -715,29 +739,31 @@ public function testWhereNotLike(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereNotLike('id', '5')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 'not like', '5')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## whereExists 查询条件
 
 ``` php
@@ -757,17 +783,18 @@ public function testWhereExists(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereExists(
-                    function ($select) {
+                    function ($select): void {
                         $select->table('test_query_subsql')->where('id', 1);
                     }
                 )
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -781,13 +808,14 @@ public function testWhereExists(): void
 
     $subSelect = $connect->table('test_query_subsql');
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([':exists' => $subSelect])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
@@ -800,13 +828,14 @@ public function testWhereExists(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([':exists' => 'select *from test_query_subsql'])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             2
         )
     );
@@ -823,27 +852,29 @@ public function testWhereExists(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where(
                     [
-                        ':exists' => function ($select) {
+                        ':exists' => function ($select): void {
                             $select
                                 ->table('test_query_subsql')
-                                ->where('id', 1);
+                                ->where('id', 1)
+                            ;
                         },
                     ]
                 )
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## whereNotExists 查询条件
 
 ``` php
@@ -863,24 +894,26 @@ public function testWhereNotExists(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereNotExists(
-                    function ($select) {
+                    function ($select): void {
                         $select
                             ->table('test_query_subsql')
-                            ->where('id', 1);
+                            ->where('id', 1)
+                        ;
                     }
                 )
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持分组
 
 ``` php
@@ -906,18 +939,20 @@ public function testWhereGroup(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 5)
-                ->orWhere(function ($select) {
+                ->orWhere(function ($select): void {
                     $select
                         ->where('votes', '>', 100)
-                        ->where('title', '<>', 'Admin');
+                        ->where('title', '<>', 'Admin')
+                    ;
                 })
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 
@@ -942,25 +977,27 @@ public function testWhereGroup(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', 5)
                 ->orWhere('name', '小牛')
-                ->where(function ($select) {
+                ->where(function ($select): void {
                     $select
                         ->where('votes', '>', 100)
-                        ->orWhere('title', '<>', 'Admin');
+                        ->orWhere('title', '<>', 'Admin')
+                    ;
                 })
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持表达式
 
 ``` php
@@ -976,18 +1013,19 @@ public function testConditionalExpression(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query', 'post,value,'.Condition::raw('concat("tt_",[id])'))
                 ->where(Condition::raw('concat("hello_",[posts])'), '=', Condition::raw('[id]'))
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持二维数组的键值为字段
 
 ``` php
@@ -1028,26 +1066,27 @@ public function testArrayKeyAsField(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([
-                    'id'     => ['=', '故事'],
-                    'name'   => ['in', [1, 2, 3]],
+                    'id' => ['=', '故事'],
+                    'name' => ['in', [1, 2, 3]],
                     'weidao' => ['between', '40,100'],
-                    'value'  => 'null',
+                    'value' => 'null',
                     'remark' => ['not null'],
-                    'goods'  => '东亚商品',
-                    'hello'  => ['world'],
+                    'goods' => '东亚商品',
+                    'hello' => ['world'],
                 ])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持字符串语法 `:string`
 
 ``` php
@@ -1063,18 +1102,19 @@ public function testSupportString(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([':string' => Condition::raw('[name] = 11 and [test_query.value] = 22 and concat("tt_",[id])')])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持分组语法 `:subor` 和 `suband` 
 
 ``` php
@@ -1096,21 +1136,22 @@ public function testSupportSubandSubor(): void
             false
         ]
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([
-                    'hello'   => 'world',
-                    ':subor'  => ['id', 'like', '你好'],
+                    'hello' => 'world',
+                    ':subor' => ['id', 'like', '你好'],
                 ])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持分组语法 `:subor` 和 `suband` 任意嵌套
 
 ``` php
@@ -1148,14 +1189,14 @@ public function testSupportSubandSuborMore(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where([
-                    'hello'   => '111',
-                    ':subor'  => [
+                    'hello' => '111',
+                    ':subor' => [
                         ['id', 'like', '你好'],
                         ['value', '=', 'helloworld'],
                     ],
@@ -1169,13 +1210,14 @@ public function testSupportSubandSuborMore(): void
                         ],
                     ],
                 ])
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );
 }
 ```
-    
+
 ## where 查询条件字段可以指定表
 
 字段条件用法和 table 中的字段用法一致，详情可以查看《查询语言.table》。
@@ -1197,18 +1239,19 @@ public function testWhereFieldWithTable(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('test_query.name', '=', 1)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## where 查询条件支持复杂的子查询
 
 ``` php
@@ -1231,22 +1274,24 @@ public function testWhereInArrayItemIsClosure(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
-                ->whereIn('id', [function ($select) {
+                ->whereIn('id', [function ($select): void {
                     $select
                         ->table('test_query_subsql', 'id')
-                        ->where('id', 1);
+                        ->where('id', 1)
+                    ;
                 }, 100])
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## whereRaw 查询条件
 
 ``` php
@@ -1262,18 +1307,19 @@ public function testWhereRaw(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereRaw('FIND_IN_SET(1, id)')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## orWhereRaw 查询条件
 
 ``` php
@@ -1289,14 +1335,15 @@ public function testOrWhereRaw(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->whereRaw('FIND_IN_SET(1, id)')
                 ->orWhereRaw('FIND_IN_SET(1, id)')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

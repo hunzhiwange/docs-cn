@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/ManagerTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/ManagerTest.php)
 :::
-    
+
 我们可以在 `option/database.php` 文件中定义数据库连接。
 
 **Uses**
@@ -11,7 +11,6 @@
 ``` php
 <?php
 
-use PDO;
 use Tests\Database\DatabaseTestCase as TestCase;
 ```
 
@@ -38,55 +37,55 @@ protected function createDatabaseManager(?Container $container = null): Manager
             'default' => 'mysql',
             'connect' => [
                 'mysql' => [
-                    'driver'   => 'mysql',
-                    'host'     => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['HOST'],
-                    'port'     => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['PORT'],
-                    'name'     => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['NAME'],
-                    'user'     => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['USER'],
+                    'driver' => 'mysql',
+                    'host' => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['HOST'],
+                    'port' => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['PORT'],
+                    'name' => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['NAME'],
+                    'user' => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['USER'],
                     'password' => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['PASSWORD'],
-                    'charset'  => 'utf8',
-                    'options'  => [
-                        PDO::ATTR_PERSISTENT        => false,
-                        PDO::ATTR_CASE              => PDO::CASE_NATURAL,
-                        PDO::ATTR_ORACLE_NULLS      => PDO::NULL_NATURAL,
-                        PDO::ATTR_STRINGIFY_FETCHES => false,
-                        PDO::ATTR_EMULATE_PREPARES  => false,
-                        PDO::ATTR_TIMEOUT           => 30,
+                    'charset' => 'utf8',
+                    'options' => [
+                        \PDO::ATTR_PERSISTENT => false,
+                        \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
+                        \PDO::ATTR_ORACLE_NULLS => \PDO::NULL_NATURAL,
+                        \PDO::ATTR_STRINGIFY_FETCHES => false,
+                        \PDO::ATTR_EMULATE_PREPARES => false,
+                        \PDO::ATTR_TIMEOUT => 30,
                     ],
-                    'separate'           => false,
-                    'distributed'        => false,
-                    'master'             => [],
-                    'slave'              => [],
+                    'separate' => false,
+                    'distributed' => false,
+                    'master' => [],
+                    'slave' => [],
                 ],
                 'password_right' => [
-                    'driver'   => 'mysql',
+                    'driver' => 'mysql',
                     'password' => $GLOBALS['LEEVEL_ENV']['DATABASE']['MYSQL']['PASSWORD'],
                 ],
                 'password_not_right' => [
-                    'driver'   => 'mysql',
+                    'driver' => 'mysql',
                     'password' => 'not right',
                 ],
             ],
         ],
         'cache' => [
-            'default'     => 'file',
-            'expire'      => 86400,
+            'default' => 'file',
+            'expire' => 86400,
             'time_preset' => [],
-            'connect'     => [
+            'connect' => [
                 'file' => [
-                    'driver'    => 'file',
-                    'path'      => __DIR__.'/databaseCacheManager',
-                    'expire'    => null,
+                    'driver' => 'file',
+                    'path' => __DIR__.'/databaseCacheManager',
+                    'expire' => null,
                 ],
                 'redis' => [
-                    'driver'     => 'redis',
-                    'host'       => $GLOBALS['LEEVEL_ENV']['CACHE']['REDIS']['HOST'],
-                    'port'       => $GLOBALS['LEEVEL_ENV']['CACHE']['REDIS']['PORT'],
-                    'password'   => $GLOBALS['LEEVEL_ENV']['CACHE']['REDIS']['PASSWORD'],
-                    'select'     => 0,
-                    'timeout'    => 0,
+                    'driver' => 'redis',
+                    'host' => $GLOBALS['LEEVEL_ENV']['CACHE']['REDIS']['HOST'],
+                    'port' => $GLOBALS['LEEVEL_ENV']['CACHE']['REDIS']['PORT'],
+                    'password' => $GLOBALS['LEEVEL_ENV']['CACHE']['REDIS']['PASSWORD'],
+                    'select' => 0,
+                    'timeout' => 0,
                     'persistent' => false,
-                    'expire'     => null,
+                    'expire' => null,
                 ],
             ],
         ],
@@ -117,7 +116,7 @@ public function testBaseUse(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $manager
             ->table('guest_book')
@@ -126,13 +125,14 @@ public function testBaseUse(): void
 
     $result = $manager->table('guest_book', 'name,content')
         ->where('id', 1)
-        ->findOne();
+        ->findOne()
+    ;
 
-    $this->assertSame('tom', $result->name);
-    $this->assertSame('I love movie.', $result->content);
+    static::assertSame('tom', $result->name);
+    static::assertSame('I love movie.', $result->content);
 }
 ```
-    
+
 ## 数据库主从设置
 
 QueryPHP 允许用户一个主数据库作为写入、更新以及删除,外加多个附属从数据库作为只读数据库来共同提供数据库服务。
@@ -146,25 +146,25 @@ public function testParseDatabaseOptionDistributedIsTrue(): void
     $manager = $this->createDatabaseManager();
 
     $option = [
-        'driver'   => 'mysql',
-        'host'     => '127.0.0.1',
-        'port'     => 3306,
-        'name'     => 'test',
-        'user'     => 'root',
+        'driver' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'name' => 'test',
+        'user' => 'root',
         'password' => '123456',
-        'charset'  => 'utf8',
-        'options'  => [
-            PDO::ATTR_PERSISTENT        => false,
-            PDO::ATTR_CASE              => PDO::CASE_NATURAL,
-            PDO::ATTR_ORACLE_NULLS      => PDO::NULL_NATURAL,
-            PDO::ATTR_STRINGIFY_FETCHES => false,
-            PDO::ATTR_EMULATE_PREPARES  => false,
-            PDO::ATTR_TIMEOUT           => 30,
+        'charset' => 'utf8',
+        'options' => [
+            \PDO::ATTR_PERSISTENT => false,
+            \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
+            \PDO::ATTR_ORACLE_NULLS => \PDO::NULL_NATURAL,
+            \PDO::ATTR_STRINGIFY_FETCHES => false,
+            \PDO::ATTR_EMULATE_PREPARES => false,
+            \PDO::ATTR_TIMEOUT => 30,
         ],
-        'separate'           => false,
-        'distributed'        => true,
-        'master'             => [],
-        'slave'              => ['host' => '127.0.0.1'],
+        'separate' => false,
+        'distributed' => true,
+        'master' => [],
+        'slave' => ['host' => '127.0.0.1'],
     ];
 
     $optionNew = $this->invokeTestMethod($manager, 'normalizeDatabaseOption', [$option]);
@@ -211,13 +211,13 @@ public function testParseDatabaseOptionDistributedIsTrue(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson($optionNew)
     );
 }
 ```
-    
+
 ## 附属从数据库支持二维数组
 
 从数据库支持多个，支持二维数组
@@ -228,25 +228,25 @@ public function testParseDatabaseOptionDistributedIsTrueWithTwoDimensionalArray(
     $manager = $this->createDatabaseManager();
 
     $option = [
-        'driver'   => 'mysql',
-        'host'     => '127.0.0.1',
-        'port'     => 3306,
-        'name'     => 'test',
-        'user'     => 'root',
+        'driver' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'name' => 'test',
+        'user' => 'root',
         'password' => '123456',
-        'charset'  => 'utf8',
-        'options'  => [
-            PDO::ATTR_PERSISTENT        => false,
-            PDO::ATTR_CASE              => PDO::CASE_NATURAL,
-            PDO::ATTR_ORACLE_NULLS      => PDO::NULL_NATURAL,
-            PDO::ATTR_STRINGIFY_FETCHES => false,
-            PDO::ATTR_EMULATE_PREPARES  => false,
-            PDO::ATTR_TIMEOUT           => 30,
+        'charset' => 'utf8',
+        'options' => [
+            \PDO::ATTR_PERSISTENT => false,
+            \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
+            \PDO::ATTR_ORACLE_NULLS => \PDO::NULL_NATURAL,
+            \PDO::ATTR_STRINGIFY_FETCHES => false,
+            \PDO::ATTR_EMULATE_PREPARES => false,
+            \PDO::ATTR_TIMEOUT => 30,
         ],
-        'separate'           => false,
-        'distributed'        => true,
-        'master'             => [],
-        'slave'              => [
+        'separate' => false,
+        'distributed' => true,
+        'master' => [],
+        'slave' => [
             ['host' => '127.0.0.1'],
             ['password' => '123456'],
         ],
@@ -312,13 +312,13 @@ public function testParseDatabaseOptionDistributedIsTrueWithTwoDimensionalArray(
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson($optionNew)
     );
 }
 ```
-    
+
 ## 数据库设置只支持数组
 
 数据库主从连接只支持数组。
@@ -334,25 +334,25 @@ public function testParseDatabaseOptionMasterAndSlaveMustBeAnArray(): void
     $manager = $this->createDatabaseManager();
 
     $option = [
-        'driver'   => 'mysql',
-        'host'     => '127.0.0.1',
-        'port'     => 3306,
-        'name'     => 'test',
-        'user'     => 'root',
+        'driver' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'name' => 'test',
+        'user' => 'root',
         'password' => '123456',
-        'charset'  => 'utf8',
-        'options'  => [
-            PDO::ATTR_PERSISTENT        => false,
-            PDO::ATTR_CASE              => PDO::CASE_NATURAL,
-            PDO::ATTR_ORACLE_NULLS      => PDO::NULL_NATURAL,
-            PDO::ATTR_STRINGIFY_FETCHES => false,
-            PDO::ATTR_EMULATE_PREPARES  => false,
-            PDO::ATTR_TIMEOUT           => 30,
+        'charset' => 'utf8',
+        'options' => [
+            \PDO::ATTR_PERSISTENT => false,
+            \PDO::ATTR_CASE => \PDO::CASE_NATURAL,
+            \PDO::ATTR_ORACLE_NULLS => \PDO::NULL_NATURAL,
+            \PDO::ATTR_STRINGIFY_FETCHES => false,
+            \PDO::ATTR_EMULATE_PREPARES => false,
+            \PDO::ATTR_TIMEOUT => 30,
         ],
-        'separate'           => false,
-        'distributed'        => true,
-        'master'             => [],
-        'slave'              => 'notarray',
+        'separate' => false,
+        'distributed' => true,
+        'master' => [],
+        'slave' => 'notarray',
     ];
 
     $this->invokeTestMethod($manager, 'normalizeDatabaseOption', [$option]);

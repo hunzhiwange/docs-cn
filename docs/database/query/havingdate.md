@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/HavingTimeTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/HavingTimeTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -21,7 +21,7 @@ public function testBaseUse(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -36,12 +36,14 @@ public function testBaseUse(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->havingDate('create_date', '+5 month')
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -49,7 +51,7 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ## havingDay 时间查询
 
 ``` php
@@ -59,7 +61,7 @@ public function testHavingDay(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -75,12 +77,14 @@ public function testHavingDay(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->havingDay('create_date', 5)
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -88,7 +92,7 @@ public function testHavingDay(): void
     );
 }
 ```
-    
+
 ## havingMonth 时间查询
 
 ``` php
@@ -98,7 +102,7 @@ public function testHavingMonth(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -114,12 +118,14 @@ public function testHavingMonth(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->havingMonth('create_date', 5)
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -127,7 +133,7 @@ public function testHavingMonth(): void
     );
 }
 ```
-    
+
 ## havingYear 时间查询
 
 ``` php
@@ -137,7 +143,7 @@ public function testHavingYear(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -152,12 +158,14 @@ public function testHavingYear(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->havingYear('create_date', 2018)
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -165,7 +173,7 @@ public function testHavingYear(): void
     );
 }
 ```
-    
+
 ## time().having.endTime 时间查询，等价于 havingDate
 
 ``` php
@@ -175,7 +183,7 @@ public function testTime(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -189,16 +197,18 @@ public function testTime(): void
     $value2 = $value + 1;
     $value3 = $value + 2;
 
-    $this->assertTrue(
-        in_array(
-            $this->varJson(
+    static::assertTrue(
+        \in_array(
+            $this->varJsonSql(
                 $connect
                     ->table('test_query')
+                    ->setColumns('create_date')
                     ->groupBy('create_date')
                     ->time()
                     ->having('create_date', '+5 month')
                     ->endTime()
-                    ->findOne(true)
+                    ->findOne(),
+                $connect
             ),
             [
                 sprintf($sql, $value),
@@ -210,7 +220,7 @@ public function testTime(): void
     );
 }
 ```
-    
+
 ## time(date).having.endTime 时间查询，等价于 havingDate
 
 ``` php
@@ -220,7 +230,7 @@ public function testTimeDateIsDefault(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -234,16 +244,18 @@ public function testTimeDateIsDefault(): void
     $value2 = $value + 1;
     $value3 = $value + 2;
 
-    $this->assertTrue(
-        in_array(
-            $this->varJson(
+    static::assertTrue(
+        \in_array(
+            $this->varJsonSql(
                 $connect
                     ->table('test_query')
+                    ->setColumns('create_date')
                     ->groupBy('create_date')
                     ->time('date')
                     ->having('create_date', '+5 month')
                     ->endTime()
-                    ->findOne(true)
+                    ->findOne(),
+                $connect
             ),
             [
                 sprintf($sql, $value),
@@ -255,7 +267,7 @@ public function testTimeDateIsDefault(): void
     );
 }
 ```
-    
+
 ## time(day).having.endTime 时间查询，等价于 havingDay
 
 ``` php
@@ -265,7 +277,7 @@ public function testTimeDay(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -281,14 +293,16 @@ public function testTimeDay(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->time('day')
                 ->having('create_date', 5)
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -296,7 +310,7 @@ public function testTimeDay(): void
     );
 }
 ```
-    
+
 ## time(month).having.endTime 时间查询，等价于 havingMonth
 
 ``` php
@@ -306,7 +320,7 @@ public function testTimeMonth(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -322,14 +336,16 @@ public function testTimeMonth(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->time('month')
                 ->having('create_date', 5)
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),
@@ -337,7 +353,7 @@ public function testTimeMonth(): void
     );
 }
 ```
-    
+
 ## time(year).having.endTime 时间查询，等价于 havingYear
 
 ``` php
@@ -347,7 +363,7 @@ public function testTimeYear(): void
 
     $sql = <<<'eot'
         [
-            "SELECT `test_query`.* FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
+            "SELECT `test_query`.`create_date` FROM `test_query` GROUP BY `test_query`.`create_date` HAVING `test_query`.`create_date` = :test_query_create_date LIMIT 1",
             {
                 "test_query_create_date": [
                     %d
@@ -362,14 +378,16 @@ public function testTimeYear(): void
     $value3 = $value + 2;
 
     $this->assertTimeRange(
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
+                ->setColumns('create_date')
                 ->groupBy('create_date')
                 ->time('year')
                 ->having('create_date', 2018)
                 ->endTime()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         ),
         sprintf($sql, $value),
         sprintf($sql, $value2),

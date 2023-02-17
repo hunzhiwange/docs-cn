@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Kernel/Bootstrap/LoadOptionTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Kernel/Bootstrap/LoadOptionTest.php)
 :::
-    
+
 QueryPHP 在内核执行过程中会执行初始化，分为 4 个步骤，载入配置、载入语言包、注册异常运行时和遍历服务提供者注册服务。
 
 内核初始化，包括 `\Leevel\Kernel\IKernel::bootstrap` 和 `\Leevel\Kernel\IKernelConsole::bootstrap` 均会执行上述 4 个步骤。
@@ -49,7 +49,7 @@ declare(strict_types=1);
 
 return [
     'environment' => getenv('ENVIRONMENT'),
-    'debug'       => false,
+    'debug' => false,
 ];
 
 ```
@@ -81,19 +81,19 @@ public function testBaseUse(): void
     $this->assertInstanceof(IApp::class, $app);
     $this->assertInstanceof(Apps::class, $app);
 
-    $this->assertSame($appPath.'/storage/bootstrap/option.php', $app->optionCachedPath());
-    $this->assertFalse($app->isCachedOption());
-    $this->assertSame($appPath.'/option', $app->optionPath());
+    static::assertSame($appPath.'/storage/bootstrap/option.php', $app->optionCachedPath());
+    static::assertFalse($app->isCachedOption());
+    static::assertSame($appPath.'/option', $app->optionPath());
 
-    $this->assertNull($bootstrap->handle($app));
+    static::assertNull($bootstrap->handle($app));
 
     $option = $container->make('option');
 
-    $this->assertSame('development', $option->get('environment'));
-    $this->assertSame('bar', $option->get('demo\\foo'));
+    static::assertSame('development', $option->get('environment'));
+    static::assertSame('bar', $option->get('demo\\foo'));
 }
 ```
-    
+
 ## RUNTIME_ENVIRONMENT 载入自定义环境变量文件
 
 设置 `RUNTIME_ENVIRONMENT` 环境变量可以载入自定义环境变量文件。
@@ -130,19 +130,19 @@ public function testWithRuntimeEnv(): void
     $this->assertInstanceof(IApp::class, $app);
     $this->assertInstanceof(Apps::class, $app);
 
-    $this->assertSame($appPath.'/storage/bootstrap/fooenv.php', $app->optionCachedPath());
-    $this->assertFalse($app->isCachedOption());
-    $this->assertSame($appPath.'/option', $app->optionPath());
+    static::assertSame($appPath.'/storage/bootstrap/fooenv.php', $app->optionCachedPath());
+    static::assertFalse($app->isCachedOption());
+    static::assertSame($appPath.'/option', $app->optionPath());
 
-    $this->assertNull($bootstrap->handle($app));
+    static::assertNull($bootstrap->handle($app));
 
     $option = $container->make('option');
 
-    $this->assertSame('testing', $option->get('environment'));
-    $this->assertSame('bar', $option->get('demo\\foo'));
+    static::assertSame('testing', $option->get('environment'));
+    static::assertSame('bar', $option->get('demo\\foo'));
 }
 ```
-    
+
 ## 配置支持缓存
 
 配置文件支持缓存，通过缓存可以降低开销提高性能，适合生产环境。
@@ -159,12 +159,12 @@ declare(strict_types=1);
 return [
     'app' => [
         'environment' => 'development',
-        'debug'       => false,
-        ':env'        => [
-            'environment'  => 'development',
-            'debug'        => true,
+        'debug' => false,
+        ':env' => [
+            'environment' => 'development',
+            'debug' => true,
             'app_auth_key' => '7becb888f518b20224a988906df51e05',
-            'foo'          => null,
+            'foo' => null,
         ],
         ':deferred_providers' => [
             0 => [
@@ -208,22 +208,22 @@ public function testLoadCached(): void
     $this->assertInstanceof(IApp::class, $app);
     $this->assertInstanceof(Apps::class, $app);
 
-    $this->assertSame($appPath.'/storage/bootstrap/option.php', $app->optionCachedPath());
-    $this->assertFalse($app->isCachedOption());
-    $this->assertSame($appPath.'/option', $app->optionPath());
+    static::assertSame($appPath.'/storage/bootstrap/option.php', $app->optionCachedPath());
+    static::assertFalse($app->isCachedOption());
+    static::assertSame($appPath.'/option', $app->optionPath());
 
-    mkdir($appPath.'/storage/bootstrap', 0777, true);
+    mkdir($appPath.'/storage/bootstrap', 0o777, true);
     file_put_contents($appPath.'/storage/bootstrap/option.php', file_get_contents($appPath.'/assert/option.php'));
 
-    $this->assertTrue($app->isCachedOption());
+    static::assertTrue($app->isCachedOption());
 
-    $this->assertNull($bootstrap->handle($app));
+    static::assertNull($bootstrap->handle($app));
 
     $option = $container->make('option');
 
-    $this->assertSame('development', $option->get('environment'));
-    $this->assertSame('bar', $option->get('demo\\foo'));
-    $this->assertNull($option->get(':env.foo'));
-    $this->assertTrue($option->get(':env.debug'));
+    static::assertSame('development', $option->get('environment'));
+    static::assertSame('bar', $option->get('demo\\foo'));
+    static::assertNull($option->get(':env.foo'));
+    static::assertTrue($option->get(':env.debug'));
 }
 ```

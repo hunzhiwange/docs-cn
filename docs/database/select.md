@@ -3,22 +3,20 @@
 ::: tip Testing Is Documentation
 [tests/Database/SelectTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/SelectTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
 <?php
 
-use I18nMock;
 use Leevel\Cache\File;
 use Leevel\Cache\ICache;
 use Leevel\Database\Condition;
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Page;
 use Leevel\Di\Container;
 use Leevel\Filesystem\Helper;
 use Leevel\Page\Page as BasePage;
-use Leevel\Support\Collection;
-use stdClass;
 use Tests\Database\DatabaseTestCase as TestCase;
 ```
 
@@ -37,18 +35,19 @@ public function testMaster(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test')
                 ->master(true)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## asSome 设置以某种包装返会结果
 
 **fixture 定义**
@@ -79,7 +78,7 @@ public function testAsSome(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -91,7 +90,8 @@ public function testAsSome(): void
         ->asSome(fn (...$args): AsSomeDemo => new AsSomeDemo(...$args))
         ->where('id', 1)
         ->setColumns('name,content')
-        ->findOne();
+        ->findOne()
+    ;
 
     $json = <<<'eot'
         {
@@ -100,7 +100,7 @@ public function testAsSome(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             (array) $result
@@ -109,11 +109,11 @@ public function testAsSome(): void
 
     $this->assertInstanceof(AsSomeDemo::class, $result);
 
-    $this->assertSame('tom', $result->name);
-    $this->assertSame('I love movie.', $result->content);
+    static::assertSame('tom', $result->name);
+    static::assertSame('I love movie.', $result->content);
 }
 ```
-    
+
 ## asCollection 设置是否以集合返回
 
 ``` php
@@ -123,17 +123,19 @@ public function testAsCollectionAsDefaultFindAll(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $result = $connect
         ->table('guest_book')
         ->asCollection()
         ->setColumns('name,content')
-        ->findAll();
+        ->findAll()
+    ;
 
     $json = <<<'eot'
         [
@@ -164,7 +166,7 @@ public function testAsCollectionAsDefaultFindAll(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result->toArray()
@@ -172,19 +174,19 @@ public function testAsCollectionAsDefaultFindAll(): void
     );
 
     $this->assertInstanceof(Collection::class, $result);
-    $this->assertCount(6, $result);
+    static::assertCount(6, $result);
 
     $n = 0;
     foreach ($result as $key => $value) {
-        $this->assertSame($key, $n);
-        $this->assertInstanceof(stdClass::class, $value);
-        $this->assertSame('tom', $value->name);
-        $this->assertSame('I love movie.', $value->content);
-        $n++;
+        static::assertSame($key, $n);
+        $this->assertInstanceof(\stdClass::class, $value);
+        static::assertSame('tom', $value->name);
+        static::assertSame('I love movie.', $value->content);
+        ++$n;
     }
 }
 ```
-    
+
 ## asArray 设置返会结果为数组
 
 ``` php
@@ -194,7 +196,7 @@ public function testAsArray(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -206,7 +208,8 @@ public function testAsArray(): void
         ->asArray()
         ->where('id', 1)
         ->setColumns('name,content')
-        ->findOne();
+        ->findOne()
+    ;
 
     $json = <<<'eot'
         {
@@ -215,19 +218,19 @@ public function testAsArray(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
         )
     );
 
-    $this->assertIsArray($result);
-    $this->assertSame('tom', $result['name']);
-    $this->assertSame('I love movie.', $result['content']);
+    static::assertIsArray($result);
+    static::assertSame('tom', $result['name']);
+    static::assertSame('I love movie.', $result['content']);
 }
 ```
-    
+
 ## asArray 设置返会结果为数组支持闭包处理
 
 ``` php
@@ -237,7 +240,7 @@ public function testAsArrayWithClosure(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -253,7 +256,8 @@ public function testAsArrayWithClosure(): void
         })
         ->where('id', 1)
         ->setColumns('name,content')
-        ->findOne();
+        ->findOne()
+    ;
 
     $json = <<<'eot'
         {
@@ -263,19 +267,19 @@ public function testAsArrayWithClosure(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
         )
     );
 
-    $this->assertIsArray($result);
-    $this->assertSame('tom', $result['name']);
-    $this->assertSame('I love movie.', $result['content']);
+    static::assertIsArray($result);
+    static::assertSame('tom', $result['name']);
+    static::assertSame('I love movie.', $result['content']);
 }
 ```
-    
+
 ## value 返回一个字段的值
 
 ``` php
@@ -285,7 +289,7 @@ public function testValue(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -295,18 +299,20 @@ public function testValue(): void
     $name = $connect
         ->table('guest_book')
         ->where('id', 1)
-        ->value('name');
+        ->value('name')
+    ;
 
     $content = $connect
         ->table('guest_book')
         ->where('id', 1)
-        ->value('content');
+        ->value('content')
+    ;
 
-    $this->assertSame('tom', $name);
-    $this->assertSame('I love movie.', $content);
+    static::assertSame('tom', $name);
+    static::assertSame('I love movie.', $content);
 }
 ```
-    
+
 ## list 返回一列数据
 
 ``` php
@@ -316,7 +322,7 @@ public function testList(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -326,7 +332,8 @@ public function testList(): void
     $result = $connect
         ->table('guest_book')
         ->where('id', 1)
-        ->list('name');
+        ->list('name')
+    ;
 
     $json = <<<'eot'
         [
@@ -334,7 +341,7 @@ public function testList(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -342,7 +349,7 @@ public function testList(): void
     );
 }
 ```
-    
+
 ## list 返回一列数据支持 2 个字段
 
 ``` php
@@ -352,7 +359,7 @@ public function testList2(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -362,7 +369,8 @@ public function testList2(): void
     $result = $connect
         ->table('guest_book')
         ->where('id', 1)
-        ->list('content', 'name');
+        ->list('content', 'name')
+    ;
 
     $json = <<<'eot'
         {
@@ -370,7 +378,7 @@ public function testList2(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -378,7 +386,7 @@ public function testList2(): void
     );
 }
 ```
-    
+
 ## list 返回一列数据支持英文逗号分隔字段
 
 ``` php
@@ -388,7 +396,7 @@ public function testList3(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('guest_book')
@@ -398,7 +406,8 @@ public function testList3(): void
     $result = $connect
         ->table('guest_book')
         ->where('id', 1)
-        ->list('content,name');
+        ->list('content,name')
+    ;
 
     $json = <<<'eot'
         {
@@ -406,7 +415,7 @@ public function testList3(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $json,
         $this->varJson(
             $result
@@ -414,7 +423,7 @@ public function testList3(): void
     );
 }
 ```
-    
+
 ## chunk 数据分块处理
 
 ``` php
@@ -424,23 +433,24 @@ public function testChunk(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $n = 1;
     $connect
         ->table('guest_book')
-        ->chunk(2, function ($result, $page) use (&$n) {
-            $this->assertInstanceof(stdClass::class, $result[0]);
+        ->chunk(2, function ($result, $page) use (&$n): void {
+            $this->assertInstanceof(\stdClass::class, $result[0]);
             $this->assertSame($n * 2 - 1, (int) $result[0]->id);
             $this->assertSame('tom', $result[0]->name);
             $this->assertSame('I love movie.', $result[0]->content);
             $this->assertStringContainsString(date('Y-m'), $result[0]->create_at);
 
-            $this->assertInstanceof(stdClass::class, $result[1]);
+            $this->assertInstanceof(\stdClass::class, $result[1]);
             $this->assertSame($n * 2, (int) $result[1]->id);
             $this->assertSame('tom', $result[1]->name);
             $this->assertSame('I love movie.', $result[1]->content);
@@ -449,11 +459,12 @@ public function testChunk(): void
             $this->assertCount(2, $result);
             $this->assertSame($n, $page);
 
-            $n++;
-        });
+            ++$n;
+        })
+    ;
 }
 ```
-    
+
 ## chunk 数据分块处理支持返回 false 中断
 
 ``` php
@@ -463,23 +474,24 @@ public function testChunkWhenReturnFalseAndBreak(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $n = 1;
     $connect
         ->table('guest_book')
         ->chunk(2, function ($result, $page) use (&$n) {
-            $this->assertInstanceof(stdClass::class, $result[0]);
+            $this->assertInstanceof(\stdClass::class, $result[0]);
             $this->assertSame($n * 2 - 1, (int) $result[0]->id);
             $this->assertSame('tom', $result[0]->name);
             $this->assertSame('I love movie.', $result[0]->content);
             $this->assertStringContainsString(date('Y-m'), $result[0]->create_at);
 
-            $this->assertInstanceof(stdClass::class, $result[1]);
+            $this->assertInstanceof(\stdClass::class, $result[1]);
             $this->assertSame($n * 2, (int) $result[1]->id);
             $this->assertSame('tom', $result[1]->name);
             $this->assertSame('I love movie.', $result[1]->content);
@@ -493,11 +505,12 @@ public function testChunkWhenReturnFalseAndBreak(): void
                 return false;
             }
 
-            $n++;
-        });
+            ++$n;
+        })
+    ;
 }
 ```
-    
+
 ## each 数据分块处理依次回调
 
 ``` php
@@ -507,17 +520,18 @@ public function testEach(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $n = $p = 1;
     $connect
         ->table('guest_book')
-        ->each(2, function ($value, $key, $page) use (&$n, &$p) {
-            $this->assertInstanceof(stdClass::class, $value);
+        ->each(2, function ($value, $key, $page) use (&$n, &$p): void {
+            $this->assertInstanceof(\stdClass::class, $value);
             $this->assertSame($n, (int) $value->id);
             $this->assertSame('tom', $value->name);
             $this->assertSame('I love movie.', $value->content);
@@ -526,16 +540,17 @@ public function testEach(): void
             $this->assertSame($p, $page);
 
             if (1 === ($n + 1) % 2) {
-                $p++;
+                ++$p;
             }
 
-            $n++;
-        });
+            ++$n;
+        })
+    ;
 
-    $this->assertSame(7, $n);
+    static::assertSame(7, $n);
 }
 ```
-    
+
 ## each 数据分块处理依次回调支持返回 false 中断
 
 ``` php
@@ -545,10 +560,11 @@ public function testEachBreak(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $n = $p = 1;
@@ -559,7 +575,7 @@ public function testEachBreak(): void
                 return false;
             }
 
-            $this->assertInstanceof(stdClass::class, $value);
+            $this->assertInstanceof(\stdClass::class, $value);
             $this->assertSame($n, (int) $value->id);
             $this->assertSame('tom', $value->name);
             $this->assertSame('I love movie.', $value->content);
@@ -568,16 +584,17 @@ public function testEachBreak(): void
             $this->assertSame($p, $page);
 
             if (1 === ($n + 1) % 2) {
-                $p++;
+                ++$p;
             }
 
-            $n++;
-        });
+            ++$n;
+        })
+    ;
 
-    $this->assertSame(3, $n);
+    static::assertSame(3, $n);
 }
 ```
-    
+
 ## pageCount 取得分页查询记录数量
 
 ``` php
@@ -587,27 +604,28 @@ public function testPageCount(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $this->assertSame(
+    static::assertSame(
         6,
         $connect
             ->table('guest_book')
             ->pageCount(),
     );
 
-    $this->assertSame(
+    static::assertSame(
         6,
         $connect
             ->table('guest_book')
             ->pageCount('*'),
     );
 
-    $this->assertSame(
+    static::assertSame(
         6,
         $connect
             ->table('guest_book')
@@ -615,7 +633,7 @@ public function testPageCount(): void
     );
 }
 ```
-    
+
 ## page 分页查询
 
 ``` php
@@ -627,53 +645,55 @@ public function testPage(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 25; $n++) {
+    for ($n = 0; $n <= 25; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $page = $connect
         ->table('guest_book')
-        ->page(1);
+        ->page(1)
+    ;
     $result = $page->toArray()['data'];
 
     $this->assertInstanceof(BasePage::class, $page);
     $this->assertInstanceof(Page::class, $page);
-    $this->assertCount(10, $result);
+    static::assertCount(10, $result);
 
     $n = 0;
     foreach ($result as $key => $value) {
-        $this->assertSame($key, $n);
-        $this->assertInstanceof(stdClass::class, $value);
-        $this->assertSame('tom', $value->name);
-        $this->assertSame('I love movie.', $value->content);
+        static::assertSame($key, $n);
+        $this->assertInstanceof(\stdClass::class, $value);
+        static::assertSame('tom', $value->name);
+        static::assertSame('I love movie.', $value->content);
 
-        $n++;
+        ++$n;
     }
 
     $data = <<<'eot'
         <div class="pagination"> <span class="pagination-total">共 26 条</span> <button class="btn-prev disabled">&#8249;</button> <ul class="pager">  <li class="number active"><a>1</a></li><li class="number"><a href="?page=2">2</a></li><li class="number"><a href="?page=3">3</a></li>  </ul> <button class="btn-next" onclick="window.location.href='?page=2';">&#8250;</button> <span class="pagination-jump">前往<input type="number" link="?page={jump}" onkeydown="var event = event || window.event; if (event.keyCode == 13) { window.location.href = this.getAttribute('link').replace( '{jump}', this.value); }" onfocus="this.select();" min="1" value="1" number="true" class="pagination-editor">页</span> </div>
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->render()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->toHtml()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->__toString()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
-        (string) ($page)
+        (string) $page
     );
 
     $data = <<<'eot'
@@ -688,14 +708,14 @@ public function testPage(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->toArray()['page']
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->jsonSerialize()['page']
@@ -706,7 +726,7 @@ public function testPage(): void
         {"per_page":10,"current_page":1,"total_page":3,"total_record":26,"total_macro":false,"from":0,"to":10}
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         json_encode($page->toArray()['page'])
     );
@@ -714,7 +734,7 @@ public function testPage(): void
     $this->clearI18n();
 }
 ```
-    
+
 ## page 分页带条件查询
 
 ``` php
@@ -726,59 +746,62 @@ public function testPageWithCondition(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 25; $n++) {
+    for ($n = 0; $n <= 25; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $page = $connect
         ->table('guest_book')
         ->where('id', '>', 23)
-        ->where(function ($select) {
+        ->where(function ($select): void {
             $select->orWhere('content', 'like', '%l%')
                 ->orWhere('content', 'like', '%o%')
-                ->orWhere('content', 'like', '%m%');
+                ->orWhere('content', 'like', '%m%')
+            ;
         })
-        ->page(1);
+        ->page(1)
+    ;
     $result = $page->toArray()['data'];
 
     $this->assertInstanceof(BasePage::class, $page);
     $this->assertInstanceof(Page::class, $page);
-    $this->assertCount(3, $result);
+    static::assertCount(3, $result);
 
     $n = 0;
     foreach ($result as $key => $value) {
-        $this->assertSame($key, $n);
-        $this->assertInstanceof(stdClass::class, $value);
-        $this->assertSame('tom', $value->name);
-        $this->assertSame('I love movie.', $value->content);
+        static::assertSame($key, $n);
+        $this->assertInstanceof(\stdClass::class, $value);
+        static::assertSame('tom', $value->name);
+        static::assertSame('I love movie.', $value->content);
 
-        $n++;
+        ++$n;
     }
 
     $data = <<<'eot'
         <div class="pagination"> <span class="pagination-total">共 3 条</span> <button class="btn-prev disabled">&#8249;</button> <ul class="pager">    </ul> <button class="btn-next disabled">&#8250;</button> <span class="pagination-jump">前往<input type="number" link="?page={jump}" onkeydown="var event = event || window.event; if (event.keyCode == 13) { window.location.href = this.getAttribute('link').replace( '{jump}', this.value); }" onfocus="this.select();" min="1" value="1" number="true" class="pagination-editor">页</span> </div>
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->render()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->toHtml()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->__toString()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
-        (string) ($page)
+        (string) $page
     );
 
     $data = <<<'eot'
@@ -793,14 +816,14 @@ public function testPageWithCondition(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->toArray()['page']
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->jsonSerialize()['page']
@@ -811,7 +834,7 @@ public function testPageWithCondition(): void
         {"per_page":10,"current_page":1,"total_page":1,"total_record":3,"total_macro":false,"from":0,"to":3}
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         json_encode($page->toArray()['page'])
     );
@@ -819,7 +842,7 @@ public function testPageWithCondition(): void
     $this->clearI18n();
 }
 ```
-    
+
 ## pageMacro 创建一个无限数据的分页查询
 
 ``` php
@@ -831,53 +854,55 @@ public function testPageMacro(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 25; $n++) {
+    for ($n = 0; $n <= 25; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $page = $connect
         ->table('guest_book')
-        ->pageMacro(1);
+        ->pageMacro(1)
+    ;
     $result = $page->toArray()['data'];
 
     $this->assertInstanceof(BasePage::class, $page);
     $this->assertInstanceof(Page::class, $page);
-    $this->assertCount(10, $result);
+    static::assertCount(10, $result);
 
     $n = 0;
     foreach ($result as $key => $value) {
-        $this->assertSame($key, $n);
-        $this->assertInstanceof(stdClass::class, $value);
-        $this->assertSame('tom', $value->name);
-        $this->assertSame('I love movie.', $value->content);
+        static::assertSame($key, $n);
+        $this->assertInstanceof(\stdClass::class, $value);
+        static::assertSame('tom', $value->name);
+        static::assertSame('I love movie.', $value->content);
 
-        $n++;
+        ++$n;
     }
 
     $data = <<<'eot'
         <div class="pagination">  <button class="btn-prev disabled">&#8249;</button> <ul class="pager">  <li class="number active"><a>1</a></li><li class="number"><a href="?page=2">2</a></li><li class="number"><a href="?page=3">3</a></li><li class="number"><a href="?page=4">4</a></li><li class="number"><a href="?page=5">5</a></li><li class="number"><a href="?page=6">6</a></li> <li class="btn-quicknext" onclick="window.location.href='?page=6';" onmouseenter="this.innerHTML='&raquo;';" onmouseleave="this.innerHTML='...';">...</li> </ul> <button class="btn-next" onclick="window.location.href='?page=2';">&#8250;</button> <span class="pagination-jump">前往<input type="number" link="?page={jump}" onkeydown="var event = event || window.event; if (event.keyCode == 13) { window.location.href = this.getAttribute('link').replace( '{jump}', this.value); }" onfocus="this.select();" min="1" value="1" number="true" class="pagination-editor">页</span> </div>
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->render()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->toHtml()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->__toString()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
-        (string) ($page)
+        (string) $page
     );
 
     $data = <<<'eot'
@@ -892,14 +917,14 @@ public function testPageMacro(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->toArray()['page']
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->jsonSerialize()['page']
@@ -910,7 +935,7 @@ public function testPageMacro(): void
         {"per_page":10,"current_page":1,"total_page":100000000,"total_record":999999999,"total_macro":true,"from":0,"to":null}
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         json_encode($page->toArray()['page'])
     );
@@ -918,7 +943,7 @@ public function testPageMacro(): void
     $this->clearI18n();
 }
 ```
-    
+
 ## pagePrevNext 创建一个只有上下页的分页查询
 
 ``` php
@@ -930,53 +955,55 @@ public function testPagePrevNext(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 25; $n++) {
+    for ($n = 0; $n <= 25; ++$n) {
         $connect
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
     $page = $connect
         ->table('guest_book')
-        ->pagePrevNext(1, 15);
+        ->pagePrevNext(1, 15)
+    ;
     $result = $page->toArray()['data'];
 
     $this->assertInstanceof(BasePage::class, $page);
     $this->assertInstanceof(Page::class, $page);
-    $this->assertCount(15, $result);
+    static::assertCount(15, $result);
 
     $n = 0;
     foreach ($result as $key => $value) {
-        $this->assertSame($key, $n);
-        $this->assertInstanceof(stdClass::class, $value);
-        $this->assertSame('tom', $value->name);
-        $this->assertSame('I love movie.', $value->content);
+        static::assertSame($key, $n);
+        $this->assertInstanceof(\stdClass::class, $value);
+        static::assertSame('tom', $value->name);
+        static::assertSame('I love movie.', $value->content);
 
-        $n++;
+        ++$n;
     }
 
     $data = <<<'eot'
         <div class="pagination">  <button class="btn-prev disabled">&#8249;</button> <ul class="pager">    </ul> <button class="btn-next" onclick="window.location.href='?page=2';">&#8250;</button> <span class="pagination-jump">前往<input type="number" link="?page={jump}" onkeydown="var event = event || window.event; if (event.keyCode == 13) { window.location.href = this.getAttribute('link').replace( '{jump}', this.value); }" onfocus="this.select();" min="1" value="1" number="true" class="pagination-editor">页</span> </div>
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->render()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->toHtml()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $page->__toString()
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
-        (string) ($page)
+        (string) $page
     );
 
     $data = <<<'eot'
@@ -991,14 +1018,14 @@ public function testPagePrevNext(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->toArray()['page']
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $page->jsonSerialize()['page']
@@ -1009,7 +1036,7 @@ public function testPagePrevNext(): void
         {"per_page":15,"current_page":1,"total_page":null,"total_record":null,"total_macro":false,"from":0,"to":null}
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         json_encode($page->toArray()['page'])
     );
@@ -1017,7 +1044,7 @@ public function testPagePrevNext(): void
     $this->clearI18n();
 }
 ```
-    
+
 ## forPage 根据分页设置条件
 
 ``` php
@@ -1033,18 +1060,19 @@ public function testForPage(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test')
                 ->forPage(20, 6)
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## makeSql 获得查询字符串
 
 ``` php
@@ -1058,7 +1086,7 @@ public function testMakeSql(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
         $this->varJson(
             [
@@ -1070,7 +1098,7 @@ public function testMakeSql(): void
     );
 }
 ```
-    
+
 ## makeSql 获得查询字符串支持集合为一个条件
 
 ``` php
@@ -1084,7 +1112,7 @@ public function testMakeSqlWithLogicGroup(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
         $this->varJson(
             [
@@ -1096,7 +1124,7 @@ public function testMakeSqlWithLogicGroup(): void
     );
 }
 ```
-    
+
 ## cache 设置查询缓存
 
 **cache 原型**
@@ -1117,48 +1145,52 @@ public function testCache(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $this->assertInstanceof(ICache::class, $manager->getCache());
     $result = $manager
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertSame(2, $result->id);
-    $this->assertSame('tom', $result->name);
-    $this->assertSame('I love movie.', $result->content);
+        ->findOne()
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertSame(2, $result->id);
+    static::assertSame('tom', $result->name);
+    static::assertSame('I love movie.', $result->content);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
+        ->findOne()
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
+        ->findOne()
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertSame(2, $resultWithCache->id);
-    $this->assertSame('tom', $resultWithCache->name);
-    $this->assertSame('I love movie.', $resultWithCache->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertFalse($resultWithCache === $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertSame(2, $resultWithCache->id);
+    static::assertSame('tom', $resultWithCache->name);
+    static::assertSame('I love movie.', $resultWithCache->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertFalse($resultWithCache === $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持过期时间
 
 ``` php
@@ -1168,48 +1200,52 @@ public function testCacheWithExpire(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertSame(2, $result->id);
-    $this->assertSame('tom', $result->name);
-    $this->assertSame('I love movie.', $result->content);
+        ->findOne()
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertSame(2, $result->id);
+    static::assertSame('tom', $result->name);
+    static::assertSame('I love movie.', $result->content);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey', 3600)
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
+        ->findOne()
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey', 3600)
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
+        ->findOne()
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertStringContainsString('[3600,', file_get_contents($cacheFile));
-    $this->assertSame(2, $resultWithCache->id);
-    $this->assertSame('tom', $resultWithCache->name);
-    $this->assertSame('I love movie.', $resultWithCache->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertFalse($resultWithCache === $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertStringContainsString('[3600,', file_get_contents($cacheFile));
+    static::assertSame(2, $resultWithCache->id);
+    static::assertSame('tom', $resultWithCache->name);
+    static::assertSame('I love movie.', $resultWithCache->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertFalse($resultWithCache === $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持缓存连接
 
 ``` php
@@ -1219,27 +1255,30 @@ public function testCacheWithConnect(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertSame(2, $result->id);
-    $this->assertSame('tom', $result->name);
-    $this->assertSame('I love movie.', $result->content);
+        ->findOne()
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertSame(2, $result->id);
+    static::assertSame('tom', $result->name);
+    static::assertSame('I love movie.', $result->content);
 
     $fileCache = $manager
         ->container()
-        ->make('cache');
+        ->make('cache')
+    ;
     $this->assertInstanceof(ICache::class, $fileCache);
     $this->assertInstanceof(File::class, $fileCache);
 
@@ -1247,26 +1286,28 @@ public function testCacheWithConnect(): void
         ->cache('testcachekey', 3600, $fileCache)
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
+        ->findOne()
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey', 3600, $fileCache)
         ->table('guest_book')
         ->where('id', 2)
-        ->findOne();
+        ->findOne()
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertStringContainsString('[3600,', file_get_contents($cacheFile));
-    $this->assertSame(2, $resultWithCache->id);
-    $this->assertSame('tom', $resultWithCache->name);
-    $this->assertSame('I love movie.', $resultWithCache->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertFalse($resultWithCache === $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertStringContainsString('[3600,', file_get_contents($cacheFile));
+    static::assertSame(2, $resultWithCache->id);
+    static::assertSame('tom', $resultWithCache->name);
+    static::assertSame('I love movie.', $resultWithCache->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertFalse($resultWithCache === $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持查询多条记录
 
 ``` php
@@ -1276,45 +1317,49 @@ public function testCacheFindAll(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
-        ->findAll();
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertCount(6, $result);
-    $this->assertSame(1, $result[0]->id);
-    $this->assertSame('tom', $result[0]->name);
-    $this->assertSame('I love movie.', $result[0]->content);
+        ->findAll()
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertCount(6, $result);
+    static::assertSame(1, $result[0]->id);
+    static::assertSame('tom', $result[0]->name);
+    static::assertSame('I love movie.', $result[0]->content);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
-        ->findAll();
+        ->findAll()
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
-        ->findAll();
+        ->findAll()
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertCount(6, $resultWithCache);
-    $this->assertSame(1, $resultWithCache[0]->id);
-    $this->assertSame('tom', $resultWithCache[0]->name);
-    $this->assertSame('I love movie.', $resultWithCache[0]->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertCount(6, $resultWithCache);
+    static::assertSame(1, $resultWithCache[0]->id);
+    static::assertSame('tom', $resultWithCache[0]->name);
+    static::assertSame('I love movie.', $resultWithCache[0]->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持查询单条记录
 
 ``` php
@@ -1324,49 +1369,53 @@ public function testCacheFindOne(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
         ->where('id', 2)
         ->one()
-        ->find();
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertSame(2, $result->id);
-    $this->assertSame('tom', $result->name);
-    $this->assertSame('I love movie.', $result->content);
+        ->find()
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertSame(2, $result->id);
+    static::assertSame('tom', $result->name);
+    static::assertSame('I love movie.', $result->content);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
         ->where('id', 2)
         ->one()
-        ->find();
+        ->find()
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
         ->where('id', 2)
         ->one()
-        ->find();
+        ->find()
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertSame(2, $resultWithCache->id);
-    $this->assertSame('tom', $resultWithCache->name);
-    $this->assertSame('I love movie.', $resultWithCache->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertSame(2, $resultWithCache->id);
+    static::assertSame('tom', $resultWithCache->name);
+    static::assertSame('I love movie.', $resultWithCache->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持查询总记录
 
 ``` php
@@ -1376,39 +1425,43 @@ public function testCacheFindCount(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
-        ->findCount();
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertSame(6, $result);
+        ->findCount()
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertSame(6, $result);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
-        ->findCount();
+        ->findCount()
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
-        ->findCount();
+        ->findCount()
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertSame(6, $resultWithCache);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertTrue($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertSame(6, $resultWithCache);
+    static::assertSame($result, $resultWithCache);
+    static::assertTrue($result === $resultWithCache);
+    static::assertSame($resultWithCache, $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持 select 查询方法
 
 ``` php
@@ -1418,43 +1471,47 @@ public function testCacheSelect(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
-        ->select('SELECT * FROM guest_book');
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertCount(6, $result);
-    $this->assertSame(1, $result[0]->id);
-    $this->assertSame('tom', $result[0]->name);
-    $this->assertSame('I love movie.', $result[0]->content);
+        ->select('SELECT * FROM guest_book')
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertCount(6, $result);
+    static::assertSame(1, $result[0]->id);
+    static::assertSame('tom', $result[0]->name);
+    static::assertSame('I love movie.', $result[0]->content);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey')
-        ->select('SELECT * FROM guest_book');
+        ->select('SELECT * FROM guest_book')
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey')
-        ->select('SELECT * FROM guest_book');
+        ->select('SELECT * FROM guest_book')
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertCount(6, $resultWithCache);
-    $this->assertSame(1, $resultWithCache[0]->id);
-    $this->assertSame('tom', $resultWithCache[0]->name);
-    $this->assertSame('I love movie.', $resultWithCache[0]->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertCount(6, $resultWithCache);
+    static::assertSame(1, $resultWithCache[0]->id);
+    static::assertSame('tom', $resultWithCache[0]->name);
+    static::assertSame('I love movie.', $resultWithCache[0]->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存支持分页查询
 
 分页查询会生成两个缓存 KEY，一种是缓存数据本身，一个是缓存分页统计数量。
@@ -1469,40 +1526,44 @@ public function testCachePage(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 25; $n++) {
+    for ($n = 0; $n <= 25; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
     $cacheFilePageCount = $cacheDir.'/testcachekey/pagecount.php';
 
     $result = $manager
         ->table('guest_book')
-        ->page(1);
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertFileDoesNotExist($cacheFilePageCount);
+        ->page(1)
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertFileDoesNotExist($cacheFilePageCount);
 
     $resultWithoutCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
-        ->page(1);
+        ->page(1)
+    ;
     // cached data
     $resultWithCache = $manager
         ->cache('testcachekey')
         ->table('guest_book')
-        ->page(1);
+        ->page(1)
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertFileExists($cacheFilePageCount);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertFileExists($cacheFilePageCount);
+    static::assertEquals($result, $resultWithCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存不支持 query 查询方法
 
 `query` 是一个底层查询方法支持直接设置缓存，实际上其它的查询都会走这个 `query` 查询方法。
@@ -1525,41 +1586,45 @@ public function testCacheQuery(): void
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 5; $n++) {
+    for ($n = 0; $n <= 5; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
         ->table('guest_book')
-        ->query('SELECT * FROM guest_book');
-    $this->assertFileDoesNotExist($cacheFile);
-    $this->assertCount(6, $result);
-    $this->assertSame(1, $result[0]->id);
-    $this->assertSame('tom', $result[0]->name);
-    $this->assertSame('I love movie.', $result[0]->content);
+        ->query('SELECT * FROM guest_book')
+    ;
+    static::assertFileDoesNotExist($cacheFile);
+    static::assertCount(6, $result);
+    static::assertSame(1, $result[0]->id);
+    static::assertSame('tom', $result[0]->name);
+    static::assertSame('I love movie.', $result[0]->content);
 
     $resultWithoutCache = $manager
-        ->query('SELECT * FROM guest_book', [], false, 'testcachekey');
+        ->query('SELECT * FROM guest_book', [], false, 'testcachekey')
+    ;
     // cached data
     $resultWithCache = $manager
-        ->query('SELECT * FROM guest_book', [], false, 'testcachekey');
+        ->query('SELECT * FROM guest_book', [], false, 'testcachekey')
+    ;
 
-    $this->assertFileExists($cacheFile);
-    $this->assertCount(6, $resultWithCache);
-    $this->assertSame(1, $resultWithCache[0]->id);
-    $this->assertSame('tom', $resultWithCache[0]->name);
-    $this->assertSame('I love movie.', $resultWithCache[0]->content);
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertFileExists($cacheFile);
+    static::assertCount(6, $resultWithCache);
+    static::assertSame(1, $resultWithCache[0]->id);
+    static::assertSame('tom', $resultWithCache[0]->name);
+    static::assertSame('I love movie.', $resultWithCache[0]->content);
+    static::assertEquals($result, $resultWithCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertEquals($resultWithCache, $resultWithoutCache);
 }
 ```
-    
+
 ## cache 设置查询缓存不支持 procedure 查询方法
 
 `procedure` 是一个底层查询方法支持直接设置缓存。
@@ -1578,24 +1643,26 @@ public function procedure(string $sql, array $bindParams = [], bool|int $master 
 ``` php
 public function testCacheProcedure(): void
 {
-    $this->markTestSkipped('Skip procedure.');
+    static::markTestSkipped('Skip procedure.');
 
     $manager = $this->createDatabaseManager();
 
     $data = ['name' => 'tom', 'content' => 'I love movie.'];
 
-    for ($n = 0; $n <= 1; $n++) {
+    for ($n = 0; $n <= 1; ++$n) {
         $manager
             ->table('guest_book')
-            ->insert($data);
+            ->insert($data)
+        ;
     }
 
-    $cacheDir = dirname(__DIR__).'/databaseCacheManager';
+    $cacheDir = \dirname(__DIR__).'/databaseCacheManager';
     $cacheFile = $cacheDir.'/testcachekey.php';
 
     $result = $manager
-        ->procedure('CALL test_procedure(0)');
-    $this->assertFileDoesNotExist($cacheFile);
+        ->procedure('CALL test_procedure(0)')
+    ;
+    static::assertFileDoesNotExist($cacheFile);
     $data = <<<'eot'
         [
             [
@@ -1613,28 +1680,30 @@ public function testCacheProcedure(): void
             ]
         ]
         eot;
-    $this->assertSame(
+    static::assertSame(
         $data,
-        $this->varJson(
+        $this->varJsonSql(
             $result
         )
     );
 
     $resultWithoutCache = $manager
-        ->procedure('CALL test_procedure(0)', [], false, 'testcachekey');
-    $this->assertFileExists($cacheFile);
+        ->procedure('CALL test_procedure(0)', [], false, 'testcachekey')
+    ;
+    static::assertFileExists($cacheFile);
     // cached data
     $resultWithCache = $manager
-        ->procedure('CALL test_procedure(0)', [], false, 'testcachekey');
-    $this->assertFileExists($cacheFile);
-    $this->assertSame(
+        ->procedure('CALL test_procedure(0)', [], false, 'testcachekey')
+    ;
+    static::assertFileExists($cacheFile);
+    static::assertSame(
         $data,
-        $this->varJson(
+        $this->varJsonSql(
             $resultWithCache
         )
     );
-    $this->assertEquals($result, $resultWithCache);
-    $this->assertFalse($result === $resultWithCache);
-    $this->assertEquals($resultWithCache, $resultWithoutCache);
+    static::assertSame($result, $resultWithCache);
+    static::assertFalse($result === $resultWithCache);
+    static::assertSame($resultWithCache, $resultWithoutCache);
 }
 ```

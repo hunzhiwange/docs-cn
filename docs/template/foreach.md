@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/Compiler/CompilerForeachTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/Compiler/CompilerForeachTest.php)
 :::
-    
+
 foreach 标签也是用于循环输出，解析后的本质为 foreach。
 
 ## node
@@ -26,10 +26,10 @@ public function testNode(): void
         <?php endforeach; endif; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## node 省略键值
 
 有时候我们不需要键值，这个时候我们在模板中写下如下的代码：
@@ -52,6 +52,6 @@ public function testNodeSimple(): void
         <?php endforeach; endif; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```

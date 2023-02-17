@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/AggregateTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/AggregateTest.php)
 :::
-    
+
 数据库聚合查询功能。
 
 **Uses**
@@ -22,7 +22,7 @@ use Tests\Database\DatabaseTestCase as TestCase;
 `函数原型`
 
 ``` php
-public function findCount(string $field = '*', string $alias = 'row_count', bool $flag = false);
+public function findCount(string $field = '*', string $alias = 'row_count');
 ```
 
 ::: tip
@@ -43,13 +43,14 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->count()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 
@@ -61,13 +62,14 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->count('id')
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             1
         )
     );
@@ -80,13 +82,14 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->count('id', 'count1')
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             2
         )
     );
@@ -99,19 +102,20 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->count(Condition::raw('[id]*50'), 'count1')
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## 平均值 avg
 
 计算平均值。
@@ -129,18 +133,19 @@ public function testAvg(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->avg('id')
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 最大值 max
 
 计算最大值。
@@ -158,18 +163,19 @@ public function testMax(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->max('num')
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 最小值 min
 
 计算最小值。
@@ -187,18 +193,19 @@ public function testMin(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->min('num')
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 合计 sum
 
 计算合计。
@@ -216,13 +223,14 @@ public function testSum(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->sum('num')
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 }

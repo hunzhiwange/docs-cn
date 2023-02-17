@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Encryption/EncryptionTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Encryption/EncryptionTest.php)
 :::
-    
+
 字符串加密解密支持。
 
 **Uses**
@@ -28,25 +28,25 @@ public function testBaseUse(): void
 
     $encodeMessage = $encryption->encrypt($sourceMessage);
 
-    $this->assertFalse($sourceMessage === $encodeMessage);
+    static::assertFalse($sourceMessage === $encodeMessage);
 
-    $this->assertSame(
+    static::assertSame(
         $encryption->decrypt($encodeMessage),
         $sourceMessage
     );
 
-    $this->assertSame(
+    static::assertSame(
         $encryption->decrypt($encodeMessage.'foo'),
         false
     );
 
-    $this->assertSame(
+    static::assertSame(
         'encode-key',
         $this->getTestProperty($encryption, 'key')
     );
 }
 ```
-    
+
 ## 加密解密 AES-128-CBC
 
 ``` php
@@ -60,25 +60,25 @@ public function testUse128(): void
 
     $encodeMessage = $encryption->encrypt($sourceMessage);
 
-    $this->assertFalse($sourceMessage === $encodeMessage);
+    static::assertFalse($sourceMessage === $encodeMessage);
 
-    $this->assertSame(
+    static::assertSame(
         $encryption->decrypt($encodeMessage),
         $sourceMessage
     );
 
-    $this->assertSame(
+    static::assertSame(
         $encryption->decrypt($encodeMessage.'foo'),
         false
     );
 
-    $this->assertSame(
+    static::assertSame(
         'encode-key',
         $this->getTestProperty($encryption, 'key')
     );
 }
 ```
-    
+
 ## 加密解密支持过期时间
 
 ``` php
@@ -90,14 +90,14 @@ public function testDecryptButExpired(): void
 
     $data = $encryption->encrypt('123456', 1);
 
-    $this->assertSame('123456', $encryption->decrypt($data));
+    static::assertSame('123456', $encryption->decrypt($data));
 
     sleep(2);
 
-    $this->assertSame(false, $encryption->decrypt($data));
+    static::assertFalse($encryption->decrypt($data));
 }
 ```
-    
+
 ## 加密解密支持 RSA 校验
 
 ``` php
@@ -116,9 +116,9 @@ public function testWithPublicAndPrimaryKey(): void
 
     $encodeMessage = $encryption->encrypt($sourceMessage);
 
-    $this->assertFalse($sourceMessage === $encodeMessage);
+    static::assertFalse($sourceMessage === $encodeMessage);
 
-    $this->assertSame(
+    static::assertSame(
         $encryption->decrypt($encodeMessage),
         $sourceMessage
     );

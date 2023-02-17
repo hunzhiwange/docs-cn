@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Router/RouterAnnotationTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Router/RouterAnnotationTest.php)
 :::
-    
+
 QueryPHP 除了传统的自动匹配 MVC 路由之外，也支持自定义的注解路由。
 
 
@@ -62,11 +62,11 @@ class RouterProviderAnnotation extends RouterProvider
     ];
 
     protected array $middlewareAlias = [
-        'demo1'              => Demo1::class,
-        'demo2'              => Demo2::class,
-        'demo3'              => Demo3::class,
+        'demo1' => Demo1::class,
+        'demo2' => Demo2::class,
+        'demo3' => Demo3::class,
         'demo_for_base_path' => DemoForBasePath::class,
-        'demo_for_all'       => DemoForAll::class,
+        'demo_for_all' => DemoForAll::class,
     ];
 
     protected array $basePaths = [
@@ -79,9 +79,9 @@ class RouterProviderAnnotation extends RouterProvider
     ];
 
     protected array $groups = [
-        'pet'     => [],
-        'store'   => [],
-        'user'    => [],
+        'pet' => [],
+        'store' => [],
+        'user' => [],
         '/api/v1' => [
             'middlewares' => 'group1',
         ],
@@ -97,7 +97,7 @@ class RouterProviderAnnotation extends RouterProvider
         '/api/v4' => [
             'middlewares' => 'notFound',
         ],
-        'newPrefix/v1'    => [],
+        'newPrefix/v1' => [],
     ];
 
     public function bootstrap(): void
@@ -207,10 +207,6 @@ class RouterProviderAnnotation extends RouterProvider
                 "\/bindNotSet\/test2\/": {
                     "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\BindNotSet@routePlaceholderBar"
                 },
-                "\/domain\/test\/": {
-                    "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Domain@fooNotMatchedDomain",
-                    "domain": "queryphp.com"
-                },
                 "\/domain\/test2\/": {
                     "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Domain@barMatchedDomain",
                     "domain": "queryphp.com"
@@ -227,6 +223,10 @@ class RouterProviderAnnotation extends RouterProvider
                 "\/domain\/test4\/": {
                     "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Domain@barMatchedDomainWithoutExtend",
                     "domain": "api.queryphp.com"
+                },
+                "\/domain\/test\/": {
+                    "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Domain@fooNotMatchedDomain",
+                    "domain": "queryphp.com"
                 },
                 "\/extendVar\/test\/": {
                     "attributes": {
@@ -283,40 +283,24 @@ class RouterProviderAnnotation extends RouterProvider
                         ]
                     }
                 },
-                "\/port\/test\/": {
-                    "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Port@fooNotMatchedPort",
-                    "port": 9527
-                },
                 "\/port\/test2\/": {
                     "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Port@barMatchedPort",
                     "port": 9527
                 },
-                "\/scheme\/test\/": {
-                    "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Scheme@fooNotMatchedScheme",
-                    "scheme": "https"
+                "\/port\/test\/": {
+                    "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Port@fooNotMatchedPort",
+                    "port": 9527
                 },
                 "\/scheme\/test2\/": {
                     "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Scheme@barMatchedScheme",
                     "scheme": "http"
+                },
+                "\/scheme\/test\/": {
+                    "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Scheme@fooNotMatchedScheme",
+                    "scheme": "https"
                 }
             },
             "a": {
-                "\/api\/v1": {
-                    "\/api\/v1\/petLeevel\/{petId:[A-Za-z]+}\/": {
-                        "bind": "\\Tests\\Router\\Controllers\\Annotation\\PetLeevel",
-                        "var": [
-                            "petId"
-                        ]
-                    },
-                    "regex": [
-                        "~^(?|\/api\/v1\/petLeevel\/([A-Za-z]+)\/)$~x"
-                    ],
-                    "map": [
-                        {
-                            "2": "\/api\/v1\/petLeevel\/{petId:[A-Za-z]+}\/"
-                        }
-                    ]
-                },
                 "_": {
                     "\/api\/notInGroup\/petLeevel\/{petId:[A-Za-z]+}\/": {
                         "bind": "\\Tests\\Router\\Apps\\AppForAnnotation\\Controllers\\Pet@petLeevelNotInGroup",
@@ -330,6 +314,22 @@ class RouterProviderAnnotation extends RouterProvider
                     "map": [
                         {
                             "2": "\/api\/notInGroup\/petLeevel\/{petId:[A-Za-z]+}\/"
+                        }
+                    ]
+                },
+                "\/api\/v1": {
+                    "\/api\/v1\/petLeevel\/{petId:[A-Za-z]+}\/": {
+                        "bind": "\\Tests\\Router\\Controllers\\Annotation\\PetLeevel",
+                        "var": [
+                            "petId"
+                        ]
+                    },
+                    "regex": [
+                        "~^(?|\/api\/v1\/petLeevel\/([A-Za-z]+)\/)$~x"
+                    ],
+                    "map": [
+                        {
+                            "2": "\/api\/v1\/petLeevel\/{petId:[A-Za-z]+}\/"
                         }
                     ]
                 }
@@ -367,24 +367,24 @@ public function testBaseRouterData(): void
 
     $provider = new RouterProviderAnnotation($container);
 
-    $this->assertNull($provider->register());
-    $this->assertNull($provider->bootstrap());
+    static::assertNull($provider->register());
+    static::assertNull($provider->bootstrap());
 
     $data = file_get_contents(__DIR__.'/Apps/AppForAnnotation/data.json');
 
-    $this->assertSame(
+    static::assertEquals(
         $data,
         $this->varJson(
             [
-                'base_paths'  => $router->getBasePaths(),
-                'groups'      => $router->getGroups(),
-                'routers'     => $router->getRouters(),
+                'base_paths' => $router->getBasePaths(),
+                'groups' => $router->getGroups(),
+                'routers' => $router->getRouters(),
             ]
         )
     );
 }
 ```
-    
+
 ## 基本使用
 
 **fixture 定义**
@@ -411,7 +411,8 @@ class PetLeevel
             $container
                 ->make('request')
                 ->attributes
-                ->get('petId');
+                ->get('petId')
+            ;
     }
 }
 ```
@@ -447,7 +448,7 @@ public function testMatchedPetLeevel(): void
 
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('hello plus for petLeevel, attributes petId is hello', $response->getContent());
+    static::assertSame('hello plus for petLeevel, attributes petId is hello', $response->getContent());
 
     $data = <<<'eot'
         [
@@ -456,7 +457,7 @@ public function testMatchedPetLeevel(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares']
@@ -475,7 +476,7 @@ public function testMatchedPetLeevel(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares'],
@@ -486,7 +487,7 @@ public function testMatchedPetLeevel(): void
     unset($GLOBALS['demo_middlewares']);
 }
 ```
-    
+
 ## 基础路径匹配
 
 **fixture 定义**
@@ -541,7 +542,7 @@ public function testMatchedBasePathNormalize(): void
 
     $this->assertInstanceof(Response::class, $response);
 
-    $this->assertSame('hello plus for basePath normalize', $response->getContent());
+    static::assertSame('hello plus for basePath normalize', $response->getContent());
 
     $data = <<<'eot'
         [
@@ -550,7 +551,7 @@ public function testMatchedBasePathNormalize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares']
@@ -567,7 +568,7 @@ public function testMatchedBasePathNormalize(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares'],
@@ -578,7 +579,7 @@ public function testMatchedBasePathNormalize(): void
     unset($GLOBALS['demo_middlewares']);
 }
 ```
-    
+
 ## Scheme 协议匹配
 
 **fixture 定义**
@@ -625,10 +626,10 @@ public function testMatchedAndSchemeMatched(): void
 
     $result = $router->dispatch($request);
 
-    $this->assertSame('barMatchedScheme', $result->getContent());
+    static::assertSame('barMatchedScheme', $result->getContent());
 }
 ```
-    
+
 ## Domain 域名匹配
 
 **fixture 定义**
@@ -678,10 +679,10 @@ public function testMatchedAndDomainMatched(): void
 
     $result = $router->dispatch($request);
 
-    $this->assertSame('barMatchedDomain', $result->getContent());
+    static::assertSame('barMatchedDomain', $result->getContent());
 }
 ```
-    
+
 ## Domain 域名匹配支持变量
 
 **fixture 定义**
@@ -734,10 +735,10 @@ public function testMatchedAndDomainWithVarMatched(): void
 
     $result = $router->dispatch($request);
 
-    $this->assertSame('barMatchedDomainWithVar and attributes are {"subdomain":"foo","domain":"bar"}', $result->getContent());
+    static::assertSame('barMatchedDomainWithVar and attributes are {"subdomain":"foo","domain":"bar"}', $result->getContent());
 }
 ```
-    
+
 ## Port 端口匹配
 
 **fixture 定义**
@@ -787,10 +788,10 @@ public function testMatchedAndPortMatched(): void
 
     $result = $router->dispatch($request);
 
-    $this->assertSame('barMatchedPort', $result->getContent());
+    static::assertSame('barMatchedPort', $result->getContent());
 }
 ```
-    
+
 ## Attributes 扩展变量匹配
 
 **fixture 定义**
@@ -841,10 +842,10 @@ public function testMatchedWithExtendVar(): void
 
     $result = $router->dispatch($request);
 
-    $this->assertSame('withExtendVar and attributes are {"args1":"hello","args2":"world"}', $result->getContent());
+    static::assertSame('withExtendVar and attributes are {"args1":"hello","args2":"world"}', $result->getContent());
 }
 ```
-    
+
 ## Middlewares 中间件匹配
 
 **fixture 定义**
@@ -905,7 +906,7 @@ public function testMiddleware(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares']
@@ -924,7 +925,7 @@ public function testMiddleware(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares'],
@@ -932,12 +933,12 @@ public function testMiddleware(): void
         )
     );
 
-    $this->assertSame('Middleware matched', $result->getContent());
+    static::assertSame('Middleware matched', $result->getContent());
 
     unset($GLOBALS['demo_middlewares']);
 }
 ```
-    
+
 ## Middlewares 中间件匹配支持数组
 
 **fixture 定义**
@@ -999,7 +1000,7 @@ public function testMiddleware2(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares']
@@ -1019,7 +1020,7 @@ public function testMiddleware2(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares'],
@@ -1027,12 +1028,12 @@ public function testMiddleware2(): void
         )
     );
 
-    $this->assertSame('Middleware matched 2', $result->getContent());
+    static::assertSame('Middleware matched 2', $result->getContent());
 
     unset($GLOBALS['demo_middlewares']);
 }
 ```
-    
+
 ## Middlewares 中间件匹配支持类名
 
 **fixture 定义**
@@ -1092,7 +1093,7 @@ public function testMiddleware4(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares']
@@ -1109,7 +1110,7 @@ public function testMiddleware4(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares'],
@@ -1117,7 +1118,7 @@ public function testMiddleware4(): void
         )
     );
 
-    $this->assertSame('Middleware matched 4', $result->getContent());
+    static::assertSame('Middleware matched 4', $result->getContent());
 
     unset($GLOBALS['demo_middlewares']);
 }

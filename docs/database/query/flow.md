@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/FlowTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/FlowTest.php)
 :::
-    
+
 QueryPHP 数据构造器支持条件运算符，可以根据不同条件做不同的事情，支持所有的构造器函数，即返回 `$this`。
 
 **Uses**
@@ -35,9 +35,9 @@ public function testBaseUse(): void
 
     $id = 2;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -51,7 +51,8 @@ public function testBaseUse(): void
                 ->elif(4 === $id)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 
@@ -69,9 +70,9 @@ public function testBaseUse(): void
 
     $id = 1;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -85,7 +86,8 @@ public function testBaseUse(): void
                 ->elif(4 === $id)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             1
         )
     );
@@ -107,9 +109,9 @@ public function testBaseUse(): void
 
     $id = 3;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -123,7 +125,8 @@ public function testBaseUse(): void
                 ->elif(4 === $id)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             2
         )
     );
@@ -142,9 +145,9 @@ public function testBaseUse(): void
 
     $id = 4;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -158,13 +161,14 @@ public function testBaseUse(): void
                 ->elif(4 === $id)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             3
         )
     );
 }
 ```
-    
+
 ## else 浅记忆
 
 else 仅仅能记忆上一次 if,elif 的结果，上一次的反向结果就是 else 的条件值，我们建议不要在 SQL 链式中使用过度的条件判断。
@@ -191,9 +195,9 @@ public function testElse(): void
 
     $id = 2;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -207,7 +211,8 @@ public function testElse(): void
                 ->else() // else 仅仅能记忆上一次 if,elif 的结果，上一次的反向结果就是 else 的条件值,其等价于 elif($id != 3)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true)
+                ->findOne(),
+            $connect
         )
     );
 
@@ -228,9 +233,9 @@ public function testElse(): void
 
     $id = 3;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -244,7 +249,8 @@ public function testElse(): void
                 ->else() // else 仅仅能记忆上一次 if,elif 的结果，上一次的反向结果就是 else 的条件值,其等价于 elif($id != 3)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             1
         )
     );
@@ -263,9 +269,9 @@ public function testElse(): void
 
     $id = 5;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->if(1 === $id)
@@ -279,13 +285,14 @@ public function testElse(): void
                 ->else() // else 仅仅能记忆上一次 if,elif 的结果，上一次的反向结果就是 else 的条件值,其等价于 elif($id != 3)
                 ->where('id', 4)
                 ->fi()
-                ->findOne(true),
+                ->findOne(),
+            $connect,
             2
         )
     );
 }
 ```
-    
+
 ::: tip
 命令遵循 shell 命令风格，即 if,elif,else,fi。
 :::

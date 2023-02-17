@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/ResetTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/ResetTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -31,9 +31,9 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', '=', 5)
@@ -41,12 +41,13 @@ public function testBaseUse(): void
                 ->reset()
                 ->table('test_query_subsql')
                 ->where('new', '=', 'world')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 重置某一项
 
 ``` php
@@ -66,9 +67,9 @@ public function testResetItem(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->where('id', '=', 5)
@@ -76,7 +77,8 @@ public function testResetItem(): void
                 ->setColumns('name,id')
                 ->reset('where')
                 ->where('new', 'like', 'new')
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );

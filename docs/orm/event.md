@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/EntityEventTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/EntityEventTest.php)
 :::
-    
+
 实体在新增和更新时，预植了事件监听器，可以定义一些事件。
 
 
@@ -25,40 +25,40 @@ use Tests\Database\Ddd\Entity\DemoEventEntity;
 public function testBaseUse(): void
 {
     $dispatch = new Dispatch(new Container());
-    $this->assertNull(Entity::eventDispatch());
+    static::assertNull(Entity::eventDispatch());
     Entity::withEventDispatch($dispatch);
     $this->assertInstanceof(Dispatch::class, Entity::eventDispatch());
 
     $test = new DemoEventEntity(['name' => 'foo']);
-    DemoEventEntity::event(Entity::BEFORE_CREATING_EVENT, function () {
+    DemoEventEntity::event(Entity::BEFORE_CREATING_EVENT, function (): void {
         $_SERVER['ENTITY.BEFORE_CREATING_EVENT'] = 'BEFORE_CREATING_EVENT';
     });
-    DemoEventEntity::event(Entity::AFTER_CREATED_EVENT, function () {
+    DemoEventEntity::event(Entity::AFTER_CREATED_EVENT, function (): void {
         $_SERVER['ENTITY.AFTER_CREATED_EVENT'] = 'AFTER_CREATED_EVENT';
     });
 
-    $this->assertFalse(isset($_SERVER['ENTITY.BEFORE_CREATING_EVENT']));
-    $this->assertFalse(isset($_SERVER['ENTITY.AFTER_CREATED_EVENT']));
+    static::assertFalse(isset($_SERVER['ENTITY.BEFORE_CREATING_EVENT']));
+    static::assertFalse(isset($_SERVER['ENTITY.AFTER_CREATED_EVENT']));
 
     $test->create()->flush();
 
-    $this->assertTrue(isset($_SERVER['ENTITY.BEFORE_CREATING_EVENT']));
-    $this->assertTrue(isset($_SERVER['ENTITY.AFTER_CREATED_EVENT']));
-    $this->assertSame('BEFORE_CREATING_EVENT', $_SERVER['ENTITY.BEFORE_CREATING_EVENT']);
-    $this->assertSame('AFTER_CREATED_EVENT', $_SERVER['ENTITY.AFTER_CREATED_EVENT']);
+    static::assertTrue(isset($_SERVER['ENTITY.BEFORE_CREATING_EVENT']));
+    static::assertTrue(isset($_SERVER['ENTITY.AFTER_CREATED_EVENT']));
+    static::assertSame('BEFORE_CREATING_EVENT', $_SERVER['ENTITY.BEFORE_CREATING_EVENT']);
+    static::assertSame('AFTER_CREATED_EVENT', $_SERVER['ENTITY.AFTER_CREATED_EVENT']);
 
     unset($_SERVER['ENTITY.BEFORE_CREATING_EVENT'], $_SERVER['ENTITY.AFTER_CREATED_EVENT']);
 }
 ```
-    
+
 ## 实体支持的事件
 
 ``` php
 # Tests\Database\Ddd\EntityEventTest::getSupportedEvent
-public function getSupportedEvent()
+public static function getSupportedEvent()
 {
     return [
-        [Entity::BEFORE_SAVEING_EVENT],
+        [Entity::BEFORE_SAVING_EVENT],
         [Entity::AFTER_SAVED_EVENT],
         [Entity::BEFORE_CREATING_EVENT],
         [Entity::AFTER_CREATED_EVENT],
@@ -79,15 +79,15 @@ public function getSupportedEvent()
 public function testSupportEvent($event): void
 {
     $dispatch = new Dispatch(new Container());
-    $this->assertNull(Entity::eventDispatch());
+    static::assertNull(Entity::eventDispatch());
     Entity::withEventDispatch($dispatch);
     $this->assertInstanceof(Dispatch::class, Entity::eventDispatch());
 
     $supportEvent = DemoEventEntity::supportEvent();
-    $this->assertTrue(in_array($event, $supportEvent, true));
+    static::assertTrue(\in_array($event, $supportEvent, true));
 }
 ```
-    
+
 ## 不受支持的事件
 
 ``` php
@@ -97,10 +97,10 @@ public function testEventWasNotSupport(): void
     $this->expectExceptionMessage('Event `not_support` do not support.');
 
     $dispatch = new Dispatch(new Container());
-    $this->assertNull(Entity::eventDispatch());
+    static::assertNull(Entity::eventDispatch());
     Entity::withEventDispatch($dispatch);
     $this->assertInstanceof(Dispatch::class, Entity::eventDispatch());
-    DemoEventEntity::event('not_support', function () {
+    DemoEventEntity::event('not_support', function (): void {
     });
 }
 ```

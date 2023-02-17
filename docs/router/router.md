@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Router/RouterTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Router/RouterTest.php)
 :::
-    
+
 路由是整个框架一个非常重要的调度组件，完成从请求到响应的完整过程，通常我们使用代理 `\Leevel\Router\Proxy\Router` 类进行静态调用。
 
 **路有服务提供者**
@@ -16,7 +16,6 @@ namespace App\Infra\Provider;
 use App\Middleware\Auth;
 use Leevel\Router\RouterProvider;
 use Leevel\Session\Middleware\Session;
-use Leevel\Throttler\Middleware\Throttler;
 
 class Router extends RouterProvider
 {
@@ -47,8 +46,8 @@ class Router extends RouterProvider
      * - 例外在应用执行结束后响应环节也会调用 HTTP 中间件.
      */
     protected array $middlewareAlias = [
-        'auth'       => Auth::class,
-        'session'    => Session::class,
+        'auth' => Auth::class,
+        'session' => Session::class,
     ];
 
     /**
@@ -67,9 +66,9 @@ class Router extends RouterProvider
      * 分组.
      */
     protected array $groups = [
-        'pet'     => [],
-        'store'   => [],
-        'user'    => [],
+        'pet' => [],
+        'store' => [],
+        'user' => [],
         '/api/v1' => [
             'middlewares' => 'api',
         ],
@@ -153,10 +152,10 @@ public function testBaseUse(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello my home', $result->getContent());
+    static::assertSame('hello my home', $result->getContent());
 }
 ```
-    
+
 ## 控制器方法单独成为类
 
 方法类的方法固定为 `handle`，返回响应结果。
@@ -191,10 +190,10 @@ public function testActionAsClass(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello action class', $result->getContent());
+    static::assertSame('hello action class', $result->getContent());
 }
 ```
-    
+
 ## 控制器方法支持短横线和下换线转换为驼峰规则
 
 **fixture 定义**
@@ -227,10 +226,10 @@ public function testActionConvert(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello action convert foo bar', $result->getContent());
+    static::assertSame('hello action convert foo bar', $result->getContent());
 }
 ```
-    
+
 ## 控制器支持短横线和下换线转换为驼峰规则
 
 **fixture 定义**
@@ -263,10 +262,10 @@ public function testControllerConvert(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello controller convert', $result->getContent());
+    static::assertSame('hello controller convert', $result->getContent());
 }
 ```
-    
+
 ## 控制器支持子目录
 
 控制器子目录支持无限层级。
@@ -301,10 +300,10 @@ public function testSubControllerDir(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello sub world foo', $result->getContent());
+    static::assertSame('hello sub world foo', $result->getContent());
 }
 ```
-    
+
 ## 控制器子目录支持短横线和下换线转换为驼峰规则
 
 **fixture 定义**
@@ -342,7 +341,7 @@ public function testConvertAll(): void
     $router->dispatch($request);
 }
 ```
-    
+
 ## 可以转换为 JSON 的控制器响应
 
 **fixture 定义**
@@ -375,10 +374,10 @@ public function testShouldJson(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('{"foo":"bar"}', $result->getContent());
+    static::assertSame('{"foo":"bar"}', $result->getContent());
 }
 ```
-    
+
 ## 不可以转换为 JSON 的控制器响应强制转化为字符串
 
 **fixture 定义**
@@ -411,10 +410,10 @@ public function testResponseIsInt(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('123456', $result->getContent());
+    static::assertSame('123456', $result->getContent());
 }
 ```
-    
+
 ## RESTFUL 控制器响应
 
 **fixture 定义**
@@ -423,7 +422,7 @@ public function testResponseIsInt(): void
 
 ``` php
 # Tests\Router\RouterTest::getRestfulData
-public function getRestfulData();
+public static function getRestfulData();
 ```
 
 **Tests\Router\Controllers\Restful\Show**
@@ -504,10 +503,10 @@ public function testRestful(string $method, string $action): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello for restful '.$action, $result->getContent());
+    static::assertSame('hello for restful '.$action, $result->getContent());
 }
 ```
-    
+
 ## setPreRequestMatched 设置路由请求预解析结果
 
 **fixture 定义**
@@ -537,22 +536,22 @@ public function testSetPreRequestMatched(): void
     $request = $this->createRequest($pathInfo, $attributes, $method);
     $router = $this->createRouter();
     $router->setPreRequestMatched($request, [
-        IRouter::APP             => 'Tests',
-        IRouter::CONTROLLER      => 'Bar',
-        IRouter::ACTION          => 'foo',
-        IRouter::PREFIX          => 'PreRequestMatched\\Prefix',
-        IRouter::ATTRIBUTES      => null,
-        IRouter::MIDDLEWARES     => null,
-        IRouter::VARS            => null,
+        IRouter::APP => 'Tests',
+        IRouter::CONTROLLER => 'Bar',
+        IRouter::ACTION => 'foo',
+        IRouter::PREFIX => 'PreRequestMatched\\Prefix',
+        IRouter::ATTRIBUTES => null,
+        IRouter::MIDDLEWARES => null,
+        IRouter::VARS => null,
     ]);
     $router->setControllerDir($controllerDir);
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello preRequestMatched', $result->getContent());
+    static::assertSame('hello preRequestMatched', $result->getContent());
 }
 ```
-    
+
 ## 穿越中间件
 
 **fixture 定义**
@@ -576,13 +575,12 @@ class ThroughMiddleware
 ``` php
 namespace Tests\Router\Middlewares;
 
-use Closure;
 use Leevel\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Demo1
 {
-    public function terminate(Closure $next, Request $request, Response $response): void
+    public function terminate(\Closure $next, Request $request, Response $response): void
     {
         $GLOBALS['demo_middlewares'][] = 'Demo1::terminate';
         $next($request, $response);
@@ -595,20 +593,19 @@ class Demo1
 ``` php
 namespace Tests\Router\Middlewares;
 
-use Closure;
 use Leevel\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Demo2
 {
-    public function handle(Closure $next, Request $request): Response
+    public function handle(\Closure $next, Request $request): Response
     {
         $GLOBALS['demo_middlewares'][] = 'Demo2::handle';
 
         return $next($request);
     }
 
-    public function terminate(Closure $next, Request $request, Response $response): void
+    public function terminate(\Closure $next, Request $request, Response $response): void
     {
         $GLOBALS['demo_middlewares'][] = 'Demo2::terminate';
         $next($request, $response);
@@ -621,13 +618,12 @@ class Demo2
 ``` php
 namespace Tests\Router\Middlewares;
 
-use Closure;
 use Leevel\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Demo3
 {
-    public function handle(Closure $next, Request $request, int $arg1 = 1, string $arg2 = 'hello'): Response
+    public function handle(\Closure $next, Request $request, int $arg1 = 1, string $arg2 = 'hello'): Response
     {
         $GLOBALS['demo_middlewares'][] = sprintf('Demo3::handle(arg1:%s,arg2:%s)', $arg1, $arg2);
 
@@ -641,20 +637,19 @@ class Demo3
 ``` php
 namespace Tests\Router\Middlewares;
 
-use Closure;
 use Leevel\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DemoForGroup
 {
-    public function handle(Closure $next, Request $request): Response
+    public function handle(\Closure $next, Request $request): Response
     {
         $GLOBALS['demo_middlewares'][] = 'DemoForGroup::handle';
 
         return $next($request);
     }
 
-    public function terminate(Closure $next, Request $request, Response $response): void
+    public function terminate(\Closure $next, Request $request, Response $response): void
     {
         $GLOBALS['demo_middlewares'][] = 'DemoForGroup::terminate';
         $next($request, $response);
@@ -689,9 +684,9 @@ public function testThroughMiddleware(): void
     ]);
 
     $router->setMiddlewareAlias([
-        'demo1'        => Demo1::class,
-        'demo2'        => Demo2::class,
-        'demo3'        => Demo3::class,
+        'demo1' => Demo1::class,
+        'demo2' => Demo2::class,
+        'demo3' => Demo3::class,
         'demoForGroup' => DemoForGroup::class,
     ]);
 
@@ -736,7 +731,7 @@ public function testThroughMiddleware(): void
     $router->throughTerminateMiddleware($request, $result);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello throughMiddleware', $result->getContent());
+    static::assertSame('hello throughMiddleware', $result->getContent());
 
     $data = <<<'eot'
         [
@@ -749,7 +744,7 @@ public function testThroughMiddleware(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $GLOBALS['demo_middlewares']
@@ -759,7 +754,7 @@ public function testThroughMiddleware(): void
     unset($GLOBALS['demo_middlewares']);
 }
 ```
-    
+
 ## 控制器支持指定分隔路由前缀
 
 子目录支持无限层级。
@@ -794,6 +789,6 @@ public function testPrefixInController(): void
     $result = $router->dispatch($request);
 
     $this->assertInstanceof(Response::class, $result);
-    $this->assertSame('hello api vi', $result->getContent());
+    static::assertSame('hello api vi', $result->getContent());
 }
 ```

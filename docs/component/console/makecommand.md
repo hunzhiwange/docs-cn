@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Console/MakeTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Console/MakeTest.php)
 :::
-    
+
 在项目实际开发中经常需要生成一个基础模板，QueryPHP 对这一场景进行了封装，提供了一个基础的代码生成器基类，
 可以十分便捷地生成你需要的模板代码。
 
@@ -99,24 +99,24 @@ hello make file
 public function testBaseUse(): void
 {
     $result = $this->runCommand(new MakeFile(), [
-        'command'     => 'make:test',
-        'name'        => 'test',
+        'command' => 'make:test',
+        'name' => 'test',
     ]);
 
     $result = $this->normalizeContent($result);
 
-    $this->assertStringContainsString($this->normalizeContent('test <test> created successfully.'), $result);
+    static::assertStringContainsString($this->normalizeContent('test <test> created successfully.'), $result);
 
     $file = __DIR__.'/Command/cache/test';
 
-    $this->assertStringContainsString('hello make file', $content = file_get_contents($file));
+    static::assertStringContainsString('hello make file', $content = file_get_contents($file));
 
-    $this->assertStringContainsString('hello key1', $content);
-    $this->assertStringContainsString('hello key2', $content);
-    $this->assertStringContainsString('hello key3', $content);
-    $this->assertStringContainsString('hello key4', $content);
+    static::assertStringContainsString('hello key1', $content);
+    static::assertStringContainsString('hello key2', $content);
+    static::assertStringContainsString('hello key3', $content);
+    static::assertStringContainsString('hello key4', $content);
 
     unlink($file);
-    rmdir(dirname($file));
+    rmdir(\dirname($file));
 }
 ```

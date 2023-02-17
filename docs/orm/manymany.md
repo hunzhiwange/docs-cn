@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/Relation/ManyManyTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/Relation/ManyManyTest.php)
 :::
-    
+
 多对多的关联是一种常用的关联，比如用户与角色属于多对多的关系。
 
 **多对多关联支持类型关联项**
@@ -24,10 +24,10 @@
 ``` php
 <?php
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Relation\ManyMany;
 use Leevel\Database\Ddd\Relation\Relation;
 use Leevel\Database\Ddd\Select;
-use Leevel\Support\Collection;
 use Tests\Database\DatabaseTestCase as TestCase;
 use Tests\Database\Ddd\Entity\Relation\Role;
 use Tests\Database\Ddd\Entity\Relation\RoleSoftDeleted;
@@ -45,130 +45,161 @@ use Tests\Database\Ddd\Entity\Relation\UserRoleSoftDeleted;
 ``` php
 namespace Tests\Database\Ddd\Entity\Relation;
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
 use Leevel\Database\Ddd\Relation\ManyMany;
+use Leevel\Database\Ddd\Struct;
 
 class User extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'user';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'name'      => [],
-        'create_at' => [],
-        'role'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_middle_with_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'withSoftDeleted',
-        ],
-        'role_middle_only_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'onlySoftDeleted',
-        ],
-        'role_relation_scope_not_found'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'notFound',
-        ],
-        'role_relation_scope_found_but_private'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'foundButPrivate',
-        ],
-        'role_not_defined_middle_entity'      => [
-            self::MANY_MANY         => Role::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_source_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_target_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_middle_source_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_middle_target_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-        ],
-        'role_middle_field'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'middleField',
-        ],
-        'role_middle_only_soft_deleted_and_middle_field_and_other_table_condition' => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'middleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition',
-        ],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $role = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleSoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'withSoftDeleted',
+    ])]
+    protected ?Collection $roleMiddleWithSoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'onlySoftDeleted',
+    ])]
+    protected ?Collection $roleMiddleOnlySoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'notFound',
+    ])]
+    protected ?Collection $roleRelationScopeNotFound = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'foundButPrivate',
+    ])]
+    protected ?Collection $roleRelationScopeFoundButPrivate = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleEntity = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleSourceKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleTargetKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'middleField',
+    ])]
+    protected ?Collection $roleMiddleField = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'middleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition',
+    ])]
+    protected ?Collection $roleMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition = null;
 
     protected function relationScopeWithSoftDeleted(ManyMany $relation): void
     {
@@ -191,9 +222,11 @@ class User extends Entity
             ->middleOnlySoftDeleted()
             ->middleField(['create_at', 'middle_id' => 'id'])
             ->setColumns('id,name')
-            ->where('id', '>', 3);
+            ->where('id', '>', 3)
+        ;
     }
 
+    /** @phpstan-ignore-next-line */
     private function relationScopeFoundButPrivate(ManyMany $relation): void
     {
     }
@@ -206,24 +239,35 @@ class User extends Entity
 namespace Tests\Database\Ddd\Entity\Relation;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class UserRole extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'user_role';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'user_id'   => [],
-        'role_id'   => [],
-        'create_at' => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?int $userId = null;
+
+    #[Struct([
+    ])]
+    protected ?int $roleId = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+    ])]
+    protected ?int $deleteAt = null;
 }
 ```
 
@@ -233,23 +277,27 @@ class UserRole extends Entity
 namespace Tests\Database\Ddd\Entity\Relation;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class Role extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'role';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'name'      => [],
-        'create_at' => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
 }
 ```
 
@@ -260,11 +308,11 @@ public function testBaseUse(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -273,7 +321,7 @@ public function testBaseUse(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -282,7 +330,7 @@ public function testBaseUse(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -291,7 +339,7 @@ public function testBaseUse(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role')
@@ -300,7 +348,7 @@ public function testBaseUse(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role')
@@ -310,7 +358,7 @@ public function testBaseUse(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role')
@@ -322,12 +370,12 @@ public function testBaseUse(): void
 
     $user = User::select()->where('id', 1)->findOne();
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->role;
 
@@ -336,40 +384,40 @@ public function testBaseUse(): void
     $role1 = $role[0];
 
     $this->assertInstanceof(Role::class, $role1);
-    $this->assertSame(1, $role1->id);
-    $this->assertSame(1, $role1['id']);
-    $this->assertSame(1, $role1->getId());
-    $this->assertSame('管理员', $role1->name);
-    $this->assertSame('管理员', $role1['name']);
-    $this->assertSame('管理员', $role1->getName());
+    static::assertSame(1, $role1->id);
+    static::assertSame(1, $role1['id']);
+    static::assertSame(1, $role1->getId());
+    static::assertSame('管理员', $role1->name);
+    static::assertSame('管理员', $role1['name']);
+    static::assertSame('管理员', $role1->getName());
 
     $role2 = $role[1];
 
-    $this->assertSame(3, $role2->id);
-    $this->assertSame(3, $role2['id']);
-    $this->assertSame(3, $role2->getId());
-    $this->assertSame('会员', $role2->name);
-    $this->assertSame('会员', $role2['name']);
-    $this->assertSame('会员', $role2->getName());
+    static::assertSame(3, $role2->id);
+    static::assertSame(3, $role2['id']);
+    static::assertSame(3, $role2->getId());
+    static::assertSame('会员', $role2->name);
+    static::assertSame('会员', $role2['name']);
+    static::assertSame('会员', $role2->getName());
 
-    $this->assertCount(2, $role);
-    $this->assertSame(1, $role[0]['id']);
-    $this->assertSame('管理员', $role[0]['name']);
-    $this->assertSame(3, $role[1]['id']);
-    $this->assertSame('会员', $role[1]['name']);
+    static::assertCount(2, $role);
+    static::assertSame(1, $role[0]['id']);
+    static::assertSame('管理员', $role[0]['name']);
+    static::assertSame(3, $role[1]['id']);
+    static::assertSame('会员', $role[1]['name']);
 
     $middle = $role[0]->middle();
     $this->assertInstanceof(UserRole::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(1, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(1, $middle->roleId);
 
     $middle = $role[1]->middle();
     $this->assertInstanceof(UserRole::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(3, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(3, $middle->roleId);
 }
 ```
-    
+
 ## eager 预加载关联
 
 ``` php
@@ -378,11 +426,11 @@ public function testEager(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -391,7 +439,7 @@ public function testEager(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -400,7 +448,7 @@ public function testEager(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -409,7 +457,7 @@ public function testEager(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role')
@@ -418,7 +466,7 @@ public function testEager(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role')
@@ -428,7 +476,7 @@ public function testEager(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role')
@@ -440,14 +488,15 @@ public function testEager(): void
 
     $user = User::eager(['role'])
         ->where('id', 1)
-        ->findOne();
+        ->findOne()
+    ;
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->role;
 
@@ -456,39 +505,39 @@ public function testEager(): void
     $role1 = $role[0];
 
     $this->assertInstanceof(Role::class, $role1);
-    $this->assertSame(1, $role1->id);
-    $this->assertSame(1, $role1['id']);
-    $this->assertSame(1, $role1->getId());
-    $this->assertSame('管理员', $role1->name);
-    $this->assertSame('管理员', $role1['name']);
-    $this->assertSame('管理员', $role1->getName());
+    static::assertSame(1, $role1->id);
+    static::assertSame(1, $role1['id']);
+    static::assertSame(1, $role1->getId());
+    static::assertSame('管理员', $role1->name);
+    static::assertSame('管理员', $role1['name']);
+    static::assertSame('管理员', $role1->getName());
 
     $role2 = $role[1];
 
     $this->assertInstanceof(Role::class, $role2);
-    $this->assertSame(3, $role2->id);
-    $this->assertSame(3, $role2['id']);
-    $this->assertSame(3, $role2->getId());
-    $this->assertSame('会员', $role2->name);
-    $this->assertSame('会员', $role2['name']);
-    $this->assertSame('会员', $role2->getName());
+    static::assertSame(3, $role2->id);
+    static::assertSame(3, $role2['id']);
+    static::assertSame(3, $role2->getId());
+    static::assertSame('会员', $role2->name);
+    static::assertSame('会员', $role2['name']);
+    static::assertSame('会员', $role2->getName());
 
-    $this->assertCount(2, $role);
-    $this->assertSame(1, $role[0]['id']);
-    $this->assertSame('管理员', $role[0]['name']);
-    $this->assertSame(3, $role[1]['id']);
-    $this->assertSame('会员', $role[1]['name']);
+    static::assertCount(2, $role);
+    static::assertSame(1, $role[0]['id']);
+    static::assertSame('管理员', $role[0]['name']);
+    static::assertSame(3, $role[1]['id']);
+    static::assertSame('会员', $role[1]['name']);
 
     $middle = $role[0]->middle();
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(1, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(1, $middle->roleId);
 
     $middle = $role[1]->middle();
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(3, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(3, $middle->roleId);
 }
 ```
-    
+
 ## eager 预加载关联支持查询条件过滤
 
 ``` php
@@ -497,11 +546,11 @@ public function testEagerWithCondition(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -510,7 +559,7 @@ public function testEagerWithCondition(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -519,7 +568,7 @@ public function testEagerWithCondition(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -528,7 +577,7 @@ public function testEagerWithCondition(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role')
@@ -537,7 +586,7 @@ public function testEagerWithCondition(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role')
@@ -547,7 +596,7 @@ public function testEagerWithCondition(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role')
@@ -557,26 +606,27 @@ public function testEagerWithCondition(): void
             ])
     );
 
-    $user = User::eager(['role' => function (Relation $select) {
+    $user = User::eager(['role' => function (Relation $select): void {
         $select->where('id', '>', 99999);
     }])
         ->where('id', 1)
-        ->findOne();
+        ->findOne()
+    ;
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->role;
 
     $this->assertInstanceof(Collection::class, $role);
-    $this->assertCount(0, $role);
+    static::assertCount(0, $role);
 }
 ```
-    
+
 ## relation 读取关联
 
 ``` php
@@ -584,7 +634,7 @@ public function testRelationAsMethod(): void
 {
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -593,7 +643,7 @@ public function testRelationAsMethod(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -602,7 +652,7 @@ public function testRelationAsMethod(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -611,7 +661,7 @@ public function testRelationAsMethod(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role')
@@ -620,7 +670,7 @@ public function testRelationAsMethod(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role')
@@ -630,7 +680,7 @@ public function testRelationAsMethod(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role')
@@ -643,17 +693,17 @@ public function testRelationAsMethod(): void
     $roleRelation = User::make()->relation('role');
 
     $this->assertInstanceof(ManyMany::class, $roleRelation);
-    $this->assertSame('id', $roleRelation->getSourceKey());
-    $this->assertSame('id', $roleRelation->getTargetKey());
-    $this->assertSame('user_id', $roleRelation->getMiddleSourceKey());
-    $this->assertSame('role_id', $roleRelation->getMiddleTargetKey());
+    static::assertSame('id', $roleRelation->getSourceKey());
+    static::assertSame('id', $roleRelation->getTargetKey());
+    static::assertSame('user_id', $roleRelation->getMiddleSourceKey());
+    static::assertSame('role_id', $roleRelation->getMiddleTargetKey());
     $this->assertInstanceof(User::class, $roleRelation->getSourceEntity());
     $this->assertInstanceof(Role::class, $roleRelation->getTargetEntity());
     $this->assertInstanceof(UserRole::class, $roleRelation->getMiddleEntity());
     $this->assertInstanceof(Select::class, $roleRelation->getSelect());
 }
 ```
-    
+
 ## relation 关联模型数据不存在返回空集合
 
 ``` php
@@ -662,11 +712,11 @@ public function testRelationDataWasNotFound(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -675,7 +725,7 @@ public function testRelationDataWasNotFound(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -684,7 +734,7 @@ public function testRelationDataWasNotFound(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -693,7 +743,7 @@ public function testRelationDataWasNotFound(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role')
@@ -704,20 +754,20 @@ public function testRelationDataWasNotFound(): void
 
     $user = User::select()->where('id', 1)->findOne();
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->role;
 
     $this->assertInstanceof(Collection::class, $role);
-    $this->assertCount(0, $role);
+    static::assertCount(0, $role);
 }
 ```
-    
+
 ## 关联软删除
 
 **fixture 定义**
@@ -727,130 +777,161 @@ public function testRelationDataWasNotFound(): void
 ``` php
 namespace Tests\Database\Ddd\Entity\Relation;
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
 use Leevel\Database\Ddd\Relation\ManyMany;
+use Leevel\Database\Ddd\Struct;
 
 class User extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'user';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'name'      => [],
-        'create_at' => [],
-        'role'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_middle_with_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'withSoftDeleted',
-        ],
-        'role_middle_only_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'onlySoftDeleted',
-        ],
-        'role_relation_scope_not_found'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'notFound',
-        ],
-        'role_relation_scope_found_but_private'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'foundButPrivate',
-        ],
-        'role_not_defined_middle_entity'      => [
-            self::MANY_MANY         => Role::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_source_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_target_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_middle_source_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_middle_target_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-        ],
-        'role_middle_field'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'middleField',
-        ],
-        'role_middle_only_soft_deleted_and_middle_field_and_other_table_condition' => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'middleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition',
-        ],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $role = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleSoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'withSoftDeleted',
+    ])]
+    protected ?Collection $roleMiddleWithSoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'onlySoftDeleted',
+    ])]
+    protected ?Collection $roleMiddleOnlySoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'notFound',
+    ])]
+    protected ?Collection $roleRelationScopeNotFound = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'foundButPrivate',
+    ])]
+    protected ?Collection $roleRelationScopeFoundButPrivate = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleEntity = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleSourceKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleTargetKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'middleField',
+    ])]
+    protected ?Collection $roleMiddleField = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'middleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition',
+    ])]
+    protected ?Collection $roleMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition = null;
 
     protected function relationScopeWithSoftDeleted(ManyMany $relation): void
     {
@@ -873,9 +954,11 @@ class User extends Entity
             ->middleOnlySoftDeleted()
             ->middleField(['create_at', 'middle_id' => 'id'])
             ->setColumns('id,name')
-            ->where('id', '>', 3);
+            ->where('id', '>', 3)
+        ;
     }
 
+    /** @phpstan-ignore-next-line */
     private function relationScopeFoundButPrivate(ManyMany $relation): void
     {
     }
@@ -888,29 +971,38 @@ class User extends Entity
 namespace Tests\Database\Ddd\Entity\Relation;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class UserRoleSoftDeleted extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'user_role_soft_deleted';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'user_id'   => [],
-        'role_id'   => [],
-        'create_at' => [],
-        'delete_at' => [
-            self::CREATE_FILL => 0,
-        ],
-    ];
-
     public const DELETE_AT = 'delete_at';
+
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?int $userId = null;
+
+    #[Struct([
+    ])]
+    protected ?int $roleId = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::CREATE_FILL => 0,
+    ])]
+    protected ?int $deleteAt = null;
 }
 ```
 
@@ -920,28 +1012,34 @@ class UserRoleSoftDeleted extends Entity
 namespace Tests\Database\Ddd\Entity\Relation;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class RoleSoftDeleted extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'role_soft_deleted';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'name'      => [],
-        'create_at' => [],
-        'delete_at' => [
-            self::CREATE_FILL => 0,
-        ],
-    ];
-
     public const DELETE_AT = 'delete_at';
+
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::CREATE_FILL => 0,
+    ])]
+    protected ?int $deleteAt = null;
 }
 ```
 
@@ -952,11 +1050,11 @@ public function testSoftDeleted(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -965,7 +1063,7 @@ public function testSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role_soft_deleted')
@@ -974,7 +1072,7 @@ public function testSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role_soft_deleted')
@@ -983,7 +1081,7 @@ public function testSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role_soft_deleted')
@@ -992,7 +1090,7 @@ public function testSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role_soft_deleted')
@@ -1002,7 +1100,7 @@ public function testSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role_soft_deleted')
@@ -1017,24 +1115,24 @@ public function testSoftDeleted(): void
     $sql = <<<'eot'
         SQL: [64] SELECT `user`.* FROM `user` WHERE `user`.`id` = :user_id LIMIT 1 | Params:  1 | Key: Name: [8] :user_id | paramno=0 | name=[8] ":user_id" | is_param=1 | param_type=1 (SELECT `user`.* FROM `user` WHERE `user`.`id` = 1 LIMIT 1)
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->roleSoftDeleted;
 
     $sql = <<<'eot'
         SQL: [490] SELECT `role_soft_deleted`.*,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` AND `user_role_soft_deleted`.`delete_at` = :user_role_soft_deleted_delete_at WHERE `role_soft_deleted`.`delete_at` = :role_soft_deleted_delete_at AND `user_role_soft_deleted`.`user_id` IN (:user_role_soft_deleted_user_id_in0) | Params:  3 | Key: Name: [33] :user_role_soft_deleted_delete_at | paramno=0 | name=[33] ":user_role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [28] :role_soft_deleted_delete_at | paramno=1 | name=[28] ":role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [35] :user_role_soft_deleted_user_id_in0 | paramno=2 | name=[35] ":user_role_soft_deleted_user_id_in0" | is_param=1 | param_type=1 (SELECT `role_soft_deleted`.*,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` AND `user_role_soft_deleted`.`delete_at` = 0 WHERE `role_soft_deleted`.`delete_at` = 0 AND `user_role_soft_deleted`.`user_id` IN (1))
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
@@ -1044,41 +1142,41 @@ public function testSoftDeleted(): void
     $role1 = $role[0];
 
     $this->assertInstanceof(RoleSoftDeleted::class, $role1);
-    $this->assertSame(1, $role1->id);
-    $this->assertSame(1, $role1['id']);
-    $this->assertSame(1, $role1->getId());
-    $this->assertSame('管理员', $role1->name);
-    $this->assertSame('管理员', $role1['name']);
-    $this->assertSame('管理员', $role1->getName());
+    static::assertSame(1, $role1->id);
+    static::assertSame(1, $role1['id']);
+    static::assertSame(1, $role1->getId());
+    static::assertSame('管理员', $role1->name);
+    static::assertSame('管理员', $role1['name']);
+    static::assertSame('管理员', $role1->getName());
 
     $role2 = $role[1];
 
     $this->assertInstanceof(RoleSoftDeleted::class, $role2);
-    $this->assertSame(3, $role2->id);
-    $this->assertSame(3, $role2['id']);
-    $this->assertSame(3, $role2->getId());
-    $this->assertSame('会员', $role2->name);
-    $this->assertSame('会员', $role2['name']);
-    $this->assertSame('会员', $role2->getName());
+    static::assertSame(3, $role2->id);
+    static::assertSame(3, $role2['id']);
+    static::assertSame(3, $role2->getId());
+    static::assertSame('会员', $role2->name);
+    static::assertSame('会员', $role2['name']);
+    static::assertSame('会员', $role2->getName());
 
-    $this->assertCount(2, $role);
-    $this->assertSame(1, $role[0]['id']);
-    $this->assertSame('管理员', $role[0]['name']);
-    $this->assertSame(3, $role[1]['id']);
-    $this->assertSame('会员', $role[1]['name']);
+    static::assertCount(2, $role);
+    static::assertSame(1, $role[0]['id']);
+    static::assertSame('管理员', $role[0]['name']);
+    static::assertSame(3, $role[1]['id']);
+    static::assertSame('会员', $role[1]['name']);
 
     $middle = $role[0]->middle();
     $this->assertInstanceof(UserRoleSoftDeleted::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(1, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(1, $middle->roleId);
 
     $middle = $role[1]->middle();
     $this->assertInstanceof(UserRoleSoftDeleted::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(3, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(3, $middle->roleId);
 }
 ```
-    
+
 ## middleWithSoftDeleted 中间实体包含软删除数据的数据库查询集合对象
 
 通过关联作用域来设置中间实体包含软删除数据的数据库查询集合对象。
@@ -1100,11 +1198,11 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -1113,7 +1211,7 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role_soft_deleted')
@@ -1122,7 +1220,7 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role_soft_deleted')
@@ -1131,7 +1229,7 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role_soft_deleted')
@@ -1140,7 +1238,7 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role_soft_deleted')
@@ -1150,13 +1248,13 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role_soft_deleted')
             ->insert([
-                'user_id'   => 1,
-                'role_id'   => 3,
+                'user_id' => 1,
+                'role_id' => 3,
                 'delete_at' => time(),
             ])
     );
@@ -1166,24 +1264,24 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
     $sql = <<<'eot'
         SQL: [64] SELECT `user`.* FROM `user` WHERE `user`.`id` = :user_id LIMIT 1 | Params:  1 | Key: Name: [8] :user_id | paramno=0 | name=[8] ":user_id" | is_param=1 | param_type=1 (SELECT `user`.* FROM `user` WHERE `user`.`id` = 1 LIMIT 1)
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->roleMiddleWithSoftDeleted;
 
     $sql = <<<'eot'
         SQL: [413] SELECT `role_soft_deleted`.*,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` WHERE `role_soft_deleted`.`delete_at` = :role_soft_deleted_delete_at AND `user_role_soft_deleted`.`user_id` IN (:user_role_soft_deleted_user_id_in0) | Params:  2 | Key: Name: [28] :role_soft_deleted_delete_at | paramno=0 | name=[28] ":role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [35] :user_role_soft_deleted_user_id_in0 | paramno=1 | name=[35] ":user_role_soft_deleted_user_id_in0" | is_param=1 | param_type=1 (SELECT `role_soft_deleted`.*,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` WHERE `role_soft_deleted`.`delete_at` = 0 AND `user_role_soft_deleted`.`user_id` IN (1))
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
@@ -1193,41 +1291,41 @@ public function testWithMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
     $role1 = $role[0];
 
     $this->assertInstanceof(RoleSoftDeleted::class, $role1);
-    $this->assertSame(1, $role1->id);
-    $this->assertSame(1, $role1['id']);
-    $this->assertSame(1, $role1->getId());
-    $this->assertSame('管理员', $role1->name);
-    $this->assertSame('管理员', $role1['name']);
-    $this->assertSame('管理员', $role1->getName());
+    static::assertSame(1, $role1->id);
+    static::assertSame(1, $role1['id']);
+    static::assertSame(1, $role1->getId());
+    static::assertSame('管理员', $role1->name);
+    static::assertSame('管理员', $role1['name']);
+    static::assertSame('管理员', $role1->getName());
 
     $role2 = $role[1];
 
     $this->assertInstanceof(RoleSoftDeleted::class, $role2);
-    $this->assertSame(3, $role2->id);
-    $this->assertSame(3, $role2['id']);
-    $this->assertSame(3, $role2->getId());
-    $this->assertSame('会员', $role2->name);
-    $this->assertSame('会员', $role2['name']);
-    $this->assertSame('会员', $role2->getName());
+    static::assertSame(3, $role2->id);
+    static::assertSame(3, $role2['id']);
+    static::assertSame(3, $role2->getId());
+    static::assertSame('会员', $role2->name);
+    static::assertSame('会员', $role2['name']);
+    static::assertSame('会员', $role2->getName());
 
-    $this->assertCount(2, $role);
-    $this->assertSame(1, $role[0]['id']);
-    $this->assertSame('管理员', $role[0]['name']);
-    $this->assertSame(3, $role[1]['id']);
-    $this->assertSame('会员', $role[1]['name']);
+    static::assertCount(2, $role);
+    static::assertSame(1, $role[0]['id']);
+    static::assertSame('管理员', $role[0]['name']);
+    static::assertSame(3, $role[1]['id']);
+    static::assertSame('会员', $role[1]['name']);
 
     $middle = $role[0]->middle();
     $this->assertInstanceof(UserRoleSoftDeleted::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(1, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(1, $middle->roleId);
 
     $middle = $role[1]->middle();
     $this->assertInstanceof(UserRoleSoftDeleted::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(3, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(3, $middle->roleId);
 }
 ```
-    
+
 ## middleOnlySoftDeleted 中间实体仅仅包含软删除数据的数据库查询集合对象
 
 通过关联作用域来设置中间实体仅仅包含软删除数据的数据库查询集合对象。
@@ -1249,11 +1347,11 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -1262,7 +1360,7 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role_soft_deleted')
@@ -1271,7 +1369,7 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role_soft_deleted')
@@ -1280,7 +1378,7 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role_soft_deleted')
@@ -1289,7 +1387,7 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role_soft_deleted')
@@ -1299,13 +1397,13 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role_soft_deleted')
             ->insert([
-                'user_id'   => 1,
-                'role_id'   => 3,
+                'user_id' => 1,
+                'role_id' => 3,
                 'delete_at' => time(),
             ])
     );
@@ -1315,24 +1413,24 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
     $sql = <<<'eot'
         SQL: [64] SELECT `user`.* FROM `user` WHERE `user`.`id` = :user_id LIMIT 1 | Params:  1 | Key: Name: [8] :user_id | paramno=0 | name=[8] ":user_id" | is_param=1 | param_type=1 (SELECT `user`.* FROM `user` WHERE `user`.`id` = 1 LIMIT 1)
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->roleMiddleOnlySoftDeleted;
 
     $sql = <<<'eot'
         SQL: [490] SELECT `role_soft_deleted`.*,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` AND `user_role_soft_deleted`.`delete_at` > :user_role_soft_deleted_delete_at WHERE `role_soft_deleted`.`delete_at` = :role_soft_deleted_delete_at AND `user_role_soft_deleted`.`user_id` IN (:user_role_soft_deleted_user_id_in0) | Params:  3 | Key: Name: [33] :user_role_soft_deleted_delete_at | paramno=0 | name=[33] ":user_role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [28] :role_soft_deleted_delete_at | paramno=1 | name=[28] ":role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [35] :user_role_soft_deleted_user_id_in0 | paramno=2 | name=[35] ":user_role_soft_deleted_user_id_in0" | is_param=1 | param_type=1 (SELECT `role_soft_deleted`.*,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` AND `user_role_soft_deleted`.`delete_at` > 0 WHERE `role_soft_deleted`.`delete_at` = 0 AND `user_role_soft_deleted`.`user_id` IN (1))
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
@@ -1342,30 +1440,30 @@ public function testOnlyMiddleSoftDeletedAndMiddleEntityHasSoftDeleted(): void
     $role1 = $role[0];
 
     $this->assertInstanceof(RoleSoftDeleted::class, $role1);
-    $this->assertSame(3, $role1->id);
-    $this->assertSame(3, $role1['id']);
-    $this->assertSame(3, $role1->getId());
-    $this->assertSame('会员', $role1->name);
-    $this->assertSame('会员', $role1['name']);
-    $this->assertSame('会员', $role1->getName());
+    static::assertSame(3, $role1->id);
+    static::assertSame(3, $role1['id']);
+    static::assertSame(3, $role1->getId());
+    static::assertSame('会员', $role1->name);
+    static::assertSame('会员', $role1['name']);
+    static::assertSame('会员', $role1->getName());
 
     $role2 = $role[1];
 
-    $this->assertNull($role2);
+    static::assertNull($role2);
 
-    $this->assertCount(1, $role);
-    $this->assertSame(3, $role[0]['id']);
-    $this->assertSame('会员', $role[0]['name']);
-    $this->assertNull($role[1]['id'] ?? null);
-    $this->assertNull($role[1]['name'] ?? null);
+    static::assertCount(1, $role);
+    static::assertSame(3, $role[0]['id']);
+    static::assertSame('会员', $role[0]['name']);
+    static::assertNull($role[1]['id'] ?? null);
+    static::assertNull($role[1]['name'] ?? null);
 
     $middle = $role[0]->middle();
     $this->assertInstanceof(UserRoleSoftDeleted::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(3, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(3, $middle->roleId);
 }
 ```
-    
+
 ## middleOnlySoftDeleted.middleField.where 组合条件查询例子
 
 通过关联作用域来设置组合查询条件。
@@ -1380,7 +1478,8 @@ protected function relationScopeMiddleOnlySoftDeletedAndMiddleFieldAndOtherTable
         ->middleOnlySoftDeleted()
         ->middleField(['create_at', 'middle_id' => 'id'])
         ->setColumns('id,name')
-        ->where('id', '>', 3);
+        ->where('id', '>', 3)
+    ;
 }
 ```
 
@@ -1391,11 +1490,11 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -1404,7 +1503,7 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role_soft_deleted')
@@ -1413,7 +1512,7 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role_soft_deleted')
@@ -1422,7 +1521,7 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role_soft_deleted')
@@ -1431,7 +1530,7 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role_soft_deleted')
@@ -1441,13 +1540,13 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role_soft_deleted')
             ->insert([
-                'user_id'   => 1,
-                'role_id'   => 3,
+                'user_id' => 1,
+                'role_id' => 3,
                 'delete_at' => time(),
             ])
     );
@@ -1457,33 +1556,33 @@ public function testMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition():
     $sql = <<<'eot'
         SQL: [64] SELECT `user`.* FROM `user` WHERE `user`.`id` = :user_id LIMIT 1 | Params:  1 | Key: Name: [8] :user_id | paramno=0 | name=[8] ":user_id" | is_param=1 | param_type=1 (SELECT `user`.* FROM `user` WHERE `user`.`id` = 1 LIMIT 1)
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->roleMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition;
 
     $sql = <<<'eot'
         SQL: [655] SELECT `role_soft_deleted`.`id`,`role_soft_deleted`.`name`,`user_role_soft_deleted`.`create_at`,`user_role_soft_deleted`.`id` AS `middle_id`,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` AND `user_role_soft_deleted`.`delete_at` > :user_role_soft_deleted_delete_at WHERE `role_soft_deleted`.`delete_at` = :role_soft_deleted_delete_at AND `role_soft_deleted`.`id` > :role_soft_deleted_id AND `user_role_soft_deleted`.`user_id` IN (:user_role_soft_deleted_user_id_in0) | Params:  4 | Key: Name: [33] :user_role_soft_deleted_delete_at | paramno=0 | name=[33] ":user_role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [28] :role_soft_deleted_delete_at | paramno=1 | name=[28] ":role_soft_deleted_delete_at" | is_param=1 | param_type=1 | Key: Name: [21] :role_soft_deleted_id | paramno=2 | name=[21] ":role_soft_deleted_id" | is_param=1 | param_type=1 | Key: Name: [35] :user_role_soft_deleted_user_id_in0 | paramno=3 | name=[35] ":user_role_soft_deleted_user_id_in0" | is_param=1 | param_type=1 (SELECT `role_soft_deleted`.`id`,`role_soft_deleted`.`name`,`user_role_soft_deleted`.`create_at`,`user_role_soft_deleted`.`id` AS `middle_id`,`user_role_soft_deleted`.`role_id` AS `middle_role_id`,`user_role_soft_deleted`.`user_id` AS `middle_user_id` FROM `role_soft_deleted` INNER JOIN `user_role_soft_deleted` ON `user_role_soft_deleted`.`role_id` = `role_soft_deleted`.`id` AND `user_role_soft_deleted`.`delete_at` > 0 WHERE `role_soft_deleted`.`delete_at` = 0 AND `role_soft_deleted`.`id` > 3 AND `user_role_soft_deleted`.`user_id` IN (1))
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
     $this->assertInstanceof(Collection::class, $role);
-    $this->assertFalse(isset($role[0]));
+    static::assertFalse(isset($role[0]));
 }
 ```
-    
+
 ## middleField 中间实体查询字段
 
 通过关联作用域来设置中间实体查询字段。
@@ -1505,11 +1604,11 @@ public function testMiddleField(): void
     $user = User::select()->where('id', 1)->findOne();
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertNull($user->id);
+    static::assertNull($user->id);
 
     $connect = $this->createDatabaseConnect();
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -1518,7 +1617,7 @@ public function testMiddleField(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -1527,7 +1626,7 @@ public function testMiddleField(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -1536,7 +1635,7 @@ public function testMiddleField(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role')
@@ -1551,44 +1650,44 @@ public function testMiddleField(): void
     $sql = <<<'eot'
         SQL: [64] SELECT `user`.* FROM `user` WHERE `user`.`id` = :user_id LIMIT 1 | Params:  1 | Key: Name: [8] :user_id | paramno=0 | name=[8] ":user_id" | is_param=1 | param_type=1 (SELECT `user`.* FROM `user` WHERE `user`.`id` = 1 LIMIT 1)
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->roleMiddleField;
 
     $sql = <<<'eot'
         SQL: [285] SELECT `role`.*,`user_role`.`create_at`,`user_role`.`id` AS `middle_id`,`user_role`.`role_id` AS `middle_role_id`,`user_role`.`user_id` AS `middle_user_id` FROM `role` INNER JOIN `user_role` ON `user_role`.`role_id` = `role`.`id` WHERE `user_role`.`user_id` IN (:user_role_user_id_in0) | Params:  1 | Key: Name: [22] :user_role_user_id_in0 | paramno=0 | name=[22] ":user_role_user_id_in0" | is_param=1 | param_type=1 (SELECT `role`.*,`user_role`.`create_at`,`user_role`.`id` AS `middle_id`,`user_role`.`role_id` AS `middle_role_id`,`user_role`.`user_id` AS `middle_user_id` FROM `role` INNER JOIN `user_role` ON `user_role`.`role_id` = `role`.`id` WHERE `user_role`.`user_id` IN (1))
         eot;
-    $this->assertSame(
+    static::assertSame(
         $sql,
         User::select()->getLastSql(),
     );
 
     $this->assertInstanceof(Collection::class, $role);
-    $this->assertCount(1, $role);
+    static::assertCount(1, $role);
 
     $role1 = $role[0];
 
     $this->assertInstanceof(Role::class, $role1);
-    $this->assertSame(2, $role1->id);
-    $this->assertSame(2, $role1['id']);
-    $this->assertSame(2, $role1->getId());
-    $this->assertSame('版主', $role1->name);
-    $this->assertSame('版主', $role1['name']);
-    $this->assertSame('版主', $role1->getName());
+    static::assertSame(2, $role1->id);
+    static::assertSame(2, $role1['id']);
+    static::assertSame(2, $role1->getId());
+    static::assertSame('版主', $role1->name);
+    static::assertSame('版主', $role1['name']);
+    static::assertSame('版主', $role1->getName());
 
     $middle = $role[0]->middle();
     $this->assertInstanceof(UserRole::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(2, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(2, $middle->roleId);
 }
 ```

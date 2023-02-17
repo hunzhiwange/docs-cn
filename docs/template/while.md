@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/Compiler/CompilerWhileTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/Compiler/CompilerWhileTest.php)
 :::
-    
+
 QueryPHP 支持 while 语法标签，通过这种方式可以很好地将 PHP 的 while 语法布局出来。
 
 ## node
@@ -29,10 +29,10 @@ public function testNode(): void
         <?php endwhile; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## cond 可省略
 
 默认第一个条件会自动解析为 cond。
@@ -58,6 +58,6 @@ public function testNodeSimple(): void
         <?php endwhile; ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```

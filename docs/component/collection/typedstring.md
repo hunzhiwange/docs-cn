@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Support/TypedStringArrayTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Support/TypedStringArrayTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -22,13 +22,13 @@ public function testBaseUse(): void
     ];
 
     $collection = new TypedStringArray($data);
-    $this->assertSame($collection[0], 'h');
-    $this->assertSame($collection[1], 'l');
-    $this->assertSame($collection[2], 'w');
-    $this->assertSame($collection[3], 'd');
-    $this->assertTrue(isset($collection[0]));
-    $this->assertTrue(isset($collection[1]));
-    $this->assertTrue(isset($collection[2]));
-    $this->assertTrue(isset($collection[3]));
+    static::assertSame($collection[0], 'h');
+    static::assertSame($collection[1], 'l');
+    static::assertSame($collection[2], 'w');
+    static::assertSame($collection[3], 'd');
+    static::assertTrue(isset($collection[0]));
+    static::assertTrue(isset($collection[1]));
+    static::assertTrue(isset($collection[2]));
+    static::assertTrue(isset($collection[3]));
 }
 ```

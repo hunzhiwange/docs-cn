@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/DistinctTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/DistinctTest.php)
 :::
-    
+
 **函数原型**
 
 ``` php
@@ -38,18 +38,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->distinct()
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## 取消查询去重
 
 ``` php
@@ -65,14 +66,15 @@ public function testCancelDistinct(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->distinct()
                 ->distinct(false)
-                ->findAll(true),
+                ->findAll(),
+            $connect,
             1
         )
     );

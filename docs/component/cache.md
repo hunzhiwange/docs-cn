@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Cache/CacheTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Cache/CacheTest.php)
 :::
-    
+
 QueryPHP 为系统提供了灵活的缓存功能，提供了多种缓存驱动。
 
 内置支持的缓存类型包括 file、redis，未来可能增加其他驱动。
@@ -213,7 +213,7 @@ public function set(string $name, mixed $data, ?int $expire = null): void;
 /**
  * 获取缓存.
  */
-public function get(string $name, mixed $defaults = false);
+public function get(string $name, mixed $defaults = false): mixed;
 ```
 
 缓存不存在或者过期返回 `false`，可以根据这个判断缓存是否可用。
@@ -240,15 +240,15 @@ public function testBaseUse(): void
     ]);
 
     $cache->set('hello', 'world');
-    $this->assertTrue(is_file($filePath));
-    $this->assertSame('world', $cache->get('hello'));
+    static::assertTrue(is_file($filePath));
+    static::assertSame('world', $cache->get('hello'));
 
     $cache->delete('hello');
-    $this->assertFalse(is_file($filePath));
-    $this->assertFalse($cache->get('hello'));
+    static::assertFalse(is_file($filePath));
+    static::assertFalse($cache->get('hello'));
 }
 ```
-    
+
 ## put 批量设置缓存
 
 函数签名
@@ -276,20 +276,20 @@ public function testPut(): void
     $cache->put('hello', 'world');
     $cache->put(['hello2' => 'world', 'foo' => 'bar']);
 
-    $this->assertSame('world', $cache->get('hello'));
-    $this->assertSame('world', $cache->get('hello2'));
-    $this->assertSame('bar', $cache->get('foo'));
+    static::assertSame('world', $cache->get('hello'));
+    static::assertSame('world', $cache->get('hello2'));
+    static::assertSame('bar', $cache->get('foo'));
 
     $cache->delete('hello');
     $cache->delete('hello2');
     $cache->delete('foo');
 
-    $this->assertFalse($cache->get('hello'));
-    $this->assertFalse($cache->get('hello2'));
-    $this->assertFalse($cache->get('foo'));
+    static::assertFalse($cache->get('hello'));
+    static::assertFalse($cache->get('hello2'));
+    static::assertFalse($cache->get('foo'));
 }
 ```
-    
+
 ## set 值 false 不允许作为缓存值
 
 因为 `false` 会作为判断缓存是否存在的一个依据，所以 `false` 不能够作为缓存，否则会引起缓存穿透。
@@ -310,7 +310,7 @@ public function testSetNotAllowedFalse(): void
     $cache->set('hello', false);
 }
 ```
-    
+
 ## put 批量设置缓存支持过期时间
 
 ``` php
@@ -325,22 +325,22 @@ public function testPutWithExpire(): void
     $cache->put('hello', 'world', 33);
     $cache->put(['hello2' => 'world', 'foo' => 'bar'], 22);
 
-    $this->assertSame('world', $cache->get('hello'));
-    $this->assertSame('world', $cache->get('hello2'));
-    $this->assertSame('bar', $cache->get('foo'));
-    $this->assertTrue(is_file($filePath));
-    $this->assertStringContainsString('[33,', file_get_contents($filePath));
+    static::assertSame('world', $cache->get('hello'));
+    static::assertSame('world', $cache->get('hello2'));
+    static::assertSame('bar', $cache->get('foo'));
+    static::assertTrue(is_file($filePath));
+    static::assertStringContainsString('[33,', file_get_contents($filePath));
 
     $cache->delete('hello');
     $cache->delete('hello2');
     $cache->delete('foo');
 
-    $this->assertFalse($cache->get('hello'));
-    $this->assertFalse($cache->get('hello2'));
-    $this->assertFalse($cache->get('foo'));
+    static::assertFalse($cache->get('hello'));
+    static::assertFalse($cache->get('hello2'));
+    static::assertFalse($cache->get('foo'));
 }
 ```
-    
+
 ## remember 缓存存在读取否则重新设置
 
 缓存值为闭包返回，闭包的参数为缓存的 `key`。
@@ -352,7 +352,7 @@ public function testPutWithExpire(): void
 /**
  * 缓存存在读取否则重新设置.
  */
-public function remember(string $name, Closure $dataGenerator, ?int $expire = null): mixed;
+public function remember(string $name, \Closure $dataGenerator, ?int $expire = null): mixed;
 ```
 
 ::: tip
@@ -368,20 +368,20 @@ public function testRemember(): void
     ]);
     $filePath = __DIR__.'/cache/hello.php';
 
-    $this->assertFalse(is_file($filePath));
-    $this->assertSame(['hello' => 'world'], $cache->remember('hello', function (string $key) {
+    static::assertFalse(is_file($filePath));
+    static::assertSame(['hello' => 'world'], $cache->remember('hello', function (string $key) {
         return [$key => 'world'];
     }));
-    $this->assertTrue(is_file($filePath));
-    $this->assertSame(['hello' => 'world'], $cache->get('hello'));
+    static::assertTrue(is_file($filePath));
+    static::assertSame(['hello' => 'world'], $cache->get('hello'));
 
     $cache->delete('hello');
 
-    $this->assertFalse($cache->get('hello'));
-    $this->assertFalse(is_file($filePath));
+    static::assertFalse($cache->get('hello'));
+    static::assertFalse(is_file($filePath));
 }
 ```
-    
+
 ## remember 缓存存在读取否则重新设置支持过期时间
 
 ``` php
@@ -396,24 +396,24 @@ public function testRememberWithExpire(): void
         unlink($filePath);
     }
 
-    $this->assertFalse(is_file($filePath));
-    $this->assertSame('123456', $cache->remember('hello', function (string $key) {
+    static::assertFalse(is_file($filePath));
+    static::assertSame('123456', $cache->remember('hello', function (string $key) {
         return '123456';
     }, 33));
 
-    $this->assertTrue(is_file($filePath));
-    $this->assertSame('123456', $cache->remember('hello', function (string $key) {
+    static::assertTrue(is_file($filePath));
+    static::assertSame('123456', $cache->remember('hello', function (string $key) {
         return '123456';
     }, 4));
-    $this->assertSame('123456', $cache->get('hello'));
+    static::assertSame('123456', $cache->get('hello'));
 
     $cache->delete('hello');
 
-    $this->assertFalse($cache->get('hello'));
-    $this->assertFalse(is_file($filePath));
+    static::assertFalse($cache->get('hello'));
+    static::assertFalse(is_file($filePath));
 }
 ```
-    
+
 ## has 缓存是否存在
 
 ``` php
@@ -424,13 +424,13 @@ public function testHas(): void
     ]);
     $filePath = __DIR__.'/cache/has.php';
 
-    $this->assertFalse($cache->has('has'));
+    static::assertFalse($cache->has('has'));
     $cache->set('has', 'world');
-    $this->assertTrue(is_file($filePath));
-    $this->assertTrue($cache->has('has'));
+    static::assertTrue(is_file($filePath));
+    static::assertTrue($cache->has('has'));
 }
 ```
-    
+
 ## increase 自增
 
 ``` php
@@ -441,12 +441,12 @@ public function testIncrease(): void
     ]);
     $filePath = __DIR__.'/cache/increase.php';
 
-    $this->assertSame(1, $cache->increase('increase'));
-    $this->assertTrue(is_file($filePath));
-    $this->assertSame(101, $cache->increase('increase', 100));
+    static::assertSame(1, $cache->increase('increase'));
+    static::assertTrue(is_file($filePath));
+    static::assertSame(101, $cache->increase('increase', 100));
 }
 ```
-    
+
 ## decrease 自减
 
 ``` php
@@ -457,12 +457,12 @@ public function testDecrease(): void
     ]);
     $filePath = __DIR__.'/cache/decrease.php';
 
-    $this->assertSame(-1, $cache->decrease('decrease'));
-    $this->assertTrue(is_file($filePath));
-    $this->assertSame(-101, $cache->decrease('decrease', 100));
+    static::assertSame(-1, $cache->decrease('decrease'));
+    static::assertTrue(is_file($filePath));
+    static::assertSame(-101, $cache->decrease('decrease', 100));
 }
 ```
-    
+
 ## ttl 获取缓存剩余时间
 
 剩余时间存在 3 种情况。
@@ -480,18 +480,18 @@ public function testTtl(): void
     ]);
     $filePath = __DIR__.'/cache/ttl.php';
 
-    $this->assertFalse($cache->has('ttl'));
-    $this->assertSame(-2, $cache->ttl('ttl'));
+    static::assertFalse($cache->has('ttl'));
+    static::assertSame(-2, $cache->ttl('ttl'));
     $cache->set('ttl', 'world');
-    $this->assertTrue(is_file($filePath));
-    $this->assertSame(86400, $cache->ttl('ttl'));
+    static::assertTrue(is_file($filePath));
+    static::assertSame(86400, $cache->ttl('ttl'));
     $cache->set('ttl', 'world', 1);
-    $this->assertSame(1, $cache->ttl('ttl'));
+    static::assertSame(1, $cache->ttl('ttl'));
     $cache->set('ttl', 'world', 0);
-    $this->assertSame(-1, $cache->ttl('ttl'));
+    static::assertSame(-1, $cache->ttl('ttl'));
 }
 ```
-    
+
 ## 键值命名规范
 
 缓存键值默认支持正则 `/^[A-Za-z0-9\-\_:.]+$/`，可以通过 `setKeyRegex` 修改。
@@ -509,7 +509,7 @@ public function testInvalidCacheKey(): void
     $cache->set('hello+world', 1);
 }
 ```
-    
+
 ## setKeyRegex 设置缓存键值正则
 
 缓存键值默认支持正则 `/^[A-Za-z0-9\-\_:.]+$/`，可以通过 `setKeyRegex` 修改。
@@ -523,6 +523,6 @@ public function testSetKeyRegex(): void
     ]);
     $cache->setKeyRegex('/^[a-z+]+$/');
     $cache->set('hello+world', 1);
-    $this->assertSame(1, $cache->get('hello+world'));
+    static::assertSame(1, $cache->get('hello+world'));
 }
 ```

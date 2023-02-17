@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Query/ColumnsTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Query/ColumnsTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -30,19 +30,20 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->columns('id')
                 ->columns('name,value')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## SetColumns 设置字段
 
 清空原有字段，然后添加新的字段。
@@ -60,20 +61,21 @@ public function testSetColumns(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->columns('id')
                 ->columns('name,value')
                 ->setColumns('remark')
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Columns 字段支持表达式
 
 ``` php
@@ -83,27 +85,24 @@ public function testColumnsExpressionForSelectString(): void
 
     $sql = <<<'eot'
         [
-            [
-                "SELECT 'foo'",
-                [],
-                false
-            ]
+            "SELECT 'foo'",
+            [],
+            false
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
-            [
-                $connect
-                    ->columns(Condition::raw("'foo'"))
-                    ->findAll(true),
-            ]
+        $this->varJsonSql(
+            $connect
+                ->columns(Condition::raw("'foo'"))
+                ->findAll(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## Columns 字段在连表中的查询
 
 ``` php
@@ -119,14 +118,15 @@ public function testSetColumnsWithTableName(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
                 ->table('test_query')
                 ->setColumns('test_query.name,test_query.value')
                 ->join('test_query_subsql', 'name,value', 'name', '=', Condition::raw('[test_query.name]'))
-                ->findAll(true)
+                ->findAll(),
+            $connect
         )
     );
 }

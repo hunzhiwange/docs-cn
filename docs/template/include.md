@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/View/Compiler/CompilerIncludeTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/View/Compiler/CompilerIncludeTest.php)
 :::
-    
+
 可以使用 include 标签来包含外部的模板文件。
 
 ## 使用完整文件名包含
@@ -30,10 +30,10 @@ public function testBaseUse(): void
         <?php echo $this->display('assets/themes/header', [], '.html'); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 使用 ext 定义模板文件后缀
 
 ``` php
@@ -49,10 +49,10 @@ public function testExt(): void
         <?php echo $this->display('hello', [], '.tpl'); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 使用变量定义完整的文件
 
 ``` php
@@ -70,10 +70,10 @@ public function testVar(): void
         <?php echo $this->display($headTpl); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 包含当前视图目录下的模板文件
 
 ``` php
@@ -89,10 +89,10 @@ public function testInViewDir(): void
         <?php echo $this->display('test'); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 包含其他模块的操作模板
 
 其中模块以目录分隔
@@ -110,10 +110,10 @@ public function testOtherModule(): void
         <?php echo $this->display('public/header'); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```
-    
+
 ## 函数表达式支持
 
 表达式语法为 `()` 包裹起来并且括号周围不能有空格。
@@ -142,6 +142,6 @@ public function testExpr(): void
         <?php echo $this->display($hello); ?>
         eot;
 
-    $this->assertSame($compiled, $parser->doCompile($source, null, true));
+    static::assertSame($compiled, $parser->doCompile($source, null, true));
 }
 ```

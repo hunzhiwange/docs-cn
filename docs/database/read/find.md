@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Read/FindTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Read/FindTest.php)
 :::
-    
+
 **Uses**
 
 ``` php
@@ -26,18 +26,19 @@ public function testBaseUse(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
-                ->find()
+                ->find(),
+            $connect
         )
     );
 }
 ```
-    
+
 ## find 查询指定数量
 
 ``` php
@@ -52,13 +53,14 @@ public function testFindLimit(): void
         ]
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $sql,
-        $this->varJson(
+        $this->varJsonSql(
             $connect
-                ->sql()
+
                 ->table('test')
                 ->find(5),
+            $connect,
             1
         )
     );

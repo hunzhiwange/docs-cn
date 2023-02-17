@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Kernel/Bootstrap/TraverseProviderTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Kernel/Bootstrap/TraverseProviderTest.php)
 :::
-    
+
 QueryPHP 在内核执行过程中会执行初始化，分为 4 个步骤，载入配置、载入语言包、注册异常运行时和遍历服务提供者注册服务。
 
 内核初始化，包括 `\Leevel\Kernel\IKernel::bootstrap` 和 `\Leevel\Kernel\IKernelConsole::bootstrap` 均会执行上述 4 个步骤。
@@ -132,19 +132,19 @@ public function testBaseUse(): void
         return $option;
     });
 
-    $this->assertNull($bootstrap->handle($app));
+    static::assertNull($bootstrap->handle($app));
 
     // for deferredAlias
-    $this->assertArrayNotHasKey('providerDeferTest1', $_SERVER);
+    static::assertArrayNotHasKey('providerDeferTest1', $_SERVER);
     $container->alias(ProviderDeferTest1::providers());
-    $this->assertSame('bar', $container->make('foo'));
-    $this->assertSame('bar', $container->make(ProviderDeferTest1::class));
-    $this->assertSame(1, $_SERVER['providerDeferTest1']);
+    static::assertSame('bar', $container->make('foo'));
+    static::assertSame('bar', $container->make(ProviderDeferTest1::class));
+    static::assertSame(1, $_SERVER['providerDeferTest1']);
 
     // for providers
-    $this->assertSame(1, $_SERVER['testRegisterProvidersRegister']);
-    $this->assertSame(1, $_SERVER['testRegisterProvidersBootstrap']);
-    $this->assertTrue($container->isBootstrap());
+    static::assertSame(1, $_SERVER['testRegisterProvidersRegister']);
+    static::assertSame(1, $_SERVER['testRegisterProvidersBootstrap']);
+    static::assertTrue($container->isBootstrap());
 
     unset(
         $_SERVER['providerDeferTest1'],

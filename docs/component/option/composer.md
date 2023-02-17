@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Option/ComposerOptionTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Option/ComposerOptionTest.php)
 :::
-    
+
 QueryPHP 系统服务提供者、应用命令、扩展配置和扩展语言包等都在 `composer` 中进行定义。
 
 **Uses**
@@ -84,14 +84,14 @@ public function testBaseUse(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $options
         )
     );
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $composerOption->loadData()

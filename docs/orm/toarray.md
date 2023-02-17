@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/EntityToArrayTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/EntityToArrayTest.php)
 :::
-    
+
 我们可以将实体导出为数组来方便处理数据。
 
 
@@ -50,26 +50,39 @@ protected function makeEntity(): DemoToArrayEntity
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoToArrayEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'          => [],
-        'name'        => [],
-        'description' => [],
-        'address'     => [],
-        'foo_bar'     => [],
-        'hello'       => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+    ])]
+    protected ?string $hello = null;
 }
 ```
 
@@ -89,7 +102,7 @@ public function testBaseUse(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -97,7 +110,7 @@ public function testBaseUse(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持白名单
 
 `toArray` 第一个参数为白名单，设置了白名单，只有白名单的字段才能够转换为数组数据。
@@ -118,7 +131,7 @@ public function testWithWhite(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -131,7 +144,7 @@ public function testWithWhite(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -148,7 +161,7 @@ public function testWithWhite(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -166,7 +179,7 @@ public function testWithWhite(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -177,7 +190,7 @@ public function testWithWhite(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持黑名单
 
 `toArray` 第二个参数为白名单，设置了黑名单但是没有设置白名单，只有不属于黑名单的字段才能够转换为数组数据。
@@ -198,7 +211,7 @@ public function testWithBlack(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -214,7 +227,7 @@ public function testWithBlack(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -232,7 +245,7 @@ public function testWithBlack(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -249,7 +262,7 @@ public function testWithBlack(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -260,7 +273,7 @@ public function testWithBlack(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持字段设置为白名单
 
 可以通过 `STRUCT` 中的定义 `\Leevel\Database\Ddd\Entity::SHOW_PROP_WHITE` 来设置字段白名单。
@@ -293,30 +306,41 @@ protected function makeWhiteEntity(): DemoToArrayWhiteEntity
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoToArrayWhiteEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'          => [],
-        'name'        => [],
-        'description' => [
-            self::SHOW_PROP_WHITE => true,
-        ],
-        'address'     => [],
-        'foo_bar'     => [
-            self::SHOW_PROP_WHITE => true,
-        ],
-        'hello'       => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+        self::SHOW_PROP_WHITE => true,
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+        self::SHOW_PROP_WHITE => true,
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+    ])]
+    protected ?string $hello = null;
 }
 ```
 
@@ -333,7 +357,7 @@ public function testWithWhiteEntity(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -341,7 +365,7 @@ public function testWithWhiteEntity(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持字段设置为黑名单
 
 可以通过 `STRUCT` 中的定义 `\Leevel\Database\Ddd\Entity::SHOW_PROP_BLACK` 来设置字段黑名单。
@@ -374,30 +398,41 @@ protected function makeBlackEntity(): DemoToArrayBlackEntity
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoToArrayBlackEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'          => [],
-        'name'        => [],
-        'description' => [
-            self::SHOW_PROP_BLACK => true,
-        ],
-        'address'     => [],
-        'foo_bar'     => [
-            self::SHOW_PROP_BLACK => true,
-        ],
-        'hello'       => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+        self::SHOW_PROP_BLACK => true,
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+        self::SHOW_PROP_BLACK => true,
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+    ])]
+    protected ?string $hello = null;
 }
 ```
 
@@ -415,7 +450,7 @@ public function testWithBlackEntity(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -423,7 +458,7 @@ public function testWithBlackEntity(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持转换关联实体数据
 
 **fixture 定义**
@@ -451,130 +486,161 @@ protected function makeRelationEntity(): Post
 ``` php
 namespace Tests\Database\Ddd\Entity\Relation;
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
 use Leevel\Database\Ddd\Relation\ManyMany;
+use Leevel\Database\Ddd\Struct;
 
 class User extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'user';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'name'      => [],
-        'create_at' => [],
-        'role'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_middle_with_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'withSoftDeleted',
-        ],
-        'role_middle_only_soft_deleted'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'onlySoftDeleted',
-        ],
-        'role_relation_scope_not_found'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'notFound',
-        ],
-        'role_relation_scope_found_but_private'      => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'foundButPrivate',
-        ],
-        'role_not_defined_middle_entity'      => [
-            self::MANY_MANY         => Role::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_source_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_target_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_middle_source_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-        ],
-        'role_not_defined_middle_target_key'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-        ],
-        'role_middle_field'      => [
-            self::MANY_MANY         => Role::class,
-            self::MIDDLE_ENTITY     => UserRole::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'middleField',
-        ],
-        'role_middle_only_soft_deleted_and_middle_field_and_other_table_condition' => [
-            self::MANY_MANY         => RoleSoftDeleted::class,
-            self::MIDDLE_ENTITY     => UserRoleSoftDeleted::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'id',
-            self::MIDDLE_SOURCE_KEY => 'user_id',
-            self::MIDDLE_TARGET_KEY => 'role_id',
-            self::RELATION_SCOPE    => 'middleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition',
-        ],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $role = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleSoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'withSoftDeleted',
+    ])]
+    protected ?Collection $roleMiddleWithSoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'onlySoftDeleted',
+    ])]
+    protected ?Collection $roleMiddleOnlySoftDeleted = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'notFound',
+    ])]
+    protected ?Collection $roleRelationScopeNotFound = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'foundButPrivate',
+    ])]
+    protected ?Collection $roleRelationScopeFoundButPrivate = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleEntity = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleSourceKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+    ])]
+    protected ?Collection $roleNotDefinedMiddleTargetKey = null;
+
+    #[Struct([
+        self::MANY_MANY => Role::class,
+        self::MIDDLE_ENTITY => UserRole::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'middleField',
+    ])]
+    protected ?Collection $roleMiddleField = null;
+
+    #[Struct([
+        self::MANY_MANY => RoleSoftDeleted::class,
+        self::MIDDLE_ENTITY => UserRoleSoftDeleted::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+        self::MIDDLE_SOURCE_KEY => 'user_id',
+        self::MIDDLE_TARGET_KEY => 'role_id',
+        self::RELATION_SCOPE => 'middleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition',
+    ])]
+    protected ?Collection $roleMiddleOnlySoftDeletedAndMiddleFieldAndOtherTableCondition = null;
 
     protected function relationScopeWithSoftDeleted(ManyMany $relation): void
     {
@@ -597,9 +663,11 @@ class User extends Entity
             ->middleOnlySoftDeleted()
             ->middleField(['create_at', 'middle_id' => 'id'])
             ->setColumns('id,name')
-            ->where('id', '>', 3);
+            ->where('id', '>', 3)
+        ;
     }
 
+    /** @phpstan-ignore-next-line */
     private function relationScopeFoundButPrivate(ManyMany $relation): void
     {
     }
@@ -611,76 +679,106 @@ class User extends Entity
 ``` php
 namespace Tests\Database\Ddd\Entity\Relation;
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
 use Leevel\Database\Ddd\Relation\Relation;
+use Leevel\Database\Ddd\Struct;
 
 class Post extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'post';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY           => true,
-        ],
-        'title'     => [],
-        'user_id'   => [],
-        'summary'   => [],
-        'create_at' => [],
-        'delete_at' => [
-            self::CREATE_FILL => 0,
-        ],
-        'user'      => [
-            self::BELONGS_TO     => User::class,
-            self::SOURCE_KEY     => 'user_id',
-            self::TARGET_KEY     => 'id',
-        ],
-        'comment' => [
-            self::HAS_MANY          => Comment::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'post_id',
-            self::RELATION_SCOPE    => 'comment',
-        ],
-        'post_content' => [
-            self::HAS_ONE     => PostContent::class,
-            self::SOURCE_KEY  => 'id',
-            self::TARGET_KEY  => 'post_id',
-        ],
-        'user_not_defined_source_key'      => [
-            self::BELONGS_TO     => User::class,
-            self::TARGET_KEY     => 'id',
-        ],
-        'user_not_defined_target_key'      => [
-            self::BELONGS_TO     => User::class,
-            self::SOURCE_KEY     => 'id',
-        ],
-        'comment_not_defined_source_key' => [
-            self::HAS_MANY          => Comment::class,
-            self::TARGET_KEY        => 'post_id',
-            self::RELATION_SCOPE    => 'comment',
-        ],
-        'comment_not_defined_target_key' => [
-            self::HAS_MANY          => Comment::class,
-            self::SOURCE_KEY        => 'id',
-            self::RELATION_SCOPE    => 'comment',
-        ],
-        'post_content_not_defined_source_key' => [
-            self::HAS_ONE     => PostContent::class,
-            self::TARGET_KEY  => 'post_id',
-        ],
-        'post_content_not_defined_target_key' => [
-            self::HAS_ONE     => PostContent::class,
-            self::SOURCE_KEY  => 'id',
-        ],
-    ];
-
     public const DELETE_AT = 'delete_at';
+
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $title = null;
+
+    #[Struct([
+    ])]
+    protected ?int $userId = null;
+
+    #[Struct([
+    ])]
+    protected ?string $summary = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::CREATE_FILL => 0,
+    ])]
+    protected ?int $deleteAt = null;
+
+    #[Struct([
+        self::BELONGS_TO => User::class,
+        self::SOURCE_KEY => 'user_id',
+        self::TARGET_KEY => 'id',
+    ])]
+    protected ?User $user = null;
+
+    #[Struct([
+        self::HAS_MANY => Comment::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'post_id',
+        self::RELATION_SCOPE => 'comment',
+    ])]
+    protected ?Collection $comment = null;
+
+    #[Struct([
+        self::HAS_ONE => PostContent::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'post_id',
+    ])]
+    protected ?PostContent $postContent = null;
+
+    #[Struct([
+        self::BELONGS_TO => User::class,
+        self::TARGET_KEY => 'id',
+    ])]
+    protected ?int $userNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::BELONGS_TO => User::class,
+        self::SOURCE_KEY => 'id',
+    ])]
+    protected ?int $userNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::HAS_MANY => Comment::class,
+        self::TARGET_KEY => 'post_id',
+        self::RELATION_SCOPE => 'comment',
+    ])]
+    protected ?int $commentNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::HAS_MANY => Comment::class,
+        self::SOURCE_KEY => 'id',
+        self::RELATION_SCOPE => 'comment',
+    ])]
+    protected ?int $commentNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::HAS_ONE => PostContent::class,
+        self::TARGET_KEY => 'post_id',
+    ])]
+    protected ?int $postContentNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::HAS_ONE => PostContent::class,
+        self::SOURCE_KEY => 'id',
+    ])]
+    protected ?int $postContentNotDefinedTargetKey = null;
 
     protected function relationScopeComment(Relation $relation): void
     {
@@ -708,7 +806,7 @@ public function testWithRelation(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -716,7 +814,7 @@ public function testWithRelation(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持转换关联实体数据（黑白名单）
 
 `toArray` 第三个参数为关联实体的黑白名单。
@@ -739,7 +837,7 @@ public function testWithRelationWhiteAndBlack(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity
@@ -755,7 +853,7 @@ public function testWithRelationWhiteAndBlack(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持 NULL 值字段默认指定数据
 
 **fixture 定义**
@@ -779,32 +877,42 @@ protected function makeShowPropNullEntity(): DemoToArrayShowPropNullEntity
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoToArrayShowPropNullEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'          => [],
-        'name'        => [],
-        'description' => [],
-        'address'     => [
-            self::SHOW_PROP_NULL => '',
-        ],
-        'foo_bar'     => [
-            self::SHOW_PROP_NULL => null,
-        ],
-        'hello'       => [
-            self::SHOW_PROP_NULL => 'default_value',
-        ],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+        self::SHOW_PROP_NULL => '',
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+        self::SHOW_PROP_NULL => null,
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+        self::SHOW_PROP_NULL => 'default_value',
+    ])]
+    protected ?string $hello = null;
 }
 ```
 
@@ -824,7 +932,7 @@ public function testWithShowPropNull(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()
@@ -832,7 +940,7 @@ public function testWithShowPropNull(): void
     );
 }
 ```
-    
+
 ## toArray 实体对象转数组支持 NULL 值字段默认指定数据（关联模型）
 
 **fixture 定义**
@@ -860,22 +968,23 @@ protected function makeRelationShowPropNullEntity(): DemoToArrayShowPropNullRela
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoToArrayShowPropNullRelationTargetEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'          => [],
-        'name'        => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
 }
 ```
 
@@ -885,37 +994,49 @@ class DemoToArrayShowPropNullRelationTargetEntity extends Entity
 namespace Tests\Database\Ddd\Entity;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class DemoToArrayShowPropNullRelationEntity extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'test';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'          => [],
-        'name'        => [],
-        'description' => [],
-        'address'     => [
-            self::SHOW_PROP_NULL => '',
-        ],
-        'foo_bar'     => [
-            self::SHOW_PROP_NULL => null,
-        ],
-        'hello'       => [
-            self::SHOW_PROP_NULL => 'default_value',
-        ],
-        'target' => [
-            self::HAS_ONE     => DemoToArrayShowPropNullRelationTargetEntity::class,
-            self::SOURCE_KEY  => 'id',
-            self::TARGET_KEY  => 'id',
-        ],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $description = null;
+
+    #[Struct([
+        self::SHOW_PROP_NULL => '',
+    ])]
+    protected ?string $address = null;
+
+    #[Struct([
+        self::SHOW_PROP_NULL => null,
+    ])]
+    protected ?string $fooBar = null;
+
+    #[Struct([
+        self::SHOW_PROP_NULL => 'default_value',
+    ])]
+    protected ?string $hello = null;
+
+    #[Struct([
+        self::HAS_ONE => DemoToArrayShowPropNullRelationTargetEntity::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'id',
+    ])]
+    protected ?DemoToArrayShowPropNullRelationTargetEntity $target = null;
 }
 ```
 
@@ -940,7 +1061,7 @@ public function testWithShowPropNullForRelation(): void
         }
         eot;
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             $entity->toArray()

@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Auth/ManagerTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Auth/ManagerTest.php)
 :::
-    
+
 QueryPHP 提供了一组简单的认证组件用于登陆验证，通常我们使用代理 `\Leevel\Auth\Proxy\Auth` 类进行静态调用。
 
 内置支持的认证驱动类型包括 session、token，分别用于 web 和 api 的认证服务。
@@ -172,21 +172,21 @@ public function testBaseUse(): void
 {
     $manager = $this->createManager();
 
-    $this->assertFalse($manager->isLogin());
-    $this->assertSame([], $manager->getLogin());
+    static::assertFalse($manager->isLogin());
+    static::assertSame([], $manager->getLogin());
 
-    $this->assertNull($manager->login(['foo' => 'bar', 'hello' => 'world'], 10));
+    static::assertNull($manager->login(['foo' => 'bar', 'hello' => 'world'], 10));
 
-    $this->assertTrue($manager->isLogin());
-    $this->assertSame(['foo' => 'bar', 'hello' => 'world'], $manager->getLogin());
+    static::assertTrue($manager->isLogin());
+    static::assertSame(['foo' => 'bar', 'hello' => 'world'], $manager->getLogin());
 
-    $this->assertNull($manager->logout());
+    static::assertNull($manager->logout());
 
-    $this->assertFalse($manager->isLogin());
-    $this->assertSame([], $manager->getLogin());
+    static::assertFalse($manager->isLogin());
+    static::assertSame([], $manager->getLogin());
 }
 ```
-    
+
 ## setTokenName 设置认证名字
 
 ``` php
@@ -196,21 +196,21 @@ public function testWithToken(): void
 
     $manager->setTokenName('token');
 
-    $this->assertFalse($manager->isLogin());
-    $this->assertSame([], $manager->getLogin());
+    static::assertFalse($manager->isLogin());
+    static::assertSame([], $manager->getLogin());
 
-    $this->assertNull($manager->login(['foo' => 'bar', 'hello' => 'world'], 10));
+    static::assertNull($manager->login(['foo' => 'bar', 'hello' => 'world'], 10));
 
-    $this->assertTrue($manager->isLogin());
-    $this->assertSame(['foo' => 'bar', 'hello' => 'world'], $manager->getLogin());
+    static::assertTrue($manager->isLogin());
+    static::assertSame(['foo' => 'bar', 'hello' => 'world'], $manager->getLogin());
 
-    $this->assertNull($manager->logout());
+    static::assertNull($manager->logout());
 
-    $this->assertFalse($manager->isLogin());
-    $this->assertSame([], $manager->getLogin());
+    static::assertFalse($manager->isLogin());
+    static::assertSame([], $manager->getLogin());
 }
 ```
-    
+
 ## setDefaultConnect 设置默认驱动
 
 ``` php
@@ -222,17 +222,17 @@ public function testSetDefaultDriver(): void
 
     $manager->setTokenName('token');
 
-    $this->assertFalse($manager->isLogin());
-    $this->assertSame([], $manager->getLogin());
+    static::assertFalse($manager->isLogin());
+    static::assertSame([], $manager->getLogin());
 
-    $this->assertNull($manager->login(['foo' => 'bar', 'hello' => 'world'], 10));
+    static::assertNull($manager->login(['foo' => 'bar', 'hello' => 'world'], 10));
 
-    $this->assertTrue($manager->isLogin());
-    $this->assertSame(['foo' => 'bar', 'hello' => 'world'], $manager->getLogin());
+    static::assertTrue($manager->isLogin());
+    static::assertSame(['foo' => 'bar', 'hello' => 'world'], $manager->getLogin());
 
-    $this->assertNull($manager->logout());
+    static::assertNull($manager->logout());
 
-    $this->assertFalse($manager->isLogin());
-    $this->assertSame([], $manager->getLogin());
+    static::assertFalse($manager->isLogin());
+    static::assertSame([], $manager->getLogin());
 }
 ```

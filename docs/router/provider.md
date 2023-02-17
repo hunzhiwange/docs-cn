@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Router/RouterProviderTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Router/RouterProviderTest.php)
 :::
-    
+
 路由主要由路由服务来接入框架，可以做一些设置。
 
 ``` php
@@ -12,7 +12,6 @@ namespace App\Infra\Provider;
 use App\Middleware\Auth;
 use Leevel\Router\RouterProvider;
 use Leevel\Session\Middleware\Session;
-use Leevel\Throttler\Middleware\Throttler;
 
 class Router extends RouterProvider
 {
@@ -43,8 +42,8 @@ class Router extends RouterProvider
      * - 例外在应用执行结束后响应环节也会调用 HTTP 中间件.
      */
     protected array $middlewareAlias = [
-        'auth'       => Auth::class,
-        'session'    => Session::class,
+        'auth' => Auth::class,
+        'session' => Session::class,
     ];
 
     /**
@@ -63,9 +62,9 @@ class Router extends RouterProvider
      * 分组.
      */
     protected array $groups = [
-        'pet'     => [],
-        'store'   => [],
-        'user'    => [],
+        'pet' => [],
+        'store' => [],
+        'user' => [],
         '/api/v1' => [
             'middlewares' => 'api',
         ],
@@ -155,9 +154,9 @@ class RouterProvider1 extends RouterProvider
     protected array $basePaths = [];
 
     protected array $groups = [
-        'pet'     => [],
-        'store'   => [],
-        'user'    => [],
+        'pet' => [],
+        'store' => [],
+        'user' => [],
         '/api/v1' => [
             'middlewares' => 'group1',
         ],
@@ -289,18 +288,18 @@ public function testBaseUse(): void
 
     $provider = new RouterProvider1($container);
 
-    $this->assertNull($provider->register());
-    $this->assertNull($provider->bootstrap());
+    static::assertNull($provider->register());
+    static::assertNull($provider->bootstrap());
 
     $data = file_get_contents(__DIR__.'/Apps/AppScanRouter/data.json');
 
-    $this->assertSame(
+    static::assertSame(
         $data,
         $this->varJson(
             [
-                'base_paths'  => $router->getBasePaths(),
-                'groups'      => $router->getGroups(),
-                'routers'     => $router->getRouters(),
+                'base_paths' => $router->getBasePaths(),
+                'groups' => $router->getGroups(),
+                'routers' => $router->getRouters(),
             ]
         )
     );

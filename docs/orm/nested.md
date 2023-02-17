@@ -3,7 +3,7 @@
 ::: tip Testing Is Documentation
 [tests/Database/Ddd/Relation/NestedTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Ddd/Relation/NestedTest.php)
 :::
-    
+
 预加载关联可以减少查询，并且支持嵌套，通过 `.` 分隔嵌套关联。
 
 
@@ -12,7 +12,7 @@
 ``` php
 <?php
 
-use Leevel\Support\Collection;
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Tests\Database\DatabaseTestCase as TestCase;
 use Tests\Database\Ddd\Entity\Relation\Post;
 use Tests\Database\Ddd\Entity\Relation\Role;
@@ -29,76 +29,106 @@ use Tests\Database\Ddd\Entity\Relation\UserRole;
 ``` php
 namespace Tests\Database\Ddd\Entity\Relation;
 
+use Leevel\Database\Ddd\EntityCollection as Collection;
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
 use Leevel\Database\Ddd\Relation\Relation;
+use Leevel\Database\Ddd\Struct;
 
 class Post extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'post';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id' => [
-            self::READONLY           => true,
-        ],
-        'title'     => [],
-        'user_id'   => [],
-        'summary'   => [],
-        'create_at' => [],
-        'delete_at' => [
-            self::CREATE_FILL => 0,
-        ],
-        'user'      => [
-            self::BELONGS_TO     => User::class,
-            self::SOURCE_KEY     => 'user_id',
-            self::TARGET_KEY     => 'id',
-        ],
-        'comment' => [
-            self::HAS_MANY          => Comment::class,
-            self::SOURCE_KEY        => 'id',
-            self::TARGET_KEY        => 'post_id',
-            self::RELATION_SCOPE    => 'comment',
-        ],
-        'post_content' => [
-            self::HAS_ONE     => PostContent::class,
-            self::SOURCE_KEY  => 'id',
-            self::TARGET_KEY  => 'post_id',
-        ],
-        'user_not_defined_source_key'      => [
-            self::BELONGS_TO     => User::class,
-            self::TARGET_KEY     => 'id',
-        ],
-        'user_not_defined_target_key'      => [
-            self::BELONGS_TO     => User::class,
-            self::SOURCE_KEY     => 'id',
-        ],
-        'comment_not_defined_source_key' => [
-            self::HAS_MANY          => Comment::class,
-            self::TARGET_KEY        => 'post_id',
-            self::RELATION_SCOPE    => 'comment',
-        ],
-        'comment_not_defined_target_key' => [
-            self::HAS_MANY          => Comment::class,
-            self::SOURCE_KEY        => 'id',
-            self::RELATION_SCOPE    => 'comment',
-        ],
-        'post_content_not_defined_source_key' => [
-            self::HAS_ONE     => PostContent::class,
-            self::TARGET_KEY  => 'post_id',
-        ],
-        'post_content_not_defined_target_key' => [
-            self::HAS_ONE     => PostContent::class,
-            self::SOURCE_KEY  => 'id',
-        ],
-    ];
-
     public const DELETE_AT = 'delete_at';
+
+    #[Struct([
+        self::READONLY => true,
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $title = null;
+
+    #[Struct([
+    ])]
+    protected ?int $userId = null;
+
+    #[Struct([
+    ])]
+    protected ?string $summary = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+        self::CREATE_FILL => 0,
+    ])]
+    protected ?int $deleteAt = null;
+
+    #[Struct([
+        self::BELONGS_TO => User::class,
+        self::SOURCE_KEY => 'user_id',
+        self::TARGET_KEY => 'id',
+    ])]
+    protected ?User $user = null;
+
+    #[Struct([
+        self::HAS_MANY => Comment::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'post_id',
+        self::RELATION_SCOPE => 'comment',
+    ])]
+    protected ?Collection $comment = null;
+
+    #[Struct([
+        self::HAS_ONE => PostContent::class,
+        self::SOURCE_KEY => 'id',
+        self::TARGET_KEY => 'post_id',
+    ])]
+    protected ?PostContent $postContent = null;
+
+    #[Struct([
+        self::BELONGS_TO => User::class,
+        self::TARGET_KEY => 'id',
+    ])]
+    protected ?int $userNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::BELONGS_TO => User::class,
+        self::SOURCE_KEY => 'id',
+    ])]
+    protected ?int $userNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::HAS_MANY => Comment::class,
+        self::TARGET_KEY => 'post_id',
+        self::RELATION_SCOPE => 'comment',
+    ])]
+    protected ?int $commentNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::HAS_MANY => Comment::class,
+        self::SOURCE_KEY => 'id',
+        self::RELATION_SCOPE => 'comment',
+    ])]
+    protected ?int $commentNotDefinedTargetKey = null;
+
+    #[Struct([
+        self::HAS_ONE => PostContent::class,
+        self::TARGET_KEY => 'post_id',
+    ])]
+    protected ?int $postContentNotDefinedSourceKey = null;
+
+    #[Struct([
+        self::HAS_ONE => PostContent::class,
+        self::SOURCE_KEY => 'id',
+    ])]
+    protected ?int $postContentNotDefinedTargetKey = null;
 
     protected function relationScopeComment(Relation $relation): void
     {
@@ -113,24 +143,35 @@ class Post extends Entity
 namespace Tests\Database\Ddd\Entity\Relation;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class UserRole extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'user_role';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'user_id'   => [],
-        'role_id'   => [],
-        'create_at' => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?int $userId = null;
+
+    #[Struct([
+    ])]
+    protected ?int $roleId = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
+
+    #[Struct([
+    ])]
+    protected ?int $deleteAt = null;
 }
 ```
 
@@ -140,23 +181,27 @@ class UserRole extends Entity
 namespace Tests\Database\Ddd\Entity\Relation;
 
 use Leevel\Database\Ddd\Entity;
-use Leevel\Database\Ddd\GetterSetter;
+use Leevel\Database\Ddd\Struct;
 
 class Role extends Entity
 {
-    use GetterSetter;
-
     public const TABLE = 'role';
 
     public const ID = 'id';
 
     public const AUTO = 'id';
 
-    public const STRUCT = [
-        'id'        => [],
-        'name'      => [],
-        'create_at' => [],
-    ];
+    #[Struct([
+    ])]
+    protected ?int $id = null;
+
+    #[Struct([
+    ])]
+    protected ?string $name = null;
+
+    #[Struct([
+    ])]
+    protected ?string $createAt = null;
 }
 ```
 
@@ -167,25 +212,25 @@ public function testBase(): void
     $posts = Post::select()->limit(5)->findAll();
 
     $this->assertInstanceof(Collection::class, $posts);
-    $this->assertCount(0, $posts);
+    static::assertCount(0, $posts);
 
     $connect = $this->createDatabaseConnect();
 
-    for ($i = 0; $i <= 5; $i++) {
-        $this->assertSame(
+    for ($i = 0; $i <= 5; ++$i) {
+        static::assertSame(
             $i + 1,
             $connect
                 ->table('post')
                 ->insert([
-                    'title'     => 'hello world',
-                    'user_id'   => 1,
-                    'summary'   => 'Say hello to the world.',
+                    'title' => 'hello world',
+                    'user_id' => 1,
+                    'summary' => 'Say hello to the world.',
                     'delete_at' => 0,
                 ])
         );
     }
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user')
@@ -194,7 +239,7 @@ public function testBase(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('role')
@@ -203,7 +248,7 @@ public function testBase(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('role')
@@ -212,7 +257,7 @@ public function testBase(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         3,
         $connect
             ->table('role')
@@ -221,7 +266,7 @@ public function testBase(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         1,
         $connect
             ->table('user_role')
@@ -231,7 +276,7 @@ public function testBase(): void
             ])
     );
 
-    $this->assertSame(
+    static::assertSame(
         2,
         $connect
             ->table('user_role')
@@ -243,36 +288,37 @@ public function testBase(): void
 
     $posts = Post::eager(['user.role'])
         ->limit(5)
-        ->findAll();
+        ->findAll()
+    ;
 
     $this->assertInstanceof(Collection::class, $posts);
-    $this->assertCount(5, $posts);
+    static::assertCount(5, $posts);
 
     $post = Post::select()->where('id', 1)->findOne();
 
-    $this->assertSame(1, $post->id);
-    $this->assertSame(1, $post['id']);
-    $this->assertSame(1, $post->getId());
-    $this->assertSame(1, $post->user_id);
-    $this->assertSame(1, $post->userId);
-    $this->assertSame(1, $post['user_id']);
-    $this->assertSame(1, $post->getUserId());
-    $this->assertSame('hello world', $post->title);
-    $this->assertSame('hello world', $post['title']);
-    $this->assertSame('hello world', $post->getTitle());
-    $this->assertSame('Say hello to the world.', $post->summary);
-    $this->assertSame('Say hello to the world.', $post['summary']);
-    $this->assertSame('Say hello to the world.', $post->getSummary());
+    static::assertSame(1, $post->id);
+    static::assertSame(1, $post['id']);
+    static::assertSame(1, $post->getId());
+    static::assertSame(1, $post->user_id);
+    static::assertSame(1, $post->userId);
+    static::assertSame(1, $post['user_id']);
+    static::assertSame(1, $post->getUserId());
+    static::assertSame('hello world', $post->title);
+    static::assertSame('hello world', $post['title']);
+    static::assertSame('hello world', $post->getTitle());
+    static::assertSame('Say hello to the world.', $post->summary);
+    static::assertSame('Say hello to the world.', $post['summary']);
+    static::assertSame('Say hello to the world.', $post->getSummary());
 
     $user = $post->user;
 
     $this->assertInstanceof(User::class, $user);
-    $this->assertSame(1, $user->id);
-    $this->assertSame(1, $user['id']);
-    $this->assertSame(1, $user->getId());
-    $this->assertSame('niu', $user->name);
-    $this->assertSame('niu', $user['name']);
-    $this->assertSame('niu', $user->getName());
+    static::assertSame(1, $user->id);
+    static::assertSame(1, $user['id']);
+    static::assertSame(1, $user->getId());
+    static::assertSame('niu', $user->name);
+    static::assertSame('niu', $user['name']);
+    static::assertSame('niu', $user->getName());
 
     $role = $user->role;
 
@@ -281,36 +327,36 @@ public function testBase(): void
     $user1 = $role[0];
 
     $this->assertInstanceof(Role::class, $user1);
-    $this->assertSame(1, $user1->id);
-    $this->assertSame(1, $user1['id']);
-    $this->assertSame(1, $user1->getId());
-    $this->assertSame('管理员', $user1->name);
-    $this->assertSame('管理员', $user1['name']);
-    $this->assertSame('管理员', $user1->getName());
+    static::assertSame(1, $user1->id);
+    static::assertSame(1, $user1['id']);
+    static::assertSame(1, $user1->getId());
+    static::assertSame('管理员', $user1->name);
+    static::assertSame('管理员', $user1['name']);
+    static::assertSame('管理员', $user1->getName());
 
     $user2 = $role[1];
     $this->assertInstanceof(Role::class, $user2);
-    $this->assertSame(3, $user2->id);
-    $this->assertSame(3, $user2['id']);
-    $this->assertSame(3, $user2->getId());
-    $this->assertSame('会员', $user2->name);
-    $this->assertSame('会员', $user2['name']);
-    $this->assertSame('会员', $user2->getName());
+    static::assertSame(3, $user2->id);
+    static::assertSame(3, $user2['id']);
+    static::assertSame(3, $user2->getId());
+    static::assertSame('会员', $user2->name);
+    static::assertSame('会员', $user2['name']);
+    static::assertSame('会员', $user2->getName());
 
-    $this->assertCount(2, $role);
-    $this->assertSame(1, $role[0]['id']);
-    $this->assertSame('管理员', $role[0]['name']);
-    $this->assertSame(3, $role[1]['id']);
-    $this->assertSame('会员', $role[1]['name']);
+    static::assertCount(2, $role);
+    static::assertSame(1, $role[0]['id']);
+    static::assertSame('管理员', $role[0]['name']);
+    static::assertSame(3, $role[1]['id']);
+    static::assertSame('会员', $role[1]['name']);
 
     $middle = $role[0]->middle();
     $this->assertInstanceof(UserRole::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(1, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(1, $middle->roleId);
 
     $middle = $role[1]->middle();
     $this->assertInstanceof(UserRole::class, $middle);
-    $this->assertSame(1, $middle->userId);
-    $this->assertSame(3, $middle->roleId);
+    static::assertSame(1, $middle->userId);
+    static::assertSame(3, $middle->roleId);
 }
 ```
