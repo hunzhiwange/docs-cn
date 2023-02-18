@@ -678,12 +678,9 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
           link: '/docs/component/stack'
         },
         {
-          title: groupB,
+          text: 'encryption',
+          link: '/docs/component/encryption',
           items: [
-            {
-              text: 'encryption',
-              link: '/docs/component/encryption'
-            },
             {
               text: 'encryption helper',
               link: '/docs/component/encryption/helper'
@@ -691,12 +688,9 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
           ],
         },
         {
-          title: groupC,
+          text: groupC,
+          link: '/docs/component/option',
           items: [
-            {
-              text: 'option',
-              link: '/docs/component/option'
-            },
             {
               text: 'option composer',
               link: '/docs/component/option/composer'
@@ -704,45 +698,75 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
           ],
         },
         {
-          title: groupD,
+          text: 'cache',
+          link: '/docs/component/cache'
+        },
+        {
+          text: 'session',
+          link: '/docs/component/session'
+        },
+        {
+          text: 'page',
+          link: '/docs/component/page'
+        },
+        {
+          text: 'debug',
+          link: '/docs/component/debug'
+        },
+        {
+          text: 'log',
+          link: '/docs/component/log'
+        },
+        {
+          text: 'HTTP',
+          link: '/docs/component/http/',
           items: [
             {
-              text: 'cache',
-              link: '/docs/component/cache'
+              text: 'request',
+              link: '/docs/component/http/request'
+            },
+            {
+              text: 'response',
+              link: '/docs/component/http/response'
+            },
+            {
+              text: 'jsonresponse',
+              link: '/docs/component/http/jsonresponse'
+            },
+            {
+              text: 'redirectresponse',
+              link: '/docs/component/http/redirectresponse'
             },
           ],
         },
-        'session',
-        'page',
-        'debug',
-        'log',
         {
-          title: 'HTTP',
+          text: groupF,
+          link: '/docs/component/filesystem',
           items: [
-            'http/',
-            'http/request',
-            'http/response',
-            'http/jsonresponse',
-            'http/redirectresponse',
-          ],
-        },
-        'cache',
-        {
-          title: groupF,
-          items: [
-            'filesystem',
-            'filesystem/helper',
+            {
+              text: 'helper',
+              link: '/docs/component/filesystem/helper'
+            },
           ],
         },
         {
-          title: groupG,
+          text: groupG,
+          link: '/docs/component/console',
           items: [
-            'console',
-            'console/makecommand',
-            'console/runcommand',
+            {
+              text: 'makecommand',
+              link: '/docs/component/console/makecommand'
+            },
+            {
+              text: 'runcommand',
+              link: '/docs/component/console/runcommand'
+            },
           ],
         },
-        'view',
+        {
+          text: 'view',
+          link: '/docs/component/view'
+        },
       ]
     }
   ]
