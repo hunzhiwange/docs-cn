@@ -1,1 +1,0 @@
-import{_ as e,o as t,c as s,a}from"./app.8bdf5597.js";const m=JSON.parse('{"title":"开发指南","description":"","frontmatter":{},"headers":[],"relativePath":"docs/guide/index.md"}'),o={name:"docs/guide/index.md"},c=a("",3),r=[c];function n(i,_,d,p,h,l){return t(),s("div",null,r)}const f=e(o,[["render",n]]);export{m as __pageData,f as default};
