@@ -12,8 +12,6 @@
 <?php
 
 use Leevel\Support\Collection;
-use Leevel\Support\IArray;
-use Leevel\Support\IJson;
 ```
 
 ## 基本使用

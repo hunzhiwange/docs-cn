@@ -636,38 +636,80 @@ function genSidebarConfigComponentDoc (groupA, groupB, groupC, groupD, groupE, g
           link: '/docs/component/support/enum'
         },
         {
-          text: 'Collection',
-          link: '/docs/component/support/Collection/',
+          text: 'collection',
+          link: '/docs/component/collection',
           items: [
-            'collection/typedassociative',
-            'collection/typedint',
-            'collection/typedstring',
+            {
+              text: 'typedassociative',
+              link: '/docs/component/collection/typedassociative'
+            },
+            {
+              text: 'typedstring',
+              link: '/docs/component/collection/typedstring'
+            },
+            {
+              text: 'typedint',
+              link: '/docs/component/collection/typedint'
+            },
           ],
         },
-        'tree',
-        'pipeline',
-        'flow',
-        'linkedlist',
-        'queue',
-        'stack',
+        {
+          text: 'tree',
+          link: '/docs/component/tree'
+        },
+        {
+          text: 'pipeline',
+          link: '/docs/component/pipeline'
+        },
+        {
+          text: 'flow',
+          link: '/docs/component/flow'
+        },
+        {
+          text: 'linkedlist',
+          link: '/docs/component/linkedlist'
+        },
+        {
+          text: 'queue',
+          link: '/docs/component/queue'
+        },
+        {
+          text: 'stack',
+          link: '/docs/component/stack'
+        },
         {
           title: groupB,
           items: [
-            'encryption',
-            'encryption/helper',
+            {
+              text: 'encryption',
+              link: '/docs/component/encryption'
+            },
+            {
+              text: 'encryption helper',
+              link: '/docs/component/encryption/helper'
+            },
           ],
         },
         {
           title: groupC,
           items: [
-            'option',
-            'option/composer',
+            {
+              text: 'option',
+              link: '/docs/component/option'
+            },
+            {
+              text: 'option composer',
+              link: '/docs/component/option/composer'
+            },
           ],
         },
         {
           title: groupD,
           items: [
-            'cache',
+            {
+              text: 'cache',
+              link: '/docs/component/cache'
+            },
           ],
         },
         'session',
