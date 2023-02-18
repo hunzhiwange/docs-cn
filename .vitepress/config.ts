@@ -155,7 +155,7 @@ export default defineConfig({
       '/docs/architecture/': genSidebarConfigArchitectureDoc('Architecture', 'Kernel'),
       '/docs/router/': genSidebarConfigRouterDoc('Routing'),
       '/docs/template/': genSidebarConfigTemplateDoc('Template'),
-      // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
+      '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
       '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
       '/docs/validate/': genSidebarConfigValidateDoc('Validate'),
       '/docs/component/': genSidebarConfigComponentDoc('Component', 'Encryption', 'Option', 'Cache', 'Auth', 'Filesystem', 'Console'),
@@ -420,37 +420,66 @@ function genSidebarConfigTemplateDoc (groupA) {
 function genSidebarConfigDatabaseDoc (groupA, groupB, groupC, groupD, groupE, groupF) {
   return [
     {
-      title: groupA,
-      collapsable: false,
-      children: [
-        '',
-        'config',
-        'database',
-        'select',
+      text: groupA,
+      link: '/docs/database/',
+      items: [
         {
-          title: groupB + ' Create',
-          collapsable: false,
-          'children': [
-            'create/insert',
-            'create/insertall',
+          text: 'config',
+          link: '/docs/database/config',
+        },
+        {
+          text: 'select',
+          link: '/docs/database/select',
+        },
+        {
+          text: 'database',
+          link: '/docs/database/database',
+        },
+        {
+          text: groupB + ' Create',
+          items: [
+            {
+              text: 'insert',
+              link: '/docs/database/create/insert',
+            },
+            {
+              text: 'insertall',
+              link: '/docs/database/create/insertall',
+            },
           ],
         },
         {
-          title: groupC + ' Delete',
-          collapsable: false,
-          'children': [
-            'delete/delete',
-            'delete/truncate',
+          text: groupC + ' Delete',
+          items: [
+            {
+              text: 'delete',
+              link: '/docs/database/delete/delete',
+            },
+            {
+              text: 'truncate',
+              link: '/docs/database/delete/truncate',
+            },
           ],
         },
         {
-          title: groupD + ' Update',
-          collapsable: false,
-          'children': [
-            'update/update',
-            'update/updatecolumn',
-            'update/updateincrease',
-            'update/updatedecrease',
+          text: groupD + ' Update',
+          items: [
+            {
+              text: 'update',
+              link: '/docs/database/update/update',
+            },
+            {
+              text: 'updatecolumn',
+              link: '/docs/database/update/updatecolumn',
+            },
+            {
+              text: 'updateincrease',
+              link: '/docs/database/update/updateincrease',
+            },
+            {
+              text: 'updatedecrease',
+              link: '/docs/database/update/updatedecrease',
+            },
           ],
         },
         {
