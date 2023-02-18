@@ -156,8 +156,8 @@ export default defineConfig({
       '/docs/router/': genSidebarConfigRouterDoc('Routing'),
       '/docs/template/': genSidebarConfigTemplateDoc('Template'),
       // '/docs/database/': genSidebarConfigDatabaseDoc('Database', 'Add', 'Delete', 'Update', 'Query', 'Query lang'),
-      // '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
-      // '/docs/validate/': genSidebarConfigValidateDoc('Validate'),
+      '/docs/orm/': genSidebarConfigOrmDoc('ORM'),
+      '/docs/validate/': genSidebarConfigValidateDoc('Validate'),
       '/docs/component/': genSidebarConfigComponentDoc('Component', 'Encryption', 'Option', 'Cache', 'Auth', 'Filesystem', 'Console'),
       // '/docs/test/': genSidebarConfigTestDoc('Test'),
       // '/docs/developer/': genSidebarConfigDeveloperDoc('Developer'),
@@ -501,110 +501,369 @@ function genSidebarConfigDatabaseDoc (groupA, groupB, groupC, groupD, groupE, gr
 
 function genSidebarConfigOrmDoc (groupA) {
   return [
-    {
-      title: groupA,
-      collapsable: false,
-      children: [
-        '',
-        'entity',
-        'define',
-        'toarray',
-        'conversion',
-        'create',
-        'update',
-        'replace',
-        'delete',
-        'event',
-        'relation',
-        'belongsto',
-        'hasmany',
-        'hasone',
-        'manymany',
-        'nested',
-        'select',
-        'unitofwork',
-        'repository',
-      ]
-    }
+      {
+        text: 'ORM',
+        link: '/docs/orm/',
+        items: [
+          {
+            text: '实体',
+            link: '/docs/orm/entity'
+          },
+          {
+            text: 'define',
+            link: '/docs/orm/define'
+          },
+          {
+            text: 'toarray',
+            link: '/docs/orm/toarray'
+          },
+          {
+            text: 'conversion',
+            link: '/docs/orm/conversion'
+          },
+          {
+            text: 'create',
+            link: '/docs/orm/create'
+          },
+          {
+            text: 'update',
+            link: '/docs/orm/update'
+          },
+          {
+            text: 'replace',
+            link: '/docs/orm/replace'
+          },
+          {
+            text: 'delete',
+            link: '/docs/orm/delete'
+          },
+          {
+            text: 'event',
+            link: '/docs/orm/event'
+          },
+          {
+            text: 'relation',
+            link: '/docs/orm/relation'
+          },
+          {
+            text: 'belongsto',
+            link: '/docs/orm/belongsto'
+          },
+          {
+            text: 'hasmany',
+            link: '/docs/orm/hasmany'
+          },
+          {
+            text: 'hasone',
+            link: '/docs/orm/hasone'
+          },
+          {
+            text: 'manymany',
+            link: '/docs/orm/manymany'
+          },
+          {
+            text: 'nested',
+            link: '/docs/orm/nested'
+          },
+          {
+            text: 'select',
+            link: '/docs/orm/select'
+          },
+          {
+            text: 'unitofwork',
+            link: '/docs/orm/unitofwork'
+          },
+          {
+            text: 'repository',
+            link: '/docs/orm/repository'
+          },
+        ]
+      },
   ]
 }
 
 function genSidebarConfigValidateDoc (groupA) {
   return [
     {
-      title: groupA,
-      collapsable: false,
-      'children': [
-        '',
-        'assert',
-        'helper',
-        'validator/accepted',
-        'validator/after',
-        'validator/allowedip',
-        'validator/alpha',
-        'validator/alphadash',
-        'validator/alphalower',
-        'validator/alphanum',
-        'validator/alphaupper',
-        'validator/isarray',
-        'validator/before',
-        'validator/between',
-        'validator/betweenequal',
-        'validator/boolean',
-        'validator/chinese',
-        'validator/chinesealphadash',
-        'validator/chinesealphanum',
-        'validator/date',
-        'validator/dateformat',
-        'validator/denyip',
-        'validator/different',
-        'validator/digit',
-        'validator/double',
-        'validator/email',
-        'validator/isempty',
-        'validator/equal',
-        'validator/equalgreaterthan',
-        'validator/equallessthan',
-        'validator/equalto',
-        'validator/isfloat',
-        'validator/greaterthan',
-        'validator/idcard',
-        'validator/in',
-        'validator/integer',
-        'validator/ip',
-        'validator/ipv4',
-        'validator/ipv6',
-        'validator/json',
-        'validator/lessthan',
-        'validator/lower',
-        'validator/luhn',
-        'validator/max',
-        'validator/maxlength',
-        'validator/min',
-        'validator/minlength',
-        'validator/mobile',
-        'validator/notbetween',
-        'validator/notbetweenequal',
-        'validator/notempty',
-        'validator/notequal',
-        'validator/notin',
-        'validator/notnull',
-        'validator/notsame',
-        'validator/isnull',
-        'validator/number',
-        'validator/phone',
-        'validator/qq',
-        'validator/regex',
-        'validator/required',
-        'validator/same',
-        'validator/strlen',
-        'validator/telephone',
-        'validator/timezone',
-        'validator/type',
-        'validator/unique',
-        'validator/upper',
-        'validator/url',
-        'validator/zipcode',
+      text: groupA,
+      link: '/docs/validate/',
+      items: [
+        {
+          text: 'assert',
+          link: '/docs/validate/assert'
+        },
+        {
+          text: 'helper',
+          link: '/docs/validate/helper'
+        },
+        {
+          text: 'accepted',
+          link: '/docs/validate/validator/accepted'
+        },
+        {
+          text: 'after',
+          link: '/docs/validate/validator/after'
+        },
+        {
+          text: 'allowedip',
+          link: '/docs/validate/validator/allowedip'
+        },
+        {
+          text: 'isarray',
+          link: '/docs/validate/validator/isarray'
+        },
+        {
+          text: 'alphaupper',
+          link: '/docs/validate/validator/alphaupper'
+        },
+        {
+          text: 'alphalower',
+          link: '/docs/validate/validator/alphalower'
+        },
+        {
+          text: 'alphanum',
+          link: '/docs/validate/validator/alphanum'
+        },
+        {
+          text: 'alphaupper',
+          link: '/docs/validate/validator/alphaupper'
+        },
+        {
+          text: 'isarray',
+          link: '/docs/validate/validator/isarray'
+        },
+        {
+          text: 'before',
+          link: '/docs/validate/validator/before'
+        },
+        {
+          text: 'between',
+          link: '/docs/validate/validator/between'
+        },
+        {
+          text: 'betweenequal',
+          link: '/docs/validate/validator/betweenequal'
+        },
+        {
+          text: 'boolean',
+          link: '/docs/validate/validator/boolean'
+        },
+        {
+          text: 'chinese',
+          link: '/docs/validate/validator/chinese'
+        },
+        {
+          text: 'chinesealphadash',
+          link: '/docs/validate/validator/chinesealphadash'
+        },
+        {
+          text: 'chinesealphanum',
+          link: '/docs/validate/validator/chinesealphanum'
+        },
+        {
+          text: 'date',
+          link: '/docs/validate/validator/date'
+        },
+        {
+          text: 'dateformat',
+          link: '/docs/validate/validator/dateformat'
+        },
+        {
+          text: 'denyip',
+          link: '/docs/validate/validator/denyip'
+        },
+        {
+          text: 'different',
+          link: '/docs/validate/validator/different'
+        },
+        {
+          text: 'digit',
+          link: '/docs/validate/validator/digit'
+        },
+        {
+          text: 'double',
+          link: '/docs/validate/validator/double'
+        },
+        {
+          text: 'email',
+          link: '/docs/validate/validator/email'
+        },
+        {
+          text: 'isempty',
+          link: '/docs/validate/validator/isempty'
+        },
+        {
+          text: 'equal',
+          link: '/docs/validate/validator/equal'
+        },
+        {
+          text: 'equalgreaterthan',
+          link: '/docs/validate/validator/equalgreaterthan'
+        },
+        {
+          text: 'equallessthan',
+          link: '/docs/validate/validator/equallessthan'
+        },
+        {
+          text: 'equalto',
+          link: '/docs/validate/validator/equalto'
+        },
+        {
+          text: 'isfloat',
+          link: '/docs/validate/validator/isfloat'
+        },
+        {
+          text: 'greaterthan',
+          link: '/docs/validate/validator/greaterthan'
+        },
+        {
+          text: 'idcard',
+          link: '/docs/validate/validator/idcard'
+        },
+        {
+          text: 'in',
+          link: '/docs/validate/validator/in'
+        },
+        {
+          text: 'integer',
+          link: '/docs/validate/validator/integer'
+        },
+        {
+          text: 'ip',
+          link: '/docs/validate/validator/ip'
+        },
+        {
+          text: 'ipv4',
+          link: '/docs/validate/validator/ipv4'
+        },
+        {
+          text: 'ipv6',
+          link: '/docs/validate/validator/ipv6'
+        },
+        {
+          text: 'json',
+          link: '/docs/validate/validator/json'
+        },
+        {
+          text: 'lessthan',
+          link: '/docs/validate/validator/lessthan'
+        },
+        {
+          text: 'lower',
+          link: '/docs/validate/validator/lower'
+        },
+        {
+          text: 'luhn',
+          link: '/docs/validate/validator/luhn'
+        },
+        {
+          text: 'max',
+          link: '/docs/validate/validator/max'
+        },
+        {
+          text: 'maxlength',
+          link: '/docs/validate/validator/maxlength'
+        },
+        {
+          text: 'min',
+          link: '/docs/validate/validator/min'
+        },
+        {
+          text: 'minlength',
+          link: '/docs/validate/validator/minlength'
+        },
+        {
+          text: 'mobile',
+          link: '/docs/validate/validator/mobile'
+        },
+        {
+          text: 'notbetween',
+          link: '/docs/validate/validator/notbetween'
+        },
+        {
+          text: 'notbetweenequal',
+          link: '/docs/validate/validator/notbetweenequal'
+        },
+        {
+          text: 'notempty',
+          link: '/docs/validate/validator/notempty'
+        },
+        {
+          text: 'notequal',
+          link: '/docs/validate/validator/notequal'
+        },
+        {
+          text: 'notin',
+          link: '/docs/validate/validator/notin'
+        },
+        {
+          text: 'notnull',
+          link: '/docs/validate/validator/notnull'
+        },
+        {
+          text: 'notsame',
+          link: '/docs/validate/validator/notsame'
+        },
+        {
+          text: 'isnull',
+          link: '/docs/validate/validator/isnull'
+        },
+        {
+          text: 'number',
+          link: '/docs/validate/validator/number'
+        },
+        {
+          text: 'phone',
+          link: '/docs/validate/validator/phone'
+        },
+        {
+          text: 'qq',
+          link: '/docs/validate/validator/qq'
+        },
+        {
+          text: 'regex',
+          link: '/docs/validate/validator/regex'
+        },
+        {
+          text: 'required',
+          link: '/docs/validate/validator/required'
+        },
+        {
+          text: 'same',
+          link: '/docs/validate/validator/same'
+        },
+        {
+          text: 'strlen',
+          link: '/docs/validate/validator/strlen'
+        },
+        {
+          text: 'telephone',
+          link: '/docs/validate/validator/telephone'
+        },
+        {
+          text: 'timezone',
+          link: '/docs/validate/validator/timezone'
+        },
+        {
+          text: 'type',
+          link: '/docs/validate/validator/type'
+        },
+        {
+          text: 'unique',
+          link: '/docs/validate/validator/unique'
+        },
+        {
+          text: 'upper',
+          link: '/docs/validate/validator/upper'
+        },
+        {
+          text: 'url',
+          link: '/docs/validate/validator/url'
+        },
+        {
+          text: 'zipcode',
+          link: '/docs/validate/validator/zipcode'
+        },
       ]
     }
   ]
