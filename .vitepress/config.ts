@@ -483,44 +483,125 @@ function genSidebarConfigDatabaseDoc (groupA, groupB, groupC, groupD, groupE, gr
           ],
         },
         {
-          title: groupE + ' Read',
-          collapsable: false,
-          'children': [
-            'read/aggregate',
-            'read/find',
-            'read/findall',
-            'read/findone',
-            'read/finddynamics',
-            'read/select',
-            'read/list',
-            'read/value',
+          text: groupE + ' Read',
+          items: [
+            {
+              text: 'aggregate',
+              link: '/docs/database/read/aggregate',
+            },
+            {
+              text: 'find',
+              link: '/docs/database/read/find',
+            },
+            {
+              text: 'findall',
+              link: '/docs/database/read/findall',
+            },
+            {
+              text: 'findone',
+              link: '/docs/database/read/findone',
+            },
+            {
+              text: 'finddynamics',
+              link: '/docs/database/read/finddynamics',
+            },
+            {
+              text: 'select',
+              link: '/docs/database/read/select',
+            },
+            {
+              text: 'list',
+              link: '/docs/database/read/list',
+            },
+            {
+              text: 'value',
+              link: '/docs/database/read/value',
+            },
           ],
         },
         {
-          title: groupF,
-          collapsable: false,
-          'children': [
-            'query/flow',
-            'query/sql',
-            'query/table',
-            'query/columns',
-            'query/where',
-            'query/wheredate',
-            'query/comment',
-            'query/prefix',
-            'query/forceindex',
-            'query/bind',
-            'query/join',
-            'query/union',
-            'query/orderby',
-            'query/groupby',
-            'query/having',
-            'query/havingdate',
-            'query/distinct',
-            'query/aggregate',
-            'query/limit',
-            'query/forupdate',
-            'query/reset',
+          text: groupF,
+          items: [
+            {
+              text: 'flow',
+              link: '/docs/database/query/flow',
+            },
+            {
+              text: 'table',
+              link: '/docs/database/query/table',
+            },
+            {
+              text: 'columns',
+              link: '/docs/database/query/columns',
+            },
+            {
+              text: 'where',
+              link: '/docs/database/query/where',
+            },
+            {
+              text: 'wheredate',
+              link: '/docs/database/query/wheredate',
+            },
+            {
+              text: 'comment',
+              link: '/docs/database/query/comment',
+            },
+            {
+              text: 'prefix',
+              link: '/docs/database/query/prefix',
+            },
+            {
+              text: 'forceindex',
+              link: '/docs/database/query/forceindex',
+            },
+            {
+              text: 'bind',
+              link: '/docs/database/query/bind',
+            },
+            {
+              text: 'join',
+              link: '/docs/database/query/join',
+            },
+            {
+              text: 'union',
+              link: '/docs/database/query/union',
+            },
+            {
+              text: 'orderby',
+              link: '/docs/database/query/orderby',
+            },
+            {
+              text: 'groupby',
+              link: '/docs/database/query/groupby',
+            },
+            {
+              text: 'having',
+              link: '/docs/database/query/having',
+            },
+            {
+              text: 'havingdate',
+              link: '/docs/database/query/havingdate',
+            },
+            {
+              text: 'distinct',
+              link: '/docs/database/query/distinct',
+            },
+            {
+              text: 'aggregate',
+              link: '/docs/database/query/aggregate',
+            },
+            {
+              text: 'limit',
+              link: '/docs/database/query/limit',
+            },
+            {
+              text: 'forupdate',
+              link: '/docs/database/query/forupdate',
+            },
+            {
+              text: 'reset',
+              link: '/docs/database/query/reset',
+            },
           ],
         },
       ]
