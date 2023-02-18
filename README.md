@@ -1,6 +1,6 @@
 # queryphp.com
 
-This site is built with [Vitepress](https://vitepress.vuejs.org/).
+This site is built with [VitePress](https://vitepress.vuejs.org/).
 
 ## Developing
 
