@@ -21,14 +21,6 @@ $ pnpm i
 $ pnpm dev
 ```
 
-## Publish
-
-You can publish your modify by use the command:
-
-```
-sh ./deploy.sh
-```
-
 ## Node Memory Limit
 
 ``` sh
