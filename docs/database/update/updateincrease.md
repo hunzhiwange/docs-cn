@@ -1,0 +1,79 @@
+# 更新字段递增.updateIncrease
+
+::: tip Testing Is Documentation
+[tests/Database/Update/UpdateIncreaseTest.php](https://github.com/hunzhiwange/framework/blob/master/tests/Database/Update/UpdateIncreaseTest.php)
+:::
+
+**Uses**
+
+``` php
+<?php
+
+use Leevel\Database\Condition;
+use Leevel\Kernel\Utils\Api;
+use Tests\Database\DatabaseTestCase as TestCase;
+```
+
+## updateIncrease 基本用法
+
+更新成功后，返回影响行数，`updateIncrease` 实际上调用的是 `updateColumn` 方法。
+
+``` php
+public function testBaseUse(): void
+{
+    $connect = $this->createDatabaseConnectMock();
+
+    $sql = <<<'eot'
+        [
+            "UPDATE `test_query` SET `test_query`.`num` = `test_query`.`num`+3 WHERE `test_query`.`id` = :test_query_id",
+            {
+                "test_query_id": [
+                    503
+                ]
+            },
+            false
+        ]
+        eot;
+
+    static::assertSame(
+        $sql,
+        $this->varJsonSql(
+            $connect
+                ->table('test_query')
+                ->where('id', 503)
+                ->updateIncrease('num', 3),
+            $connect
+        )
+    );
+}
+```
+
+## updateIncrease 支持参数绑定
+
+``` php
+public function testBind(): void
+{
+    $connect = $this->createDatabaseConnectMock();
+
+    $sql = <<<'eot'
+        [
+            "UPDATE `test_query` SET `test_query`.`num` = `test_query`.`num`+3 WHERE `test_query`.`id` = ?",
+            [
+                503
+            ],
+            false
+        ]
+        eot;
+
+    static::assertSame(
+        $sql,
+        $this->varJsonSql(
+            $connect
+                ->table('test_query')
+                ->where('id', Condition::raw('?'))
+                ->updateIncrease('num', 3, [503]),
+            $connect
+        )
+    );
+}
+```

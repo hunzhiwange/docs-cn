@@ -1,0 +1,22 @@
+{
+	"name": "queryphp-doc",
+	"version": "1.0.0",
+	"description": "QueryPHP Document.",
+	"repository": "https://github.com/hunzhiwange/docs-cn",
+	"author": "Xiangmin Liu",
+	"private": true,
+	"devDependencies": {
+		"chalk": "^4.1.0",
+		"gray-matter": "^4.0.3",
+		"lodash": "^4.17.21",
+		"vite": "^5.0.2",
+		"vitepress": "^v1.0.0-rc.31",
+		"yorkie": "^2.0.0"
+	},
+	"scripts": {
+		"dev": "vitepress dev .",
+		"build": "vitepress build .",
+		"serve": "vitepress serve ."
+	},
+	"type": "module"
+}
