@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
 # 忽略错误
-set -e
+# set -e
 
-# 构建
-npm run build
+# # 构建
+# npm run build
 
 # 进入待发布的目录
 cd .vitepress/dist
@@ -15,6 +15,8 @@ echo 'www.queryphp.com' > CNAME
 git init
 git add -A
 git commit -m 'deploy'
+
+# git remote add origin git@github.com:hunzhiwange/docs-cn.git
 
 # 如果部署到 https://<USERNAME>.github.io
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
